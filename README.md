@@ -21,4 +21,4 @@ The `-`, `/`, and `+` controls work well with a number pad if your keyboard has 
 
 # Proof of Concept
 
-This is currently in the proof of concept phase. If you want to try it out, clone the repo and load the `FactoroidAsShip.html` file from the `poc` folder in your favorite browser. That should give you an idea of how it will work.
+This is currently in the proof of concept phase. If you want to try it out, clone the repo and load the `index.html` file from the `poc` folder in your favorite browser. That should give you an idea of how it will work.
