@@ -30,6 +30,16 @@
         let bullets = [];
         let facts = [];
         const steps = [5, 6, 8, 9, 10, 12, 15, 18, 20, 24, 30, 36, 40, 45];
+        let fb = [
+            {
+                name: 'Default',
+            },
+            {
+                name: 'Splinter'
+            }
+        ];
+        let fbIndex = 0;
+        let fbCooldown = 0;
 
         class Point {
             constructor(x, y) {
@@ -122,14 +132,16 @@
                 this.minRadius = 100000;
                 this.rotationSpeed = this.adjustDirection(Math.random());
                 this.rotation = 0;
-                var velo = vector || Math.random() * 360;
-                this.xVelocity = Math.cos(degreesToRadians(velo)) * magnitude;
-                this.yVelocity = Math.sin(degreesToRadians(velo)) * magnitude;
+                this.vector = vector || Math.random() * 360;
+                this.magnitude = magnitude;
+                this.xVelocity = Math.cos(degreesToRadians(this.vector)) * magnitude;
+                this.yVelocity = Math.sin(degreesToRadians(this.vector)) * magnitude;
                 this.color = generateColor(this.product);
                 this.dead = false;
                 this.centers;
                 this.maxSize = product * 7;
-                this.unstable = false;
+                this.spawn = [];
+                this.hasSpawn = false;
 
                 this.generateFactors();
                 this.generatePoints();
@@ -302,12 +314,22 @@
                         if (this.product === 1) {
                             this.dead = true;
                             return 1;
+                        } else {
+                            const vector = this.vector + (180 + (Math.random() * 20 * coinToss()));
+                            const magnitude = this.magnitude * ((Math.random() * 5) + 1)
+                            const f = new Factoroid(number, new Point(this.xPos, this.yPos), this.upperBounds, vector, magnitude);
+                            if (fb[fbIndex].name === 'Splinter') {
+                                this.hasSpawn = true;
+                                this.spawn.push(this);
+                                this.spawn.push(f);
+                            }
                         }
                     } else {
                         this.product = this.product * bullet.number;
                     }
                     if (this.product > this.maxSize) {
-                        this.unstable = true;
+                        this.hasSpawn = true;
+                        this.spawn = this.stabilize();
                         return 2;
                     }
                     this.generateFactors();
@@ -517,6 +539,62 @@
             }
         };
 
+
+        function fireBullet(ship, b) {
+            bullets.push(new Bullet(b,
+                new Point(ship.xPos, ship.yPos),
+                ship.xVelocity - Math.cos(degreesToRadians(ship.rotation + 90)) * 20,
+                ship.yVelocity - Math.sin(degreesToRadians(ship.rotation + 90)) * 20,
+                ship.upperBounds,
+                120
+            ));
+        }
+
+
+        function generateFiringSolutions(ship) {
+            const fs1 = {
+                fire: () => {
+                    if (ship.keyHandler.fire() && ship.breachNumber > 0) {
+                        if (bullets.length === 0) {
+                            const b = ship.keyHandler.number();
+                            fireBullet(ship, b);
+                            ship.breachNumber = 0;
+                            ship.keyHandler.clearNumber();
+                        }
+                    }
+                },
+                name: 'Default'
+            }
+
+            const fs2 = {
+                fire: () => {
+                    const b = ship.keyHandler.number();
+                    if (b > 0 && bullets.length === 0) {
+                        fireBullet(ship, b);
+                    }
+                    ship.breachNumber = 0;
+                    ship.keyHandler.clearNumber();
+                },
+                name: 'Rapid'
+            }
+
+            const fs3 = {
+                fire: () => {
+                    if (ship.keyHandler.fire() && ship.breachNumber > 0) {
+                        if (bullets.length === 0) {
+                            const b = ship.keyHandler.number();
+                            fireBullet(ship, b);
+                            ship.breachNumber = 0;
+                            ship.keyHandler.fired();
+                        }
+                    }
+                },
+                name: 'Sticky'
+            }
+
+            return [fs1, fs2, fs3];
+        }
+
         // Objects
         class Ship extends BaseSprite {
             constructor(origin, upperBounds, keyHandler, number, stepSize, maxSize, outline = 'yellow', drawRadii = false) {
@@ -538,6 +616,9 @@
                 this.maxSize = maxSize / 2;
                 this.outline = outline;
                 this.drawR = drawRadii
+                this.firingSolutionIndex = 0;
+                this.firingSolutions = generateFiringSolutions(this);
+                this.firingSolutionCooldown = 0;
 
                 this.generateFactors();
                 this.generatePoints();
@@ -645,6 +726,8 @@
                 this.deathCountDown = 5;
                 this.particleCloudExtent = 2;
                 this.collisionShieldCountdown = 4;
+                this.breachNumber = 0;
+                this.keyHandler.clearNumber();
             }
 
             addSpecial(special) {
@@ -713,22 +796,20 @@
                 this.updateBreach(delta);
             }
 
-            updateBreach(time) {
-                this.breachNumber = this.keyHandler.number();             
+            fire() {
+                this.firingSolutions[this.firingSolutionIndex].fire();
+            }
 
-                if (this.keyHandler.fire() && this.breachNumber > 0) {
-                    if (bullets.length === 0) {
-                        bullets.push(new Bullet(this.breachNumber,
-                            new Point(this.xPos, this.yPos),
-                            this.xVelocity - Math.cos(degreesToRadians(this.rotation + 90)) * 20,
-                            this.yVelocity - Math.sin(degreesToRadians(this.rotation + 90)) * 20,
-                            this.upperBounds,
-                            120
-                        ));
-                        this.breachNumber = 0;
-                        this.keyHandler.clearNumber();
-                    }
+            updateBreach(time) {
+                this.breachNumber = this.keyHandler.number();
+                if (this.keyHandler.firingSolution() && this.firingSolutionCooldown === 0) {
+                    this.firingSolutionIndex = (this.firingSolutionIndex + 1) % this.firingSolutions.length;
+                    this.firingSolutionCooldown = 12;
                 }
+                if (this.firingSolutionCooldown > 0) {
+                    this.firingSolutionCooldown -= 1;
+                }
+                this.fire();
             }
 
             drawRadii(context, xLoc, yLoc) {
@@ -929,7 +1010,7 @@
 
         populateLevel();
 
-        const keymap = new KeyHandler();
+        const keyHandler = new KeyHandler();
         let xtraCooldown = 0;
         let xtraIndex = 0;
         const xtras = [FlipSpecial, HyperSpecial];
@@ -937,7 +1018,7 @@
         const bluntness = coinToss() > 0 ? 100000 : 1000;
         const number = primes[Math.floor(Math.random() * 1000)] * bluntness;
         const stepSize = steps[Math.floor(Math.random() * steps.length)];
-        const ship = new Ship(new Point(canvas.width / 2, canvas.height / 2), new Point(canvas.width, canvas.height), keymap, number, stepSize, 50);
+        const ship = new Ship(new Point(canvas.width / 2, canvas.height / 2), new Point(canvas.width, canvas.height), keyHandler, number, stepSize, 50);
         ship.addSpecial(FlipSpecial);
 
         window.addEventListener('resize', resizeCanvas, false);
@@ -948,6 +1029,22 @@
             context.textAlign = 'left';
             context.textBaseline = 'middle';
             context.fillText(`Level: ${level}`, 5, 10);
+        }
+
+        function paintFiringSolution(context, ship) {
+            context.fillStyle = 'white';
+            context.font = '12pt Courier';
+            context.textAlign = 'left';
+            context.textBaseline = 'middle';
+            context.fillText(`FS: ${ship.firingSolutions[ship.firingSolutionIndex].name}`, 5, 30);
+        }
+
+        function paintFactoroidBehavoir(context) {
+            context.fillStyle = 'white';
+            context.font = '12pt Courier';
+            context.textAlign = 'left';
+            context.textBaseline = 'middle';
+            context.fillText(`FB: ${fb[fbIndex].name}`, 5, 47);
         }
 
         function animate(now) {
@@ -972,13 +1069,17 @@
 
             facts.forEach(f => f.detectShipCollision(ship));
 
-
-            const unstable = facts.filter(f => f.unstable)[0]; // should only be one;
-            facts = facts.filter(f => !f.dead && !f.unstable);
-            if (unstable) {
-                newFactoroids = unstable.stabilize();
+            const spawner = facts.filter(f => f.hasSpawn)[0]; // should only be one;
+            facts = facts.filter(f => !f.dead && !f.hasSpawn);
+            if (spawner) {
+                const newFactoroids = spawner.spawn.map(x => {
+                    x.hasSpawn = false; // no recursive spawning;
+                    x.spawn = []; // clean up the spawn array; 
+                    return x;
+                });
                 facts = facts.concat(newFactoroids);
             }
+
 
 
             for (var i = 0; i < facts.length; ++i) {
@@ -1006,9 +1107,21 @@
                 }
             }
 
-            paintLevel(context, level);
+            if (keyHandler.factoroidBehavior() && fbCooldown === 0) {
+                fbIndex = (fbIndex + 1) % fb.length;
+                fbCooldown = 12;
+            }
 
-            if (keymap.xtra() && xtraCooldown === 0) {
+            if (fbCooldown > 0) {
+                fbCooldown -= 1;
+            }
+
+            paintLevel(context, level);
+            paintFiringSolution(context, ship);
+            paintFactoroidBehavoir(context);
+
+
+            if (keyHandler.xtra() && xtraCooldown === 0) {
                 xtraIndex = (xtraIndex + 1) % xtras.length;
                 ship.addSpecial(xtras[xtraIndex]);
                 xtraCooldown = 20;
