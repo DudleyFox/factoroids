@@ -163,8 +163,8 @@ export default class Ship extends BaseSprite {
         this.keyHandler.clearNumber();
     }
 
-    addSpecial(special) {
-        this.special = new special();
+    addpowerUp(powerUp) {
+        this.powerUp = new powerUp();
     }
 
     updatePosition() {
@@ -215,10 +215,12 @@ export default class Ship extends BaseSprite {
             this.yVelocity = this.yVelocity * slowdown;
         }
 
-        if (this.special) {
-            this.special.tick();
-            if (this.keyHandler.special()) {
-                this.special.update(this, facts, delta);
+        if (this.powerUp) {
+            this.powerUp.tick();
+            if (this.keyHandler.powerUp()) {
+                // TODO: 2022-09-03 - D. Fox: This is grabbing facts as a global variable
+                // Need a better way to pass that through.
+                this.powerUp.update(this, facts, delta);
             }
         }
 
