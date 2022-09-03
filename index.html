@@ -1,0 +1,71 @@
+<html>
+<!-- 
+        Copyright � 2022 Dudley Fox
+    -->
+
+<head>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1, IE=edge">
+    <!-- from https://stackoverflow.com/questions/4288253/html5-canvas-100-width-height-of-viewport -->
+    <style>
+        html,
+        body {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        canvas {
+            display: block;
+            background-color: black;
+        }
+    </style>
+</head>
+
+<body>
+    <canvas id="AstCan"></canvas>
+    <script type="module">
+
+        import Point from './js/Point.js';
+        import GameScreenBlue from './js/GameScreenBlue.js';
+        
+        // goo
+        window.requestAnimFrame = (function (callback) {
+            return window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame || window.oRequestAnimationFrame || window.msRequestAnimationFrame ||
+                function (callback) {
+                    window.setTimeout(callback, 1000 / 60);
+                };
+        })();
+
+
+        var canvas = document.getElementById('AstCan');
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+
+        resizeCanvas()
+        window.addEventListener('resize', resizeCanvas, false);
+        let gs = new GameScreenBlue(new Point(canvas.width, canvas.height));
+
+        function animate(now) {
+            var newNow = new Date().getTime();
+            var time = (newNow - now) / 1000.0;
+            var context = canvas.getContext('2d');
+
+            context.clearRect(0, 0, canvas.width, canvas.height);
+            gs.setUpperBounds(new Point(canvas.width, canvas.height));
+            const tgs = gs.update(time);
+            gs.draw(context);
+            gs = tgs;
+
+            requestAnimFrame(function () {
+                animate(newNow);
+            });
+        }
+        var now = new Date().getTime();
+        animate(now);
+    </script>
+</body>
+
+</html>
