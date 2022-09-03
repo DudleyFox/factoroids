@@ -1,4 +1,4 @@
-export class BaseSprite {
+export default class BaseSprite {
     constructor(origin, upperBounds) {
         this.upperBounds = upperBounds;
         this.xPos = origin.x;

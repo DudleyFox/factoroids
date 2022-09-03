@@ -1,4 +1,64 @@
-export class Ship extends BaseSprite {
+import BaseSprite from './BaseSprite.js';
+import Point from './Point.js';
+
+// TODO: 2022-09-02 D. Fox - Find a better home for the firing solutions.
+function fireBullet(ship, b) {
+    bullets.push(new Bullet(b,
+        new Point(ship.xPos, ship.yPos),
+        ship.xVelocity - Math.cos(degreesToRadians(ship.rotation + 90)) * 20,
+        ship.yVelocity - Math.sin(degreesToRadians(ship.rotation + 90)) * 20,
+        ship.upperBounds,
+        120
+    ));
+}
+
+
+function generateFiringSolutions(ship) {
+    const fs1 = {
+        fire: () => {
+            if (ship.keyHandler.fire() && ship.breachNumber > 0) {
+                if (bullets.length === 0) {
+                    const b = ship.keyHandler.number();
+                    fireBullet(ship, b);
+                    ship.breachNumber = 0;
+                    ship.keyHandler.clearNumber();
+                }
+            }
+        },
+        name: 'Default'
+    }
+
+    const fs2 = {
+        fire: () => {
+            const b = ship.keyHandler.number();
+            if (b > 0 && bullets.length === 0) {
+                fireBullet(ship, b);
+            }
+            ship.breachNumber = 0;
+            ship.keyHandler.clearNumber();
+        },
+        name: 'Rapid'
+    }
+
+    const fs3 = {
+        fire: () => {
+            if (ship.keyHandler.fire() && ship.breachNumber > 0) {
+                if (bullets.length === 0) {
+                    const b = ship.keyHandler.number();
+                    fireBullet(ship, b);
+                    ship.breachNumber = 0;
+                    ship.keyHandler.fired();
+                }
+            }
+        },
+        name: 'Sticky'
+    }
+
+    return [fs1, fs2, fs3];
+}
+
+
+export default class Ship extends BaseSprite {
     constructor(origin, upperBounds, keyHandler, number, stepSize, maxSize, outline = 'yellow', drawRadii = false) {
         super(origin, upperBounds);
         this.origin = origin;

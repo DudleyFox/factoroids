@@ -1,4 +1,4 @@
-export class GhostShip extends BaseSprite {
+export default class GhostShip extends BaseSprite {
     constructor(origin, upperBounds, number, stepSize, maxSize, outline = 'grey', drawRadii = false) {
         super(origin, upperBounds);
         this.origin = origin;
