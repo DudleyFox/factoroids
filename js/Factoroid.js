@@ -1,8 +1,17 @@
+import BaseSprite from "./BaseSprite.js";
+import Point from "./Point.js";
+import {
+    distanceBetweenTwoPoints,
+    degreesToRadians,
+    linesIntersect,
+    generateFactors,
+    sumTheFactors
+} from './AAAHelpers.js';
+
 export default class Factoroid extends BaseSprite {
     constructor(product, origin, upperBounds, vector, magnitude = 10) {
         super(origin, upperBounds);
         this.product = product;
-        this.factors = new Array();
         this.points = new Array();
         this.innerPoints = new Array();
         this.radii = new Array();
@@ -21,7 +30,7 @@ export default class Factoroid extends BaseSprite {
         this.spawn = [];
         this.hasSpawn = false;
 
-        this.generateFactors();
+        this.factors = generateFactors(this.product);
         this.generatePoints();
         this.generateCenters();
     }
@@ -59,46 +68,6 @@ export default class Factoroid extends BaseSprite {
         this.generateCenters();
     }
 
-    generateFactors() {
-        // GetFactors
-        this.factors = [];
-        var t = this.product
-        var index = 0
-        var sqt = Math.sqrt(t)
-        while (t != 1) {
-            var factor = primes[index]
-            if ((t % factor) === 0) {
-                this.factors.push(factor);
-                t = t / factor;
-                sqt = Math.sqrt(t)
-            }
-            else {
-                index += 1;
-                factor = primes[index];
-                if (factor > sqt) {
-                    this.factors.push(t);
-                    return;
-                }
-            }
-        }
-    }
-
-    sumTheFactors(theta) {
-        let sum = 0;
-
-        for (let i = 0; i < this.factors.length; i++) {
-            const f = this.factors[i];
-            sum += Math.cos(f * theta);
-        }
-
-
-        if (sum < 0) {
-            sum = -sum;
-        }
-
-        return sum;
-    }
-
     generatePoints() {
         this.points = [];
         this.innerPoints = [];
@@ -107,7 +76,7 @@ export default class Factoroid extends BaseSprite {
         var i;
         for (i = 0; i < 360; i += 5) {
             var theta = degreesToRadians(Number(i));
-            var sum = this.sumTheFactors(theta);
+            var sum = sumTheFactors(theta, this.factors);
             var radius = (Math.log(this.product) * (5 + sum)) + 7;
             var x = (radius * Math.cos(theta));
             var y = -(radius * Math.sin(theta));
@@ -210,7 +179,7 @@ export default class Factoroid extends BaseSprite {
                 this.spawn = this.stabilize();
                 return 2;
             }
-            this.generateFactors();
+            this.factors = generateFactors(this.product);
             this.generatePoints();
 
             return 1;

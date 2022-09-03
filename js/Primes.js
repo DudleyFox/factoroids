@@ -27,3 +27,5 @@ while (primes.length < 50000) {
     }
 }
 
+export default primes;
+

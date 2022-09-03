@@ -1,5 +1,9 @@
 import BaseSprite from './BaseSprite.js';
 import Point from './Point.js';
+import {
+generateFactors,
+sumTheFactors
+} from './AAAHelpers.js';
 
 // TODO: 2022-09-02 D. Fox - Find a better home for the firing solutions.
 function fireBullet(ship, b) {
@@ -67,7 +71,6 @@ export default class Ship extends BaseSprite {
         this.count = 0;
         this.radius = 12;
         this.number = number;
-        this.factors = new Array();
         this.points = new Array();
         this.innerPoints = new Array();
         this.radii = new Array();
@@ -83,47 +86,9 @@ export default class Ship extends BaseSprite {
         this.firingSolutionCooldown = 0;
         this.isGameOver = false;
 
-        this.generateFactors();
+        this.factors = generateFactors(this.number);
         this.generatePoints();
         this.reset();
-    }
-
-    generateFactors() {
-        // GetFactors
-        var t = this.number
-        var index = 0
-        var sqt = Math.sqrt(t)
-        while (t != 1) {
-            var factor = primes[index]
-            if ((t % factor) === 0) {
-                this.factors.push(factor);
-                t = t / factor;
-                sqt = Math.sqrt(t)
-            }
-            else {
-                index += 1;
-                factor = primes[index];
-                if (factor > sqt) {
-                    this.factors.push(t);
-                    return;
-                }
-            }
-        }
-    }
-
-
-    sumTheFactors(theta) {
-        let sum = 0;
-
-        for (var i = 0; i < this.factors.length; i++) {
-            const f = this.factors[i];
-            sum += Math.cos(f * theta);
-        }
-
-        if (sum < 0) {
-            sum = -sum;
-        }
-        return sum;
     }
 
     generatePoints() {
@@ -131,7 +96,7 @@ export default class Ship extends BaseSprite {
         let i;
         for (i = 0; i < 360; i += this.stepSize) {
             var theta = degreesToRadians(Number(i));
-            var sum = this.sumTheFactors(theta);
+            var sum = sumTheFactors(theta, this.factors);
             var radius = (Math.log(this.number) * (5 + sum)) + 7;
             this.radii.push(radius);
             this.maxRadius = Math.max(this.maxRadius, radius);

@@ -1,11 +1,13 @@
 
+import primes from './Primes.js';
+
 const params = new URLSearchParams(window.location.search);
 
-function getQueryVariable(variable, fallback = null) {
+export function getQueryVariable(variable, fallback = null) {
     return params.get(variable) || fallback;
 }
 
-function getQueryVariableInt(variable, fallback = null) {
+export function getQueryVariableInt(variable, fallback = null) {
 
     const result = params.get(variable);
     if (!!result) {
@@ -18,11 +20,11 @@ function getQueryVariableInt(variable, fallback = null) {
     return fallback;
 }
 
-function coinToss() {
+export function coinToss() {
     return (Math.random() * 100 > 50) ? 1 : -1;
 }
 
-function distanceBetweenTwoPoints(x1, y1, x2, y2) {
+export function distanceBetweenTwoPoints(x1, y1, x2, y2) {
     let dx = x1 - x2;
     let dy = y1 - y2;
 
@@ -32,11 +34,11 @@ function distanceBetweenTwoPoints(x1, y1, x2, y2) {
     return Math.sqrt(dx + dy);
 }
 
-function degreesToRadians(degrees) {
+export function degreesToRadians(degrees) {
     return (degrees * Math.PI) / 180.0;
 }
 
-function linesIntersect(l1x1, l1y1, l1x2, l1y2, l2x1, l2y1, l2x2, l2y2) {
+export function linesIntersect(l1x1, l1y1, l1x2, l1y2, l2x1, l2y1, l2x2, l2y2) {
     /*
              (Ay-Cy)(Dx-Cx)-(Ax-Cx)(Dy-Cy)
          r = -----------------------------  (eqn 1)
@@ -102,4 +104,45 @@ function linesIntersect(l1x1, l1y1, l1x2, l1y2, l2x1, l2y1, l2x2, l2y2) {
         return true;
 
     return false;
+}
+
+// TODO: 2022-09-03 - D. Fox - Do we want this to be in a base class?
+export function generateFactors(product) {
+    const factors = [];
+    var t = product
+    var index = 0
+    var sqt = Math.sqrt(t)
+    while (t != 1) {
+        var factor = primes[index]
+        if ((t % factor) === 0) {
+            factors.push(factor);
+            t = t / factor;
+            sqt = Math.sqrt(t)
+        }
+        else {
+            index += 1;
+            factor = primes[index];
+            if (factor > sqt) {
+                factors.push(t);
+                return factors;
+            }
+        }
+    }
+    return factors;
+}
+
+export function sumTheFactors(theta, factors) {
+    let sum = 0;
+
+    for (let i = 0; i < factors.length; i++) {
+        const f = factors[i];
+        sum += Math.cos(f * theta);
+    }
+
+
+    if (sum < 0) {
+        sum = -sum;
+    }
+
+    return sum;
 }
