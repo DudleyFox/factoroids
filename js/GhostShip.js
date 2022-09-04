@@ -2,7 +2,8 @@ import BaseSprite from "./BaseSprite.js";
 import Point from './Point.js';
 import {
 generateFactors,
-sumTheFactors
+sumTheFactors,
+degreesToRadians
 } from './AAAHelpers.js';
 
 export default class GhostShip extends BaseSprite {
@@ -111,7 +112,7 @@ export default class GhostShip extends BaseSprite {
         context.rotate(degreesToRadians(this.rotation - 90));
         context.beginPath();
         context.moveTo(this.points[0].x, this.points[0].y);
-        for (i = 1; i < this.points.length; ++i) {
+        for (let i = 1; i < this.points.length; ++i) {
             context.lineTo(this.points[i].x, this.points[i].y);
         }
 

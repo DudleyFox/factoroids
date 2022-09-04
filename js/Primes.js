@@ -12,7 +12,7 @@ while (primes.length < 50000) {
     var flag = 1;
     while (flag) {
         for (var i = 0; i < primes.length; i++) {
-            prime = primes[i];
+            var prime = primes[i];
             if (prime > sqc) {
                 primes.push(candidate);
                 flag = 0;

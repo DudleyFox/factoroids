@@ -4,7 +4,9 @@
 // * animation loop.
 // *
 export default class GameScreenBase {
-    constructor() {
+    constructor(upperBounds, KeyHandler) {
+        this.keyHandler = KeyHandler;
+        this.upperBounds = upperBounds;
     }
 
     update (delta) {
@@ -16,6 +18,6 @@ export default class GameScreenBase {
     }
 
     setUpperBounds(ub) {
-
+        this.upperBounds = ub;
     }
 }

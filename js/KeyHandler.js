@@ -1,4 +1,4 @@
-class KeyHandler {
+export default class KeyHandler {
     constructor() {
         this.map = new Array();
         for (var x = 0; x < 256; ++x) {

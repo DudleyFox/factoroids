@@ -26,7 +26,10 @@
     <script type="module">
 
         import Point from './js/Point.js';
-        import GameScreenBlue from './js/GameScreenBlue.js';
+        import GameScreenLevel from './js/GameScreenLevel.js';
+        import KeyHandler from './js/KeyHandler.js';
+
+        const keyHandler = new KeyHandler();
         
         // goo
         window.requestAnimFrame = (function (callback) {
@@ -46,7 +49,7 @@
 
         resizeCanvas()
         window.addEventListener('resize', resizeCanvas, false);
-        let gs = new GameScreenBlue(new Point(canvas.width, canvas.height));
+        let gs = new GameScreenLevel(new Point(canvas.width, canvas.height), keyHandler, 2);
 
         function animate(now) {
             var newNow = new Date().getTime();

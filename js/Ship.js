@@ -2,7 +2,8 @@ import BaseSprite from './BaseSprite.js';
 import Point from './Point.js';
 import {
 generateFactors,
-sumTheFactors
+sumTheFactors,
+degreesToRadians
 } from './AAAHelpers.js';
 
 // TODO: 2022-09-02 D. Fox - Find a better home for the firing solutions.
@@ -220,7 +221,7 @@ export default class Ship extends BaseSprite {
             if (this.keyHandler.powerUp()) {
                 // TODO: 2022-09-03 - D. Fox: This is grabbing facts as a global variable
                 // Need a better way to pass that through.
-                this.powerUp.update(this, facts, delta);
+                this.powerUp.update(this, null, delta);
             }
         }
 
@@ -270,7 +271,7 @@ export default class Ship extends BaseSprite {
             context.rotate(degreesToRadians(this.rotation - 90));
             context.beginPath();
             context.moveTo(this.points[0].x, this.points[0].y);
-            for (i = 1; i < this.points.length; ++i) {
+            for (let i = 1; i < this.points.length; ++i) {
                 context.lineTo(this.points[i].x, this.points[i].y);
             }
 

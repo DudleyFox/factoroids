@@ -1,4 +1,4 @@
-import PowerUpBase from "./PowerUpBase";
+import PowerUpBase from "./PowerUpBase.js";
 
 export default class PowerUpHyper extends PowerUpBase {
     constructor() {

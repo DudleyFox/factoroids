@@ -5,7 +5,9 @@ import {
     degreesToRadians,
     linesIntersect,
     generateFactors,
-    sumTheFactors
+    sumTheFactors,
+    coinToss,
+    generateColor
 } from './AAAHelpers.js';
 
 export default class Factoroid extends BaseSprite {
@@ -42,7 +44,7 @@ export default class Factoroid extends BaseSprite {
     update(delta) {
         this.rotation = (this.rotation + this.rotationSpeed) % 360;
         this.points = new Array();
-        for (i = 0; i < 360; i += 5) {
+        for (let i = 0; i < 360; i += 5) {
             var theta = degreesToRadians(i + this.rotation);
             var x = (this.radii[i / 5] * Math.cos(theta));
             var y = -(this.radii[i / 5] * Math.sin(theta));
@@ -266,7 +268,7 @@ export default class Factoroid extends BaseSprite {
         context.lineWidth = 3;
         context.strokeStyle = this.color;
         context.moveTo(this.points[0].x + xLoc, this.points[0].y + yLoc);
-        for (i = 1; i < this.points.length; ++i) {
+        for (let i = 1; i < this.points.length; ++i) {
             context.lineTo(this.points[i].x + xLoc, this.points[i].y + yLoc);
         }
 

@@ -20,6 +20,12 @@ export function getQueryVariableInt(variable, fallback = null) {
     return fallback;
 }
 
+export function generateColor(p) {
+    const adjust = Math.abs(Math.cos(p))
+    const blue = Math.floor(88 * adjust);
+    return `#7777${(0x77 + blue).toString(16)}`
+}
+
 export function coinToss() {
     return (Math.random() * 100 > 50) ? 1 : -1;
 }
