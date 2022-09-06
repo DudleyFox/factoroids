@@ -1,4 +1,5 @@
-class Button {
+import Point from './Point.js';
+export default class Button {
     constructor(name, displayName, topLeft, width, height, pointerHandler) {
         this.tl = new Point(topLeft.x, topLeft.y);
         this.width = width;
@@ -9,7 +10,7 @@ class Button {
         this.subscribers = [];
         this.name = name;
         this.displayName = displayName;
-        this.edge = 'orange';
+        this.edge = 'yellow';
         this.face = 'darkblue';
         this.swapped = false;
     }
@@ -90,7 +91,7 @@ class Button {
         context.stroke();
         context.fill();
 
-        context.fillStyle = 'white';
+        context.fillStyle = 'yellow';
         context.font = '12pt Courier';
         context.textAlign = 'center';
         context.textBaseline = 'middle';

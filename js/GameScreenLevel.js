@@ -23,12 +23,14 @@ export default class GameScreenLevel extends GameScreenBase {
             const bluntness = coinToss() > 0 ? 100000 : 1000;
             const number = primes[Math.floor(Math.random() * 1000)] * bluntness;
             const stepSize = this.steps[Math.floor(Math.random() * this.steps.length)];
-            this.state.ship = new Ship(new Point(this.upperBounds.x / 2, this.upperBounds.y / 2), new Point(this.upperBounds.x, this.upperBounds.y), this.keyHandler, this.state, number, stepSize, 50);
+            this.state.ship = new Ship(new Point(this.upperBounds.x / 2, this.upperBounds.y / 2), new Point(this.upperBounds.x, this.upperBounds.y), this.keyHandler, this.state, 50);
             const delta = 48;
             for (let i = 0; i < this.state.lifeCount - 1; ++i) {
-                this.state.lives.push(new GhostShip(new Point(this.upperBounds.x - delta, delta + delta * i), new Point(this.upperBounds.x, this.upperBounds.y), number, stepSize, 50));
+                this.state.lives.push(new GhostShip(new Point(this.upperBounds.x - delta, delta + delta * i), new Point(this.upperBounds.x, this.upperBounds.y), this.state.shipNumber, this.state.shipStepSize, 50));
             }
-            this.state.ship.addpowerUp(PowerUpFlip);
+            this.state.ship.addPowerUp(PowerUpFlip);
+        } else {
+            this.state.ship.reset();
         }
 
         this.populateLevel(this.level);
@@ -164,7 +166,7 @@ export default class GameScreenLevel extends GameScreenBase {
         context.font = '16pt Courier';
         context.textAlign = 'left';
         context.textBaseline = 'middle';
-        context.fillText(`Level: ${level} (alpha 0.4)`, 5, 10);
+        context.fillText(`Level: ${level} (alpha 0.5)`, 5, 10);
     }
 
     paintFiringSolution(context, ship) {

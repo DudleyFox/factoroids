@@ -1,4 +1,4 @@
-class PointerHandler {
+export default class PointerHandler {
     constructor(parent) {
         let obj = this;
         const p = parent || window;

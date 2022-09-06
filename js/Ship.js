@@ -66,21 +66,21 @@ function generateFiringSolutions(ship) {
 
 
 export default class Ship extends BaseSprite {
-    constructor(origin, upperBounds, keyHandler, state, number, stepSize, maxSize, outline = 'yellow', drawRadii = false) {
+    constructor(origin, upperBounds, keyHandler, state, maxSize, outline = 'yellow', drawRadii = false) {
         super(origin, upperBounds, state);
         this.origin = origin;
         this.breachNumber = 0;
         this.keyHandler = keyHandler;
         this.count = 0;
         this.radius = 12;
-        this.number = number;
+        this.number = this.state.shipNumber;
         this.points = new Array();
         this.innerPoints = new Array();
         this.radii = new Array();
         this.maxRadius = 0;
         this.minRadius = 100000;
         this.origin = origin;
-        this.stepSize = stepSize % 180;
+        this.stepSize = this.state.shipStepSize % 180;
         this.maxSize = maxSize / 2;
         this.outline = outline;
         this.drawR = drawRadii
@@ -166,7 +166,7 @@ export default class Ship extends BaseSprite {
         this.keyHandler.clearNumber();
     }
 
-    addpowerUp(powerUp) {
+    addPowerUp(powerUp) {
         this.powerUp = new powerUp();
     }
 
@@ -252,7 +252,7 @@ export default class Ship extends BaseSprite {
     drawRadii(context, xLoc, yLoc) {
         context.save();
 
-        for (i = 0; i < this.points.length; ++i) {
+        for (let i = 0; i < this.points.length; ++i) {
             context.beginPath();
             context.lineWidth = 0.75
             context.strokeStyle = 'black';

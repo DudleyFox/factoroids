@@ -28,8 +28,11 @@
         import Point from './js/Point.js';
         import GameScreenLevel from './js/GameScreenLevel.js';
         import KeyHandler from './js/KeyHandler.js';
+        import ShipSelector from './js/ShipSelector.js';
+        import PointerHandler from './js/PointerHandler.js';
 
         const keyHandler = new KeyHandler();
+        const pointerHandler = new PointerHandler();
 
         // goo
         window.requestAnimFrame = (function (callback) {
@@ -63,9 +66,13 @@
                 }
             ],
             fbIndex: 0,
-            fbCooldown: 0
+            fbCooldown: 0,
+            shipNumber: 2,
+            shipStepSize: 5
         };
-        let gs = new GameScreenLevel(new Point(canvas.width, canvas.height), keyHandler, state, 2);
+        // let gs = new GameScreenLevel(new Point(canvas.width, canvas.height), keyHandler, state, 2);
+        let gs = new ShipSelector(new Point(canvas.width, canvas.height), keyHandler, state, pointerHandler);
+
 
         function animate(now) {
             var newNow = new Date().getTime();
