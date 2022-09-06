@@ -5,7 +5,7 @@ export default class PowerUpFlip extends PowerUpBase {
         super();
     }
 
-    update(ship, factoroids, delta) {
+    update(ship, delta) {
         if (this.cooldown === 0) {
             ship.rotation += 180;
             this.cooldown = 15;

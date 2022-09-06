@@ -1,7 +1,10 @@
+import BaseSprite from "./BaseSprite.js";
+import Point from './Point.js';
+import { degreesToRadians } from './AAAHelpers.js';
 
 export default class Bullet extends BaseSprite {
-    constructor(number, origin, xVel, yVel, upperBounds, ttl) {
-        super(origin, upperBounds);
+    constructor(number, origin, xVel, yVel, upperBounds, state, ttl) {
+        super(origin, upperBounds, state);
         this.path = [new Point(this.xPos, this.yPos)];
         this.xVelocity = xVel;
         this.yVelocity = yVel;

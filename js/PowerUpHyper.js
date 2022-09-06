@@ -5,7 +5,7 @@ export default class PowerUpHyper extends PowerUpBase {
         super();
     }
 
-    update(ship, factoroids, delta) {
+    update(ship, delta) {
         if (this.cooldown === 0) {
             const newX = Math.random() * ship.upperBounds.x;
             const newY = Math.random() * ship.upperBounds.y;

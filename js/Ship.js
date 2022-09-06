@@ -1,4 +1,5 @@
 import BaseSprite from './BaseSprite.js';
+import Bullet from './Bullet.js';
 import Point from './Point.js';
 import {
 generateFactors,
@@ -8,11 +9,12 @@ degreesToRadians
 
 // TODO: 2022-09-02 D. Fox - Find a better home for the firing solutions.
 function fireBullet(ship, b) {
-    bullets.push(new Bullet(b,
+    ship.state.bullets.push(new Bullet(b,
         new Point(ship.xPos, ship.yPos),
         ship.xVelocity - Math.cos(degreesToRadians(ship.rotation + 90)) * 20,
         ship.yVelocity - Math.sin(degreesToRadians(ship.rotation + 90)) * 20,
         ship.upperBounds,
+        ship.state,
         120
     ));
 }
@@ -22,7 +24,7 @@ function generateFiringSolutions(ship) {
     const fs1 = {
         fire: () => {
             if (ship.keyHandler.fire() && ship.breachNumber > 0) {
-                if (bullets.length === 0) {
+                if (ship.state.bullets.length === 0) {
                     const b = ship.keyHandler.number();
                     fireBullet(ship, b);
                     ship.breachNumber = 0;
@@ -36,7 +38,7 @@ function generateFiringSolutions(ship) {
     const fs2 = {
         fire: () => {
             const b = ship.keyHandler.number();
-            if (b > 0 && bullets.length === 0) {
+            if (b > 0 && ship.state.bullets.length === 0) {
                 fireBullet(ship, b);
             }
             ship.breachNumber = 0;
@@ -48,7 +50,7 @@ function generateFiringSolutions(ship) {
     const fs3 = {
         fire: () => {
             if (ship.keyHandler.fire() && ship.breachNumber > 0) {
-                if (bullets.length === 0) {
+                if (ship.state.bullets.length === 0) {
                     const b = ship.keyHandler.number();
                     fireBullet(ship, b);
                     ship.breachNumber = 0;
@@ -64,8 +66,8 @@ function generateFiringSolutions(ship) {
 
 
 export default class Ship extends BaseSprite {
-    constructor(origin, upperBounds, keyHandler, number, stepSize, maxSize, outline = 'yellow', drawRadii = false) {
-        super(origin, upperBounds);
+    constructor(origin, upperBounds, keyHandler, state, number, stepSize, maxSize, outline = 'yellow', drawRadii = false) {
+        super(origin, upperBounds, state);
         this.origin = origin;
         this.breachNumber = 0;
         this.keyHandler = keyHandler;
@@ -219,9 +221,7 @@ export default class Ship extends BaseSprite {
         if (this.powerUp) {
             this.powerUp.tick();
             if (this.keyHandler.powerUp()) {
-                // TODO: 2022-09-03 - D. Fox: This is grabbing facts as a global variable
-                // Need a better way to pass that through.
-                this.powerUp.update(this, null, delta);
+                this.powerUp.update(this, delta);
             }
         }
 

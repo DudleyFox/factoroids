@@ -7,7 +7,7 @@ export default class PowerUpBase {
             this.cooldown -= 1;
         }
     }
-    update(ship, factoroids, delta) {
+    update(ship, delta) {
         throw new Error('Did you forget to implement this?');
     }
 }

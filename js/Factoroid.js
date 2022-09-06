@@ -11,8 +11,8 @@ import {
 } from './AAAHelpers.js';
 
 export default class Factoroid extends BaseSprite {
-    constructor(product, origin, upperBounds, vector, magnitude = 10) {
-        super(origin, upperBounds);
+    constructor(product, origin, state, upperBounds, vector, magnitude = 10) {
+        super(origin, upperBounds, state);
         this.product = product;
         this.points = new Array();
         this.innerPoints = new Array();
@@ -105,7 +105,7 @@ export default class Factoroid extends BaseSprite {
                     num = 0;
                 }
                 const v = coinToss() === 1 ? vector : vector + 180;
-                const f = new Factoroid(s, new Point(this.xPos, this.yPos), this.upperBounds, v, Math.random() * 50);
+                const f = new Factoroid(s, new Point(this.xPos, this.yPos), this.state, this.upperBounds, v, Math.random() * 50);
                 stableFactoroids.push(f);
             }
 
@@ -166,8 +166,8 @@ export default class Factoroid extends BaseSprite {
                 } else {
                     const vector = this.vector + (180 + (Math.random() * 20 * coinToss()));
                     const magnitude = this.magnitude * ((Math.random() * 5) + 1)
-                    const f = new Factoroid(number, new Point(this.xPos, this.yPos), this.upperBounds, vector, magnitude);
-                    if (fb[fbIndex].name === 'Splinter') {
+                    const f = new Factoroid(number, new Point(this.xPos, this.yPos), this.state, this.upperBounds, vector, magnitude);
+                    if (this.state.fb[this.state.fbIndex].name === 'Splinter') {
                         this.hasSpawn = true;
                         this.spawn.push(this);
                         this.spawn.push(f);
@@ -192,8 +192,8 @@ export default class Factoroid extends BaseSprite {
     detectShipCollision(ship) {
         if (ship.collisionShieldCountdown <= 0 && !ship.dead && this.detectCollision(ship)) {
             ship.death();
-            lives.pop();
-            lifeCount -= 1;
+            this.state.lives.pop();
+            this.state.lifeCount -= 1;
         }
     }
 

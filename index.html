@@ -30,7 +30,7 @@
         import KeyHandler from './js/KeyHandler.js';
 
         const keyHandler = new KeyHandler();
-        
+
         // goo
         window.requestAnimFrame = (function (callback) {
             return window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame || window.oRequestAnimationFrame || window.msRequestAnimationFrame ||
@@ -49,7 +49,23 @@
 
         resizeCanvas()
         window.addEventListener('resize', resizeCanvas, false);
-        let gs = new GameScreenLevel(new Point(canvas.width, canvas.height), keyHandler, 2);
+        let state = {
+            facts: [],
+            bullets: [],
+            lives: [],
+            lifeCount: 3,
+            fb: [
+                {
+                    name: 'Default',
+                },
+                {
+                    name: 'Splinter'
+                }
+            ],
+            fbIndex: 0,
+            fbCooldown: 0
+        };
+        let gs = new GameScreenLevel(new Point(canvas.width, canvas.height), keyHandler, state, 2);
 
         function animate(now) {
             var newNow = new Date().getTime();
