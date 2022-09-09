@@ -66,7 +66,7 @@ function generateFiringSolutions(ship) {
 
 
 export default class Ship extends BaseSprite {
-    constructor(origin, upperBounds, keyHandler, state, maxSize, outline = 'yellow', drawRadii = false) {
+    constructor(origin, upperBounds, keyHandler, state, maxSize, outline = 'yellow', drawRadii = false, demo = false) {
         super(origin, upperBounds, state);
         this.origin = origin;
         this.breachNumber = 0;
@@ -88,6 +88,7 @@ export default class Ship extends BaseSprite {
         this.firingSolutions = generateFiringSolutions(this);
         this.firingSolutionCooldown = 0;
         this.isGameOver = false;
+        this.demo = demo;
 
         this.factors = generateFactors(this.number);
         this.generatePoints();
@@ -161,7 +162,9 @@ export default class Ship extends BaseSprite {
         this.isGameOver = false;
         this.deathCountDown = 5;
         this.particleCloudExtent = 2;
-        this.collisionShieldCountdown = 4;
+        if (!this.demo) {
+            this.collisionShieldCountdown = 4;
+        }
         this.breachNumber = 0;
         this.keyHandler.clearNumber();
     }
@@ -207,7 +210,7 @@ export default class Ship extends BaseSprite {
         if (this.keyHandler.right()) {
             this.rotation += 2;
         }
-        if (this.keyHandler.accelerate()) {
+        if (this.keyHandler.accelerate() && !this.demo) {
             const constant = 1 / 25;
             this.xVelocity -= Math.cos(degreesToRadians(this.rotation + 90)) * constant;
             this.yVelocity -= Math.sin(degreesToRadians(this.rotation + 90)) * constant;
@@ -264,6 +267,13 @@ export default class Ship extends BaseSprite {
         context.restore();
     }
 
+    getFillColor() {
+        if (this.demo) {
+            return 'yellow';
+        }
+        return this.collisionShieldCountdown > 0 && !this.demo ? 'orange' : 'yellow';
+    }
+
     draw(context) {
         if (!this.dead && !this.isGameOver) {
             context.save();
@@ -278,7 +288,7 @@ export default class Ship extends BaseSprite {
             context.lineTo(this.points[0].x, this.points[0].y);
             context.closePath();
 
-            context.fillStyle = this.collisionShieldCountdown > 0 ? 'orange' : 'yellow';
+            context.fillStyle = this.getFillColor();
             context.fill();
             context.lineWidth = 0.5;
             context.strokeStyle = this.outline;

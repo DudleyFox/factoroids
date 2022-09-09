@@ -43,15 +43,15 @@ export default class ShipSelector extends GameScreenBase {
         this.angle = 0;
 
         this.drawRadii = false;
-        this.leftEdge = 850;
+        this.leftEdge = this.upperBounds.x - 150;
         this.textCenter = 62;
-        this.buttons.push(new Button('plus', '+', new Point(950, 25), 25, 25, pointerHandler));
+        this.buttons.push(new Button('plus', '+', new Point(this.leftEdge + 100, 25), 25, 25, pointerHandler));
         this.buttons.push(new Button('minus', '-', new Point(this.leftEdge, 25), 25, 25, pointerHandler));
-        this.buttons.push(new Button('plusF', '+', new Point(950, 60), 25, 25, pointerHandler));
+        this.buttons.push(new Button('plusF', '+', new Point(this.leftEdge + 100, 60), 25, 25, pointerHandler));
         this.buttons.push(new Button('minusF', '-', new Point(this.leftEdge, 60), 25, 25, pointerHandler));
-        this.buttons.push(new Button('plusS', '>', new Point(950, 95), 25, 25, pointerHandler));
+        this.buttons.push(new Button('plusS', '>', new Point(this.leftEdge + 100, 95), 25, 25, pointerHandler));
         this.buttons.push(new Button('minusS', '<', new Point(this.leftEdge, 95), 25, 25, pointerHandler));
-        this.buttons.push(new Button('plusR', '+', new Point(950, 130), 25, 25, pointerHandler));
+        this.buttons.push(new Button('plusR', '+', new Point(this.leftEdge + 100, 130), 25, 25, pointerHandler));
         this.buttons.push(new Button('minusR', '-', new Point(this.leftEdge, 130), 25, 25, pointerHandler));
         this.buttons.push(new Button('random', 'Random', new Point(this.leftEdge, 165), 125, 25, pointerHandler));
         //this.buttons.push(new Button('struts', 'Struts', new Point(this.leftEdge, 200), 125, 25, pointerHandler));
@@ -73,13 +73,22 @@ export default class ShipSelector extends GameScreenBase {
         this.qNumber = primes[this.modelIndex] * Math.pow(this.sweep[this.sweepIndex].root, this.rivets[this.rivetIndex])
         this.stepSize = this.steps[this.fustrumCapacitance];
         this.state.shipNumber = this.qNumber;
-        this.state.shipStepsize = this.stepSize;
+        this.state.shipStepSize = this.stepSize;
 
         setItem('f', this.fustrumCapacitance);
         setItem('m', this.modelIndex);
         setItem('s', this.sweepIndex);
         setItem('r', this.rivetIndex);
-        this.ship = new Ship(new Point(this.upperBounds.x / 2, this.upperBounds.y / 2), this.upperBounds, this.keyHandler, this.state, 500, 'yellow', false);
+        this.ship = new Ship(new Point(this.upperBounds.x / 2, this.upperBounds.y / 2), this.upperBounds, this.keyHandler, this.state, 500, 'yellow', false, true);
+    }
+
+    setUpperBounds(ub) {
+        super.setUpperBounds(ub);
+        const delta = this.leftEdge - (this.upperBounds.x - 150);
+        this.leftEdge -= delta;
+        this.buttons.forEach(b => b.tl.x = b.tl.x - delta);
+        this.ship.xPos = this.upperBounds.x / 2;
+        this.ship.yPos = this.upperBounds.y / 2;
     }
 
     click(x, button) {
