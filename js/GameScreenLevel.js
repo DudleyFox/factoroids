@@ -6,7 +6,7 @@ import primes from './Primes.js';
 import Point from './Point.js';
 import PowerUpFlip from './PowerUpFlip.js';
 import PowerUpHyper from './PowerUpHyper.js';
-import { coinToss } from './AAAHelpers.js';
+import { coinToss, degreesToRadians } from './AAAHelpers.js';
 
 export default class GameScreenLevel extends GameScreenBase {
     constructor(upperBounds, keyHandler, state, level) {
@@ -44,8 +44,9 @@ export default class GameScreenLevel extends GameScreenBase {
     }
 
     getProductFromLevelSimpleMax(level) {
+        const phi = 1.618033988749895;
         const index = primes.findIndex(p => p === level);
-        const max = (primes[index] * primes[index]) + 1;
+        const max =  phi * (primes[index + 1]) + 1;
         const product = Math.max(2, Math.floor(Math.random() * max));
         return product;
     }
@@ -57,7 +58,8 @@ export default class GameScreenLevel extends GameScreenBase {
             // facts.push(new Factoroid(2 * 3 * 5 * 7 * 11, new Point(x, y), new Point(this.upperBounds.x, this.upperBounds.y)));
             this.state.facts.push(new Factoroid(1172490, new Point(x, y), this.state, new Point(this.upperBounds.x, this.upperBounds.y)));
         } else {
-            for (var i = 0; i < level; ++i) {
+            const factoroids = Math.max(Math.floor(Math.abs(level * Math.sin(degreesToRadians(level)))), 2);
+            for (var i = 0; i < factoroids; ++i) {
                 const qNumber = this.getProductFromLevelSimpleMax(level);
                 const x = Math.random() * this.upperBounds.x;
                 const y = Math.random() * this.upperBounds.y;
