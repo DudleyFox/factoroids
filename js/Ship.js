@@ -15,7 +15,8 @@ function fireBullet(ship, b) {
         ship.yVelocity - Math.sin(degreesToRadians(ship.rotation + 90)) * 20,
         ship.upperBounds,
         ship.state,
-        120
+        ship.color,
+        90
     ));
 }
 
@@ -66,7 +67,7 @@ function generateFiringSolutions(ship) {
 
 
 export default class Ship extends BaseSprite {
-    constructor(origin, upperBounds, keyHandler, state, maxSize, outline = 'yellow', drawRadii = false, demo = false) {
+    constructor(origin, upperBounds, keyHandler, state, maxSize, drawRadii = false, demo = false) {
         super(origin, upperBounds, state);
         this.origin = origin;
         this.breachNumber = 0;
@@ -82,13 +83,14 @@ export default class Ship extends BaseSprite {
         this.origin = origin;
         this.stepSize = this.state.shipStepSize % 180;
         this.maxSize = maxSize / 2;
-        this.outline = outline;
+        this.outline = state.shipColor;
         this.drawR = drawRadii
         this.firingSolutionIndex = 0;
         this.firingSolutions = generateFiringSolutions(this);
         this.firingSolutionCooldown = 0;
         this.isGameOver = false;
         this.demo = demo;
+        this.color = state.shipColor;
 
         this.factors = generateFactors(this.number);
         this.generatePoints();
@@ -107,13 +109,9 @@ export default class Ship extends BaseSprite {
             this.minRadius = Math.min(this.minRadius, radius);
         }
 
-        // scale it down to our max size
-        if (this.maxRadius > this.maxSize) {
-            // maxRadius * x = maxSize;
-            // x = maxSize / maxRadius;
-            const ratio = this.maxSize / this.maxRadius;
-            this.radii = this.radii.map(r => r * ratio);
-        }
+        // scale it to our max size
+        const ratio = this.maxSize / this.maxRadius;
+        this.radii = this.radii.map(r => r * ratio);
 
         i = 0;
         this.radii.forEach(r => {
@@ -269,9 +267,9 @@ export default class Ship extends BaseSprite {
 
     getFillColor() {
         if (this.demo) {
-            return 'yellow';
+            return this.color;
         }
-        return this.collisionShieldCountdown > 0 && !this.demo ? 'orange' : 'yellow';
+        return this.collisionShieldCountdown > 0 && !this.demo ? 'orange' : this.color;
     }
 
     draw(context) {
@@ -299,7 +297,7 @@ export default class Ship extends BaseSprite {
             context.translate(this.xPos, this.yPos);
             context.rotate(degreesToRadians(this.rotation));
             if (this.breachNumber > 0) {
-                context.fillStyle = 'yellow';
+                context.fillStyle = 'white';
                 context.font = '12pt Courier';
                 context.textAlign = 'center';
                 context.textBaseline = 'middle';
@@ -319,7 +317,7 @@ export default class Ship extends BaseSprite {
                 const size = Math.random() * 2;
                 context.beginPath();
                 context.arc(x + this.xPos, y + this.yPos, size, 0, 2 * Math.PI);
-                context.fillStyle = 'yellow';
+                context.fillStyle = this.color;
                 context.fill();
                 context.closePath();
             }

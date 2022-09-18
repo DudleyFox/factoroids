@@ -20,10 +20,14 @@ export function getQueryVariableInt(variable, fallback = null) {
     return fallback;
 }
 
+export function toHex(n, p, v = '0') {
+    return `${n.toString(16).padStart(p,v)}`;
+}
+
 export function generateColor(p) {
-    const adjust = Math.abs(Math.cos(p))
+    const adjust = Math.abs(Math.cos(p));
     const blue = Math.floor(88 * adjust);
-    return `#7777${(0x77 + blue).toString(16)}`
+    return `#7777${(0x77 + blue).toString(16)}`;
 }
 
 export function coinToss() {

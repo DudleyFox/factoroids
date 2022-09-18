@@ -3,7 +3,7 @@ import Point from './Point.js';
 import { degreesToRadians } from './AAAHelpers.js';
 
 export default class Bullet extends BaseSprite {
-    constructor(number, origin, xVel, yVel, upperBounds, state, ttl) {
+    constructor(number, origin, xVel, yVel, upperBounds, state, color, ttl) {
         super(origin, upperBounds, state);
         this.path = [new Point(this.xPos, this.yPos)];
         this.xVelocity = xVel;
@@ -14,6 +14,7 @@ export default class Bullet extends BaseSprite {
         this.rVelocity = 45;
         this.radius = (Math.floor(Math.log10(number * 10 + 1)) * 9) / 2;
         this.dead = false;
+        this.color = 'white';
     }
 
     expired() {
@@ -66,7 +67,7 @@ export default class Bullet extends BaseSprite {
         context.save();
         context.translate(this.xPos, this.yPos);
         context.rotate(degreesToRadians(this.rotation));
-        context.fillStyle = 'yellow';
+        context.fillStyle = this.color;
         context.font = '12pt Courier';
         context.textAlign = 'center';
         context.textBaseline = 'middle';
