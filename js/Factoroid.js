@@ -192,7 +192,6 @@ export default class Factoroid extends BaseSprite {
     detectShipCollision(ship) {
         if (ship.collisionShieldCountdown <= 0 && !ship.dead && this.detectCollision(ship)) {
             ship.death();
-            this.state.lives.pop();
             this.state.lifeCount -= 1;
         }
     }

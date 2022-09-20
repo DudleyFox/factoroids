@@ -91,6 +91,11 @@ export default class Ship extends BaseSprite {
         this.isGameOver = false;
         this.demo = demo;
         this.color = state.shipColor;
+        this.rotationMin = 0.1;
+        this.rotationMax = 2;
+        this.rotationInc = 0.1;
+        this.leftRotation = this.rotationMin;
+        this.rightRotation = this.rotationMin;
 
         this.factors = generateFactors(this.number);
         this.generatePoints();
@@ -195,6 +200,7 @@ export default class Ship extends BaseSprite {
             this.particleCloudExtent *= 1.02;
             this.updatePosition();
             if (this.deathCountDown < 0 && !this.isGameOver) {
+                this.state.lives.pop();
                 this.reset();
             }
             return;
@@ -203,10 +209,17 @@ export default class Ship extends BaseSprite {
             this.collisionShieldCountdown -= delta;
         }
         if (this.keyHandler.left()) {
-            this.rotation -= 2;
+            this.rotation -= this.leftRotation;
+            this.leftRotation = Math.min(this.rotationMax, this.leftRotation + this.rotationInc);
+        } else {
+            this.leftRotation = this.rotationMin;
+           
         }
         if (this.keyHandler.right()) {
-            this.rotation += 2;
+            this.rotation += this.rightRotation;
+            this.rightRotation = Math.min(this.rotationMax, this.rightRotation + this.rotationInc);
+        } else {
+            this.rightRotation = this.rotationMin;
         }
         if (this.keyHandler.accelerate() && !this.demo) {
             const constant = 1 / 25;
@@ -269,7 +282,14 @@ export default class Ship extends BaseSprite {
         if (this.demo) {
             return this.color;
         }
-        return this.collisionShieldCountdown > 0 && !this.demo ? 'orange' : this.color;
+        return this.collisionShieldCountdown > 0 ? 'black' : this.color;
+    }
+
+    getOutlineColor() {
+        if (this.demo) {
+            return this.outline;
+        }
+        return this.collisionShieldCountdown > 0 ? 'white' : this.outline;
     }
 
     draw(context) {
@@ -289,7 +309,7 @@ export default class Ship extends BaseSprite {
             context.fillStyle = this.getFillColor();
             context.fill();
             context.lineWidth = 0.5;
-            context.strokeStyle = this.outline;
+            context.strokeStyle = this.getOutlineColor();
             context.stroke();
             context.restore();
 
