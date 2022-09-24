@@ -1,6 +1,6 @@
-import PowerUpBase from './PowerUpBase.js';
+import SpecialBase from './SpecialBase.js';
 
-export default class PowerUpFlip extends PowerUpBase {
+export default class SpecialFlip extends SpecialBase {
     constructor() {
         super();
     }
@@ -11,5 +11,9 @@ export default class PowerUpFlip extends PowerUpBase {
             this.cooldown = 15;
         }
 
+    }
+
+    color() {
+        return '#1111DD';
     }
 }

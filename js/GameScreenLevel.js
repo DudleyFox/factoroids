@@ -4,9 +4,10 @@ import GhostShip from './GhostShip.js';
 import Factoroid from './Factoroid.js';
 import primes from './Primes.js';
 import Point from './Point.js';
-import PowerUpFlip from './PowerUpFlip.js';
-import PowerUpHyper from './PowerUpHyper.js';
+import SpecialFlip from './SpecialFlip.js';
+import SpecialHyper from './SpecialHyper.js';
 import { coinToss, degreesToRadians } from './AAAHelpers.js';
+import PowerUp from './PowerUp.js';
 
 export default class GameScreenLevel extends GameScreenBase {
     constructor(upperBounds, keyHandler, state, level) {
@@ -17,7 +18,11 @@ export default class GameScreenLevel extends GameScreenBase {
         this.steps = [5, 6, 8, 9, 10, 12, 15, 18, 20, 24, 30, 36, 40, 45];
         this.xtraCooldown = 0;
         this.xtraIndex = 0;
-        this.xtras = [PowerUpFlip, PowerUpHyper];
+        this.xtras = [SpecialFlip, SpecialHyper];
+
+        this.state.powerUps = [];
+        this.state.powerUps.push(new PowerUp(new Point(100,100), upperBounds, this.state, new SpecialFlip()));
+        this.state.powerUps.push(new PowerUp(new Point(10,200), upperBounds, this.state, new SpecialHyper()));
 
         if (!this.state.ship) {
             const bluntness = coinToss() > 0 ? 100000 : 1000;
@@ -28,7 +33,7 @@ export default class GameScreenLevel extends GameScreenBase {
             for (let i = 0; i < this.state.lifeCount - 1; ++i) {
                 this.state.lives.push(new GhostShip(new Point(this.upperBounds.x - delta, delta + delta * i), new Point(this.upperBounds.x, this.upperBounds.y), this.state.shipNumber, this.state.shipStepSize, 50));
             }
-            this.state.ship.addPowerUp(PowerUpFlip);
+            this.state.ship.addSpecial(SpecialFlip);
         } else {
             this.state.ship.reset();
         }
@@ -76,6 +81,9 @@ export default class GameScreenLevel extends GameScreenBase {
             }
             return new GameScreenLevel(this.upperBounds, this.keyHandler, this.state, this.level)
         }
+
+        this.state.powerUps.forEach(p => {p.update(delta); p.detectShipCollision(this.state.ship)});
+        this.state.powerUps = this.state.powerUps.filter(x => x.active);
 
         // TODO: Clean up this mess
         if (this.state.lifeCount === 0 && this.gameOverCountdown > 0) {
@@ -153,7 +161,7 @@ export default class GameScreenLevel extends GameScreenBase {
 
         if (this.keyHandler.xtra() && this.xtraCooldown === 0) {
             this.xtraIndex = (this.xtraIndex + 1) % this.xtras.length;
-            this.state.ship.addPowerUp(this.xtras[this.xtraIndex]);
+            this.state.ship.addSpecial(this.xtras[this.xtraIndex]);
             this.xtraCooldown = 20;
         }
         if (this.xtraCooldown > 0) {
@@ -191,6 +199,7 @@ export default class GameScreenLevel extends GameScreenBase {
         for (var i = 0; i < this.state.facts.length; ++i) {
             this.state.facts[i].draw(context);
         }
+        this.state.powerUps.forEach(p => p.draw(context));
         this.state.ship.draw(context);
         if (this.state.bullets.length > 0) {
             const bullet = this.state.bullets[0];

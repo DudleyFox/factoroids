@@ -1,6 +1,6 @@
-import PowerUpBase from "./PowerUpBase.js";
+import SpecialBase from "./SpecialBase.js";
 
-export default class PowerUpHyper extends PowerUpBase {
+export default class SpecialHyper extends SpecialBase {
     constructor() {
         super();
     }
@@ -17,5 +17,8 @@ export default class PowerUpHyper extends PowerUpBase {
             ship.yVelocity = 0;
             this.cooldown = 15;
         }
+    }
+    color() {
+        return '#DD1111';
     }
 }

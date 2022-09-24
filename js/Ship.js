@@ -172,8 +172,8 @@ export default class Ship extends BaseSprite {
         this.keyHandler.clearNumber();
     }
 
-    addPowerUp(powerUp) {
-        this.powerUp = new powerUp();
+    addSpecial(special) {
+        this.special = new special();
     }
 
     updatePosition() {
@@ -232,10 +232,10 @@ export default class Ship extends BaseSprite {
             this.yVelocity = this.yVelocity * slowdown;
         }
 
-        if (this.powerUp) {
-            this.powerUp.tick();
-            if (this.keyHandler.powerUp()) {
-                this.powerUp.update(this, delta);
+        if (this.special) {
+            this.special.tick();
+            if (this.keyHandler.special()) {
+                this.special.update(this, delta);
             }
         }
 

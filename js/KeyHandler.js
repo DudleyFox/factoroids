@@ -80,7 +80,7 @@ export default class KeyHandler {
         return this.map[87] || this.map[38];
     }
 
-    powerUp() {
+    special() {
         // S or down arrow
         return this.map[40] || this.map[83];
     }

@@ -275,14 +275,16 @@ export default class Factoroid extends BaseSprite {
         context.closePath();
 
         context.stroke();
-
+        console.log(context.fillStyle, this.product);
         context.restore();
 
+        context.save();
         context.fillStyle = 'white';
         context.font = '14pt Courier';
         context.textAlign = 'center';
         context.textBaseline = 'middle';
         context.fillText(this.product, xLoc, yLoc);
+        context.restore();
     }
 
 

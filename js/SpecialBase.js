@@ -1,4 +1,4 @@
-export default class PowerUpBase {
+export default class SpecialBase {
     constructor() {
         this.cooldown = 0;
     }
@@ -8,6 +8,10 @@ export default class PowerUpBase {
         }
     }
     update(ship, delta) {
+        throw new Error('Did you forget to implement this?');
+    }
+
+    color() {
         throw new Error('Did you forget to implement this?');
     }
 }
