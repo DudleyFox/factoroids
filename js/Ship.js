@@ -1,22 +1,20 @@
-import BaseSprite from './BaseSprite.js';
+import MobileSprite from './MobileSprite.js';
 import Bullet from './Bullet.js';
 import Point from './Point.js';
 import {
-generateFactors,
-sumTheFactors,
-degreesToRadians
+    generateFactors,
+    sumTheFactors,
+    degreesToRadians
 } from './AAAHelpers.js';
 
 // TODO: 2022-09-02 D. Fox - Find a better home for the firing solutions.
 function fireBullet(ship, b) {
     ship.state.bullets.push(new Bullet(b,
         new Point(ship.xPos, ship.yPos),
-        ship.xVelocity - Math.cos(degreesToRadians(ship.rotation + 90)) * 20,
-        ship.yVelocity - Math.sin(degreesToRadians(ship.rotation + 90)) * 20,
         ship.upperBounds,
         ship.state,
-        ship.color,
-        90
+        ship.rotation - 90,
+        ship.xVelocity + ship.yVelocity + 1000
     ));
 }
 
@@ -66,9 +64,9 @@ function generateFiringSolutions(ship) {
 }
 
 
-export default class Ship extends BaseSprite {
+export default class Ship extends MobileSprite {
     constructor(origin, upperBounds, keyHandler, state, maxSize, drawRadii = false, demo = false) {
-        super(origin, upperBounds, state);
+        super(origin, upperBounds, state, 0, 0);
         this.origin = origin;
         this.breachNumber = 0;
         this.keyHandler = keyHandler;
@@ -172,33 +170,15 @@ export default class Ship extends BaseSprite {
         this.keyHandler.clearNumber();
     }
 
-    addPowerUp(powerUp) {
-        this.powerUp = new powerUp();
-    }
-
-    updatePosition() {
-        this.xPos += this.xVelocity;
-        this.yPos += this.yVelocity;
-
-        if (this.xPos < 0) {
-            this.xPos = this.upperBounds.x + this.xPos;
-        }
-        if (this.yPos < 0) {
-            this.yPos = this.upperBounds.y + this.yPos;
-        }
-        if (this.xPos > this.upperBounds.x) {
-            this.xPos = this.xPos - this.upperBounds.x;
-        }
-        if (this.yPos > this.upperBounds.y) {
-            this.yPos = this.yPos - this.upperBounds.y;
-        }
+    setSpecial(special) {
+        this.special = special;
     }
 
     update(delta) {
         if (this.dead && this.deathCountDown > 0) {
             this.deathCountDown -= delta;
             this.particleCloudExtent *= 1.02;
-            this.updatePosition();
+            this.updatePosition(delta);
             if (this.deathCountDown < 0 && !this.isGameOver) {
                 this.state.lives.pop();
                 this.reset();
@@ -213,7 +193,7 @@ export default class Ship extends BaseSprite {
             this.leftRotation = Math.min(this.rotationMax, this.leftRotation + this.rotationInc);
         } else {
             this.leftRotation = this.rotationMin;
-           
+
         }
         if (this.keyHandler.right()) {
             this.rotation += this.rightRotation;
@@ -222,7 +202,7 @@ export default class Ship extends BaseSprite {
             this.rightRotation = this.rotationMin;
         }
         if (this.keyHandler.accelerate() && !this.demo) {
-            const constant = 1 / 25;
+            const constant = 4;
             this.xVelocity -= Math.cos(degreesToRadians(this.rotation + 90)) * constant;
             this.yVelocity -= Math.sin(degreesToRadians(this.rotation + 90)) * constant;
         }
@@ -232,14 +212,14 @@ export default class Ship extends BaseSprite {
             this.yVelocity = this.yVelocity * slowdown;
         }
 
-        if (this.powerUp) {
-            this.powerUp.tick();
-            if (this.keyHandler.powerUp()) {
-                this.powerUp.update(this, delta);
+        if (this.special) {
+            this.special.tick(delta);
+            if (this.keyHandler.special()) {
+                this.special.invoke(this);
             }
         }
 
-        this.updatePosition();
+        this.updatePosition(delta);
 
         if (this.keyHandler.reset()) {
             this.reset();
@@ -282,7 +262,7 @@ export default class Ship extends BaseSprite {
         if (this.demo) {
             return this.color;
         }
-        return this.collisionShieldCountdown > 0 ? 'black' : this.color;
+        return this.collisionShieldCountdown > 0 ? 'nope' : this.color;
     }
 
     getOutlineColor() {
@@ -292,10 +272,10 @@ export default class Ship extends BaseSprite {
         return this.collisionShieldCountdown > 0 ? 'white' : this.outline;
     }
 
-    draw(context) {
+    privateDraw(context, x, y) {
         if (!this.dead && !this.isGameOver) {
             context.save();
-            context.translate(this.xPos, this.yPos);
+            context.translate(x, y);
             context.rotate(degreesToRadians(this.rotation - 90));
             context.beginPath();
             context.moveTo(this.points[0].x, this.points[0].y);
@@ -305,16 +285,22 @@ export default class Ship extends BaseSprite {
 
             context.lineTo(this.points[0].x, this.points[0].y);
             context.closePath();
-
-            context.fillStyle = this.getFillColor();
-            context.fill();
+            const fillColor = this.getFillColor();
+            if (fillColor !== 'nope') {
+                context.fillStyle = fillColor;
+                context.fill();
+            }
             context.lineWidth = 0.5;
             context.strokeStyle = this.getOutlineColor();
             context.stroke();
             context.restore();
 
+            if (this.special) {
+                this.special.draw(context);
+            }
+
             context.save();
-            context.translate(this.xPos, this.yPos);
+            context.translate(x, y);
             context.rotate(degreesToRadians(this.rotation));
             if (this.breachNumber > 0) {
                 context.fillStyle = 'white';
@@ -325,18 +311,18 @@ export default class Ship extends BaseSprite {
             }
             context.restore();
             if (this.drawR) {
-                this.drawRadii(context, this.xPos, this.yPos)
+                this.drawRadii(context, x, y)
             }
         } else {
             const points = [];
             for (let i = 0; i < 10; ++i) {
                 const range = this.radius + this.particleCloudExtent;
                 const angle = Math.random() * 2 * Math.PI;
-                const x = (Math.random() * range) * Math.cos(angle);
-                const y = (Math.random() * range) * Math.sin(angle);
+                const xR = (Math.random() * range) * Math.cos(angle);
+                const yR = (Math.random() * range) * Math.sin(angle);
                 const size = Math.random() * 2;
                 context.beginPath();
-                context.arc(x + this.xPos, y + this.yPos, size, 0, 2 * Math.PI);
+                context.arc(x + xR, y + yR, size, 0, 2 * Math.PI);
                 context.fillStyle = this.color;
                 context.fill();
                 context.closePath();

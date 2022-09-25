@@ -1,4 +1,4 @@
-import BaseSprite from "./BaseSprite.js";
+import MobileSprite from "./MobileSprite.js";
 import Point from "./Point.js";
 import {
     distanceBetweenTwoPoints,
@@ -10,9 +10,9 @@ import {
     generateColor
 } from './AAAHelpers.js';
 
-export default class Factoroid extends BaseSprite {
+export default class Factoroid extends MobileSprite {
     constructor(product, origin, state, upperBounds, vector, magnitude = 10) {
-        super(origin, upperBounds, state);
+        super(origin, upperBounds, state, vector, magnitude);
         this.product = product;
         this.points = new Array();
         this.innerPoints = new Array();
@@ -21,10 +21,6 @@ export default class Factoroid extends BaseSprite {
         this.minRadius = 100000;
         this.rotationSpeed = this.adjustDirection(Math.random());
         this.rotation = 0;
-        this.vector = vector || Math.random() * 360;
-        this.magnitude = magnitude;
-        this.xVelocity = Math.cos(degreesToRadians(this.vector)) * magnitude;
-        this.yVelocity = Math.sin(degreesToRadians(this.vector)) * magnitude;
         this.color = generateColor(this.product);
         this.dead = false;
         this.centers;
@@ -50,24 +46,7 @@ export default class Factoroid extends BaseSprite {
             var y = -(this.radii[i / 5] * Math.sin(theta));
             this.points.push(new Point(x, y));
         }
-        this.xPos += this.xVelocity * delta;
-        this.yPos += this.yVelocity * delta;
-
-
-        if (this.xPos < 0) {
-            this.xPos = this.upperBounds.x + this.xPos;
-        }
-        else if (this.xPos > this.upperBounds.x) {
-            this.xPos = this.xPos - this.upperBounds.x
-        }
-        if (this.yPos < 0) {
-            this.yPos = this.upperBounds.y + this.yPos;
-        }
-        else if (this.yPos > this.upperBounds.y) {
-            this.yPos = this.yPos - this.upperBounds.y
-        }
-
-        this.generateCenters();
+       this.updatePosition(delta);
     }
 
     generatePoints() {
@@ -196,71 +175,6 @@ export default class Factoroid extends BaseSprite {
         }
     }
 
-    onRight() {
-        return this.xPos + this.maxRadius > this.upperBounds.x
-    }
-
-    onLeft() {
-        return this.xPos - this.maxRadius < 0;
-    }
-
-    onBottom() {
-        return this.yPos + this.maxRadius > this.upperBounds.y;
-    }
-
-    onTop() {
-        return this.yPos - this.maxRadius < 0;
-    }
-
-    generateCenters() {
-        this.centers = [new Point(this.xPos, this.yPos)];
-        if (this.onRight()) {
-            this.centers.push(new Point(
-                this.xPos - this.upperBounds.x,
-                this.yPos));
-            if (this.onTop()) {
-                this.centers.push(new Point(
-                    this.xPos - this.upperBounds.x,
-                    this.yPos + this.upperBounds.y));
-            }
-            if (this.onBottom()) {
-                this.centers.push(new Point(
-                    this.xPos - this.upperBounds.x,
-                    this.yPos - this.upperBounds.y));
-            }
-
-        }
-        if (this.onLeft()) {
-            this.centers.push(new Point(
-                this.xPos + this.upperBounds.x,
-                this.yPos));
-            if (this.onTop()) {
-                this.centers.push(new Point(
-                    this.xPos + this.upperBounds.x,
-                    this.yPos + this.upperBounds.y));
-            }
-            if (this.onBottom()) {
-                this.centers.push(new Point(
-                    this.xPos + this.upperBounds.x,
-                    this.yPos - this.upperBounds.y));
-            }
-        }
-        if (this.onBottom()) {
-            this.centers.push(new Point(
-                this.xPos,
-                this.yPos - this.upperBounds.y));
-        }
-        if (this.onTop()) {
-            this.centers.push(new Point(
-                this.xPos,
-                this.yPos + this.upperBounds.y));
-        }
-
-        return this.centers;
-    }
-
-
-
     privateDraw(context, xLoc, yLoc) {
         context.save();
         context.beginPath();
@@ -275,14 +189,15 @@ export default class Factoroid extends BaseSprite {
         context.closePath();
 
         context.stroke();
-
         context.restore();
 
+        context.save();
         context.fillStyle = 'white';
         context.font = '14pt Courier';
         context.textAlign = 'center';
         context.textBaseline = 'middle';
         context.fillText(this.product, xLoc, yLoc);
+        context.restore();
     }
 
 
@@ -304,14 +219,6 @@ export default class Factoroid extends BaseSprite {
     drawRadii(context) {
         this.centers.forEach(p => {
             this.privateDrawRadii(context, p.x, p.y);
-        });
-
-    }
-
-    draw(context) {
-
-        this.centers.forEach(p => {
-            this.privateDraw(context, p.x, p.y);
         });
     }
 }
