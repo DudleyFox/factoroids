@@ -8,7 +8,7 @@ The year is 3001, and the crypto miners have used up all the numbers on Earth. A
 Collect the Factoroids by hitting them with their prime factors.
 
 ## Controls:
-WASD is movement. `S` is actually for Special, but right now it only flips your ship.
+WASD is movement. `S` is for Special it invokes the current power up.
 
 Press number keys to load a bullet.
 
