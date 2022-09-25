@@ -44,7 +44,7 @@
             if (down) {
                 var origin = new Point(canvas.width / 2, canvas.height / 2);
                 var point = new Point(evt.clientX, evt.clientY);
-                const f = facts[0];
+                const f = state.facts[0];
                 if (f) {
                     f.xPos = point.x;
                     f.yPos = point.y;
