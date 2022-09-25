@@ -72,11 +72,11 @@
         };
         // let gs = new GameScreenLevel(new Point(canvas.width, canvas.height), keyHandler, state, 2);
         let gs = new ShipSelector(new Point(canvas.width, canvas.height), keyHandler, state, pointerHandler);
-
+        let lastNow = new Date().getTime();
 
         function animate(now) {
-            var newNow = new Date().getTime();
-            var time = (newNow - now) / 1000.0;
+            var time = (now - lastNow) / 1000.0;
+            lastNow = now;
             var context = canvas.getContext('2d');
 
             context.clearRect(0, 0, canvas.width, canvas.height);
@@ -85,12 +85,9 @@
             gs.draw(context);
             gs = tgs;
 
-            requestAnimFrame(function () {
-                animate(newNow);
-            });
+            requestAnimFrame(animate);
         }
-        var now = new Date().getTime();
-        animate(now);
+        requestAnimFrame(animate);
     </script>
 </body>
 

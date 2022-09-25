@@ -1,41 +1,24 @@
-import BaseSprite from './BaseSprite.js';
+import MobileSprite from './MobileSprite.js';
 import {
     distanceBetweenTwoPoints,
 } from './AAAHelpers.js';
 
-export default class PowerUp extends BaseSprite {
+export default class PowerUp extends MobileSprite {
     constructor(origins, upperBounds, state, special) {
-        super(origins, upperBounds, state);
+        super(origins, upperBounds, state, 180, 80);
         this.special = special;
-        this.xVelocity = 2;
-        this.yVelocity = 0
-        this.size = 25;
+        this.maxRadius = 25;
         this.active = true;
-        
+        this.ttl = 5;
+        console.log('pup');
     }
-    updatePosition() {
-        this.xPos += this.xVelocity;
-        this.yPos += this.yVelocity;
+   
 
-        if (this.xPos < 0) {
-            this.xPos = this.upperBounds.x + this.xPos;
-        }
-        if (this.yPos < 0) {
-            this.yPos = this.upperBounds.y + this.yPos;
-        }
-        if (this.xPos > this.upperBounds.x) {
-            this.xPos = this.xPos - this.upperBounds.x;
-        }
-        if (this.yPos > this.upperBounds.y) {
-            this.yPos = this.yPos - this.upperBounds.y;
-        }
-    }
-
-    draw(context) {
+    privateDraw(context, x, y) {
         context.save();
         context.beginPath();
-        context.arc(this.xPos, this.yPos, this.size, 0, 2 * Math.PI);
-        var gradient = context.createRadialGradient(this.xPos, this.yPos, 0, this.xPos, this.yPos, this.size);
+        context.arc(x, y, this.maxRadius, 0, 2 * Math.PI);
+        var gradient = context.createRadialGradient(x, y, 0, x, y, this.maxRadius);
         gradient.addColorStop(0, '#AAAAAA');
         gradient.addColorStop(0.5, this.special.color());
         gradient.addColorStop(1, '#000000');
@@ -46,22 +29,35 @@ export default class PowerUp extends BaseSprite {
         context.stroke();
         context.restore();
     }
+
     update(delta) {
-        this.updatePosition();
+        this.ttl = this.ttl - delta;
+        this.active = this.ttl > 0;
+        this.updatePosition(delta);
+        
     }
 
     inCollision(item, fx, fy) {
         const dist = distanceBetweenTwoPoints(item.xPos, item.yPos, fx, fy);
-        if (dist > (this.size + item.radius)) {
+        if (dist > (this.maxRadius + item.radius)) {
             return false;
         }
-        if (dist < (this.size + item.radius)) {
+        if (dist < (this.maxRadius + item.radius)) {
             return true;
         }
     }
 
+    detectCollision(item) {
+        for (let i = 0; i < this.centers.length; ++i) {
+            if (this.inCollision(item, this.centers[i].x, this.centers[i].y)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     detectShipCollision(ship) {
-        if (!ship.dead && this.inCollision(ship, this.xPos, this.yPos)) {
+        if (!ship.dead && this.detectCollision(ship, this.xPos, this.yPos)) {
             ship.special = this.special;
             this.active = false;
         }

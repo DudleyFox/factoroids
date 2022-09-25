@@ -12,7 +12,7 @@ import PowerUp from './PowerUp.js';
 export default class GameScreenLevel extends GameScreenBase {
     constructor(upperBounds, keyHandler, state, level) {
         super(upperBounds, keyHandler, state);
-        this.level = level;
+        this.level = level || 2;
         this.gameOverCountdownValue = 10;
         this.gameOverCountdown = this.gameOverCountdownValue;
         this.steps = [5, 6, 8, 9, 10, 12, 15, 18, 20, 24, 30, 36, 40, 45];
@@ -196,10 +196,13 @@ export default class GameScreenLevel extends GameScreenBase {
     }
 
     draw(context) {
+
+        this.state.powerUps.forEach(p => p.draw(context));
+
         for (var i = 0; i < this.state.facts.length; ++i) {
             this.state.facts[i].draw(context);
         }
-        this.state.powerUps.forEach(p => p.draw(context));
+       
         this.state.ship.draw(context);
         if (this.state.bullets.length > 0) {
             const bullet = this.state.bullets[0];
