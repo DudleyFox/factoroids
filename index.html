@@ -73,7 +73,7 @@
         };
         // let gs = new GameScreenLevel(new Point(canvas.width, canvas.height), keyHandler, state, 2);
         let gs = new ShipSelector(new Point(canvas.width, canvas.height), keyHandler, state, pointerHandler);
-        let lastNow = new Date().getTime();
+        let lastNow = performance.now();
 
         function animate(now) {
             var time = (now - lastNow) / 1000.0;
