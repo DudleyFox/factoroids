@@ -1,18 +1,16 @@
-import BaseSprite from "./BaseSprite.js";
+import MobileSprite from "./MobileSprite.js";
 import Point from './Point.js';
 import { degreesToRadians } from './AAAHelpers.js';
 
-export default class Bullet extends BaseSprite {
-    constructor(number, origin, xVel, yVel, upperBounds, state, color, ttl) {
-        super(origin, upperBounds, state);
+export default class Bullet extends MobileSprite {
+    constructor(number, origin, upperBounds, state, vector, magnitude) {
+        super(origin, upperBounds, state, vector, magnitude);
         this.path = [new Point(this.xPos, this.yPos)];
-        this.xVelocity = xVel;
-        this.yVelocity = yVel;
-        this.ttl = ttl;
+        this.ttl = 90;
         this.number = number;
         this.rotation = 0;
         this.rVelocity = 45;
-        this.radius = (Math.floor(Math.log10(number * 10 + 1)) * 9) / 2;
+        this.maxRadius = (Math.floor(Math.log10(number * 10 + 1)) * 9) / 2;
         this.dead = false;
         this.color = 'white';
     }
@@ -23,33 +21,19 @@ export default class Bullet extends BaseSprite {
 
     getRotatedRadius() {
         const thetaR = degreesToRadians(this.rotation);
-        const x1 = this.xPos - (this.radius * Math.cos(thetaR));
-        const x2 = this.xPos + (this.radius * Math.cos(thetaR));
-        const y1 = this.yPos - (this.radius * Math.sin(thetaR));
-        const y2 = this.yPos + (this.radius * Math.sin(thetaR));
+        const x1 = this.xPos - (this.maxRadius * Math.cos(thetaR));
+        const x2 = this.xPos + (this.maxRadius * Math.cos(thetaR));
+        const y1 = this.yPos - (this.maxRadius * Math.sin(thetaR));
+        const y2 = this.yPos + (this.maxRadius * Math.sin(thetaR));
 
         return { x1, y1, x2, y2 };
     }
 
 
-    update(time) {
-        this.xPos += this.xVelocity;
-        this.yPos += this.yVelocity;
+    update(delta) {
         this.rotation += this.rVelocity;
         this.path.push(new Point(this.xPos, this.yPos));
-
-        if (this.xPos < 0) {
-            this.xPos = this.upperBounds.x + this.xPos;
-        }
-        if (this.yPos < 0) {
-            this.yPos = this.upperBounds.y + this.yPos;
-        }
-        if (this.xPos > this.upperBounds.x) {
-            this.xPos = this.xPos - this.upperBounds.x;
-        }
-        if (this.yPos > this.upperBounds.y) {
-            this.yPos = this.yPos - this.upperBounds.y;
-        }
+        this.updatePosition(delta);
 
         this.ttl -= 1;
     }
@@ -63,9 +47,9 @@ export default class Bullet extends BaseSprite {
         });
     }
 
-    draw(context) {
+    privateDraw(context, x, y) {
         context.save();
-        context.translate(this.xPos, this.yPos);
+        context.translate(x, y);
         context.rotate(degreesToRadians(this.rotation));
         context.fillStyle = this.color;
         context.font = '12pt Courier';

@@ -17,7 +17,6 @@ export default class MobileSprite extends BaseSprite {
         this.magnitude = magnitude;
         this.xVelocity = Math.cos(degreesToRadians(this.vector)) * magnitude;
         this.yVelocity = Math.sin(degreesToRadians(this.vector)) * magnitude;
-        console.log(this.xVelocity, this.yVelocity);
 
         this.generateCenters();
     }

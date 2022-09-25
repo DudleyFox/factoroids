@@ -2,18 +2,13 @@ import SpecialBase from './SpecialBase.js';
 
 export default class SpecialFlip extends SpecialBase {
     constructor() {
-        super();
+        super(0.25, '#1111DD');
     }
 
-    update(ship, delta) {
+    invoke(ship) {
         if (this.cooldown === 0) {
             ship.rotation += 180;
-            this.cooldown = 15;
+            this.cooldown = this.cooldownTime;
         }
-
-    }
-
-    color() {
-        return '#1111DD';
     }
 }

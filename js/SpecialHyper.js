@@ -2,10 +2,10 @@ import SpecialBase from "./SpecialBase.js";
 
 export default class SpecialHyper extends SpecialBase {
     constructor() {
-        super();
+        super(1, '#DD1111');
     }
 
-    update(ship, delta) {
+    invoke(ship) {
         if (this.cooldown === 0) {
             const newX = Math.random() * ship.upperBounds.x;
             const newY = Math.random() * ship.upperBounds.y;
@@ -15,10 +15,7 @@ export default class SpecialHyper extends SpecialBase {
             ship.rotation = newR;
             ship.xVelocity = 0;
             ship.yVelocity = 0;
-            this.cooldown = 15;
+            this.cooldown = this.cooldownTime;
         }
-    }
-    color() {
-        return '#DD1111';
     }
 }

@@ -5,9 +5,8 @@ import Factoroid from './Factoroid.js';
 import primes from './Primes.js';
 import Point from './Point.js';
 import SpecialFlip from './SpecialFlip.js';
-import SpecialHyper from './SpecialHyper.js';
-import { coinToss, degreesToRadians } from './AAAHelpers.js';
-import PowerUp from './PowerUp.js';
+import { degreesToRadians } from './AAAHelpers.js';
+import PowerUpFactory from './PowerUpFactory.js';
 
 export default class GameScreenLevel extends GameScreenBase {
     constructor(upperBounds, keyHandler, state, level) {
@@ -16,24 +15,16 @@ export default class GameScreenLevel extends GameScreenBase {
         this.gameOverCountdownValue = 10;
         this.gameOverCountdown = this.gameOverCountdownValue;
         this.steps = [5, 6, 8, 9, 10, 12, 15, 18, 20, 24, 30, 36, 40, 45];
-        this.xtraCooldown = 0;
-        this.xtraIndex = 0;
-        this.xtras = [SpecialFlip, SpecialHyper];
 
-        this.state.powerUps = [];
-        this.state.powerUps.push(new PowerUp(new Point(100,100), upperBounds, this.state, new SpecialFlip()));
-        this.state.powerUps.push(new PowerUp(new Point(10,200), upperBounds, this.state, new SpecialHyper()));
-
+        this.powerUpFactory = new PowerUpFactory(upperBounds, state);
+       
         if (!this.state.ship) {
-            const bluntness = coinToss() > 0 ? 100000 : 1000;
-            const number = primes[Math.floor(Math.random() * 1000)] * bluntness;
-            const stepSize = this.steps[Math.floor(Math.random() * this.steps.length)];
             this.state.ship = new Ship(new Point(this.upperBounds.x / 2, this.upperBounds.y / 2), new Point(this.upperBounds.x, this.upperBounds.y), this.keyHandler, this.state, 50);
             const delta = 48;
             for (let i = 0; i < this.state.lifeCount - 1; ++i) {
                 this.state.lives.push(new GhostShip(new Point(this.upperBounds.x - delta, delta + delta * i), new Point(this.upperBounds.x, this.upperBounds.y), this.state.shipNumber, this.state.shipStepSize, 50));
             }
-            this.state.ship.addSpecial(SpecialFlip);
+            this.state.ship.setSpecial(new SpecialFlip());
         } else {
             this.state.ship.reset();
         }
@@ -81,6 +72,8 @@ export default class GameScreenLevel extends GameScreenBase {
             }
             return new GameScreenLevel(this.upperBounds, this.keyHandler, this.state, this.level)
         }
+
+        this.powerUpFactory.tick();
 
         this.state.powerUps.forEach(p => {p.update(delta); p.detectShipCollision(this.state.ship)});
         this.state.powerUps = this.state.powerUps.filter(x => x.active);
@@ -157,17 +150,6 @@ export default class GameScreenLevel extends GameScreenBase {
             this.state.fbCooldown -= 1;
         }
 
-
-
-        if (this.keyHandler.xtra() && this.xtraCooldown === 0) {
-            this.xtraIndex = (this.xtraIndex + 1) % this.xtras.length;
-            this.state.ship.addSpecial(this.xtras[this.xtraIndex]);
-            this.xtraCooldown = 20;
-        }
-        if (this.xtraCooldown > 0) {
-            this.xtraCooldown -= 1;
-        }
-
         return this;
     }
 
@@ -176,7 +158,7 @@ export default class GameScreenLevel extends GameScreenBase {
         context.font = '16pt Courier';
         context.textAlign = 'left';
         context.textBaseline = 'middle';
-        context.fillText(`Level: ${level} (alpha 0.7)`, 5, 10);
+        context.fillText(`Level: ${level} (alpha 2)`, 5, 10);
     }
 
     paintFiringSolution(context, ship) {

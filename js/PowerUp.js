@@ -5,12 +5,11 @@ import {
 
 export default class PowerUp extends MobileSprite {
     constructor(origins, upperBounds, state, special) {
-        super(origins, upperBounds, state, 180, 80);
+        super(origins, upperBounds, state, undefined, 80);
         this.special = special;
         this.maxRadius = 25;
         this.active = true;
-        this.ttl = 5;
-        console.log('pup');
+        this.ttl = 10;
     }
    
 
