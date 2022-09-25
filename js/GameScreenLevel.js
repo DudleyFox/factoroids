@@ -158,7 +158,7 @@ export default class GameScreenLevel extends GameScreenBase {
         context.font = '16pt Courier';
         context.textAlign = 'left';
         context.textBaseline = 'middle';
-        context.fillText(`Level: ${level} (alpha 2)`, 5, 10);
+        context.fillText(`Level: ${level} (%category x%)`, 5, 10);
     }
 
     paintFiringSolution(context, ship) {
