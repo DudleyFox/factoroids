@@ -2,7 +2,7 @@ import SpecialBase from "./SpecialBase.js";
 
 export default class SpecialHyper extends SpecialBase {
     constructor() {
-        super(1, '#DD1111');
+        super(1, '#11DD11');
     }
 
     invoke(ship) {
