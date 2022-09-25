@@ -86,12 +86,13 @@ def copyFile(name, jsFileNames, category, version):
     lines = getFileLines(name)
     with open(newName, 'w') as f:
         for l in lines:
-            if l.find('import') != -1:
+            if l.find('from') != -1:
                 for js in jsFileNames:
                     l = l.replace(js, makeNewName(js, category, version))
-                f.write(l)
-            else:
-                f.write(l)
+            elif l.find('%category x%') != -1:
+                l = l.replace('%category x%', f'{category} {version}')
+            
+            f.write(l)
     print (f'Copied {name} to {newName}')
 
     
