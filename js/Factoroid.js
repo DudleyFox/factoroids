@@ -27,6 +27,7 @@ export default class Factoroid extends MobileSprite {
         this.maxSize = product * 7;
         this.spawn = [];
         this.hasSpawn = false;
+        this.magnetar = false;
 
         this.factors = generateFactors(this.product);
         this.generatePoints();
@@ -35,6 +36,44 @@ export default class Factoroid extends MobileSprite {
 
     adjustDirection(aValue) {
         return aValue * coinToss();
+    }
+
+    calculatePosition(src, dst, vel, delta) {
+        if (src < dst) {
+            return src + vel * delta;
+        } else if (src > dst) {
+            return src - vel * delta;
+        }
+        return src;
+    }
+
+    calculateMagnetarPosition(delta) {
+        const magnetarVelocity = 80;
+        const x = this.state.ship.xPos;
+        const y = this.state.ship.yPos;
+        const dx = Math.abs(this.xPos - x);
+        const dy = Math.abs(this.yPos - y);
+        const hypo = Math.sqrt(dx * dx + dy * dy);
+        const ratioX = dx / hypo;
+        const rationY = dy / hypo;
+        this.xVelocity = magnetarVelocity * ratioX;
+        this.yVelocity = magnetarVelocity * rationY;
+        this.xPos = this.calculatePosition(this.xPos, x, this.xVelocity, delta);
+        this.yPos = this.calculatePosition(this.yPos, y, this.yVelocity, delta);
+        if (this.xPos < 0) {
+            this.xPos = this.upperBounds.x + this.xPos;
+        }
+        else if (this.xPos > this.upperBounds.x) {
+            this.xPos = this.xPos - this.upperBounds.x
+        }
+        if (this.yPos < 0) {
+            this.yPos = this.upperBounds.y + this.yPos;
+        }
+        else if (this.yPos > this.upperBounds.y) {
+            this.yPos = this.yPos - this.upperBounds.y
+        }
+
+        this.generateCenters();
     }
 
     update(delta) {
@@ -46,7 +85,21 @@ export default class Factoroid extends MobileSprite {
             var y = -(this.radii[i / 5] * Math.sin(theta));
             this.points.push(new Point(x, y));
         }
-       this.updatePosition(delta);
+        if (this.magnetar) {
+            this.calculateMagnetarPosition(delta);
+        } else {
+            this.updatePosition(delta);
+        }
+    }
+
+    magnetarOn() {
+        this.magnetar = true;
+    }
+
+    magnetarOff() {
+        this.magnetar = false;
+        this.xVelocity = Math.cos(degreesToRadians(this.vector)) * this.magnitude;
+        this.yVelocity = Math.sin(degreesToRadians(this.vector)) * this.magnitude;
     }
 
     generatePoints() {

@@ -57,7 +57,7 @@ export default class PowerUp extends MobileSprite {
 
     detectShipCollision(ship) {
         if (!ship.dead && this.detectCollision(ship, this.xPos, this.yPos)) {
-            ship.special = this.special;
+            ship.setSpecial(this.special);
             this.active = false;
         }
     }

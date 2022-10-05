@@ -4,13 +4,19 @@ export default class SpecialBase {
         this.cooldownTime = cooldownTime;
         this.colorValue = color;
     }
+
     tick(delta) {
         if (this.cooldown > 0) {
             this.cooldown = Math.max(this.cooldown - delta, 0);
         }
     }
+
     invoke(ship) {
         throw new Error('Did you forget to implement this?');
+    }
+
+    terminate() {
+        // called when we switch out specials.
     }
 
     draw(context) {

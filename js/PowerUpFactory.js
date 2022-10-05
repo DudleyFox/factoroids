@@ -4,6 +4,7 @@ import PowerUp from './PowerUp.js';
 import SpecialFlip from './SpecialFlip.js';
 import SpecialHyper from './SpecialHyper.js';
 import SpecialDeadStop from './SpecialDeadStop.js';
+import SpecialMagnetar from './SpecialMagnetar.js';
 
 export default class PowerUpFactory {
     constructor(upperBounds, state) {
@@ -12,7 +13,8 @@ export default class PowerUpFactory {
         this.specials = [
             SpecialFlip,
             SpecialHyper,
-            SpecialDeadStop
+            SpecialDeadStop,
+            SpecialMagnetar
         ]
     }
     tick() {

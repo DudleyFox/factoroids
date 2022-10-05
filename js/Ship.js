@@ -147,6 +147,7 @@ export default class Ship extends MobileSprite {
 
     death() {
         this.dead = true;
+        this.special?.terminate();
     }
 
     gameOver() {
@@ -171,6 +172,7 @@ export default class Ship extends MobileSprite {
     }
 
     setSpecial(special) {
+        this.special?.terminate();
         this.special = special;
     }
 
