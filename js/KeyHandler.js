@@ -113,6 +113,11 @@ export default class KeyHandler {
         return this.map[66];
     }
 
+    powerUp() {
+        // 'P'
+        return this.map[80];
+    }
+
     reset() {
         // 'R'
         return this.map[82];

@@ -1,4 +1,3 @@
-import { coinToss } from './AAAHelpers.js';
 import Point from './Point.js';
 import PowerUp from './PowerUp.js';
 import SpecialFlip from './SpecialFlip.js';
@@ -9,6 +8,7 @@ import SpecialMagnetar from './SpecialMagnetar.js';
 export default class PowerUpFactory {
     constructor(upperBounds, state) {
         this.state = state;
+        this.cooldown = 0;
         this.upperBounds = upperBounds;
         this.specials = [
             SpecialFlip,
@@ -17,14 +17,30 @@ export default class PowerUpFactory {
             SpecialMagnetar
         ]
     }
-    tick() {
+
+    tick(delta) {
         const jackPot = Math.floor(Math.random() * 1000) === 997;
         if (jackPot && this.state.powerUps.length === 0) {
-            const index = Math.floor(Math.random() * this.specials.length);
-            const special = new this.specials[index]();
-            const x = Math.random() * this.upperBounds.x;
-            const y = Math.random() * this.upperBounds.y;
-            this.state.powerUps.push(new PowerUp(new Point(x,y), this.upperBounds, this.state, special))
+           this.boom();
+        }
+        if (this.cooldown > 0) {
+            this.cooldown -= delta
+            this.cooldown = Math.max(0, this.cooldown);
+        }
+    }
+
+    boom() {
+        const index = Math.floor(Math.random() * this.specials.length);
+        const special = new this.specials[index]();
+        const x = Math.random() * this.upperBounds.x;
+        const y = Math.random() * this.upperBounds.y;
+        this.state.powerUps.push(new PowerUp(new Point(x,y), this.upperBounds, this.state, special))
+    }
+
+    create() {
+        if (this.cooldown === 0) {
+            this.boom();
+            this.cooldown = 1;
         }
     }
 }

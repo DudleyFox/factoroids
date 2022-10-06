@@ -73,7 +73,12 @@ export default class GameScreenLevel extends GameScreenBase {
             return new GameScreenLevel(this.upperBounds, this.keyHandler, this.state, this.level)
         }
 
-        this.powerUpFactory.tick();
+        if (this.keyHandler.powerUp()) {
+            this.powerUpFactory.create();
+        } else {
+            this.powerUpFactory.tick(delta);
+        }
+        
 
         this.state.powerUps.forEach(p => {p.update(delta); p.detectShipCollision(this.state.ship)});
         this.state.powerUps = this.state.powerUps.filter(x => x.active);

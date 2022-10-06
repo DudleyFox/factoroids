@@ -2,6 +2,7 @@ import MobileSprite from './MobileSprite.js';
 import {
     distanceBetweenTwoPoints,
 } from './AAAHelpers.js';
+import Calculator from './Calculator.js';
 
 export default class PowerUp extends MobileSprite {
     constructor(origins, upperBounds, state, special) {
@@ -9,31 +10,21 @@ export default class PowerUp extends MobileSprite {
         this.special = special;
         this.maxRadius = 25;
         this.active = true;
-        this.ttl = 10;
+        this.ttl = 30;
+        this.calculator = new Calculator(this.special.color(), this.special.text());
     }
+
    
 
     privateDraw(context, x, y) {
-        context.save();
-        context.beginPath();
-        context.arc(x, y, this.maxRadius, 0, 2 * Math.PI);
-        var gradient = context.createRadialGradient(x, y, 0, x, y, this.maxRadius);
-        gradient.addColorStop(0, '#AAAAAA');
-        gradient.addColorStop(0.5, this.special.color());
-        gradient.addColorStop(1, '#000000');
-        context.fillStyle = gradient;
-        context.fill();
-        context.strokeStyle = 'white';
-        context.lineWidth = 0.1;
-        context.stroke();
-        context.restore();
+        this.calculator.draw(context, x, y);
     }
 
     update(delta) {
         this.ttl = this.ttl - delta;
         this.active = this.ttl > 0;
         this.updatePosition(delta);
-        
+
     }
 
     inCollision(item, fx, fy) {

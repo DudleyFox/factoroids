@@ -1,8 +1,12 @@
+import Calculator from "./Calculator.js";
+
 export default class SpecialBase {
-    constructor(cooldownTime, color) {
+    constructor(cooldownTime, color, text) {
         this.cooldown = 0;
         this.cooldownTime = cooldownTime;
         this.colorValue = color;
+        this.textValue = text;
+        this.calculator = new Calculator(this.colorValue, this.textValue);
     }
 
     tick(delta) {
@@ -19,20 +23,16 @@ export default class SpecialBase {
         // called when we switch out specials.
     }
 
+    text() {
+        return this.textValue;
+    }
+
     draw(context) {
         const x = 30;
-        const y = 75;
-        const radius = 25;
+        const y = 95;
+        const radius = 40;
         const three60 = Math.PI * 2;
-        context.save();
-        context.beginPath();
-        context.arc(x, y, radius, 0, three60);
-        var gradient = context.createRadialGradient(x, y, 0, x, y, radius);
-        gradient.addColorStop(0, '#AAAAAA');
-        gradient.addColorStop(0.5, this.color());
-        gradient.addColorStop(1, '#000000');
-        context.fillStyle = gradient;
-        context.fill();
+        this.calculator.draw(context, x, y);
         if (this.cooldown > 0) {
             const startAngle = 0 - Math.PI * 0.5;
             const arcAngle = (1 - (this.cooldown / this.cooldownTime)) * (three60) - Math.PI * 0.5;
