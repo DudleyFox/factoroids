@@ -28,7 +28,7 @@
         import Point from './js/Point.js';
         import GameScreenLevel from './js/GameScreenLevel.js';
         import KeyHandler from './js/KeyHandler.js';
-        import ShipSelector from './js/ShipSelector.js';
+        import StartScreen from './js/StartScreen.js';
         import PointerHandler from './js/PointerHandler.js';
 
         const keyHandler = new KeyHandler();
@@ -72,7 +72,7 @@
             shipStepSize: 5
         };
         // let gs = new GameScreenLevel(new Point(canvas.width, canvas.height), keyHandler, state, 2);
-        let gs = new ShipSelector(new Point(canvas.width, canvas.height), keyHandler, state, pointerHandler);
+        let gs = new StartScreen(new Point(canvas.width, canvas.height), keyHandler, state, pointerHandler)
         let lastNow = performance.now();
 
         function animate(now) {

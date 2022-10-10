@@ -3,49 +3,18 @@ import GameScreenLevel from './GameScreenLevel.js';
 import Button from './Button.js';
 import Point from './Point.js';
 import Ship from './Ship.js';
-import {
-    getItemInt,
-    setItem
-} from './Storage.js';
-import primes from './Primes.js';
-import Slider from './Slider.js';
-import { toHex } from './AAAHelpers.js';
 
-const wrapBackwards = (c, m) => c < 0 ? m - 1 : c;
-const randInt = (max) => Math.floor(Math.random() * max);
+import Slider from './Slider.js';
+import ShipWarehouse from './ShipWarehouse.js';
+import StartScreen from './StartScreen.js';
 
 export default class ShipSelector extends GameScreenBase {
     constructor(upperBounds, keyhandler, state, pointerHandler) {
         super(upperBounds, keyhandler, state)
+        this.shipWarehouse = new ShipWarehouse();
         this.pointerHandler = pointerHandler;
         this.buttons = [];
         this.sliders = [];
-        this.steps = [45, 40, 36, 30, 24, 20, 18, 15, 12, 10, 9, 8, 6, 5];
-        this.sweep = [
-            {
-                symbol: 'B',
-                root: 10
-            },
-            {
-                symbol: 'F',
-                root: 14
-            },
-            {
-                symbol: 'L',
-                root: 6
-            },
-        ];
-        this.rivets = [4, 5, 6, 7, 8, 9];
-        this.modelIndex = getItemInt('m', 0);
-        this.fustrumCapacitance = getItemInt('f', 13);
-        this.sweepIndex = getItemInt('s', 0);
-        this.rivetIndex = getItemInt('r', 0);
-        this.red = getItemInt('sr', 255);
-        this.green = getItemInt('sg', 255);
-        this.blue = getItemInt('sb', 0);
-        this.color = this.calculateColor();
-        this.qNumber = 7;
-        this.stepSize = 5;
 
         const gradientFill = (color) => (ctx, slider) => {
             // This assume the direction is up for the slider
@@ -78,44 +47,18 @@ export default class ShipSelector extends GameScreenBase {
         this.buttons.push(new Button('minusR', '-', new Point(this.leftEdge, 130), 25, 25, pointerHandler));
         this.buttons.push(new Button('random', 'Random', new Point(this.leftEdge, 165), 125, 25, pointerHandler));
         this.buttons.push(new Button('reset', 'Reset', new Point(this.leftEdge, 200), 125, 25, pointerHandler));
-        this.buttons.push(new Button('ok', 'Save', new Point(this.leftEdge, 235), 125, 25, pointerHandler));
-        this.sliders.push(new Slider('red', 0, 255, this.red, new Point(5, 10), 20, 255, 'up', 'gray', redFill, 'gray', pointerHandler));
-        this.sliders.push(new Slider('green', 0, 255, this.green, new Point(5 + 27, 10), 20, 255, 'up', 'gray', greenFill, 'gray', pointerHandler));
-        this.sliders.push(new Slider('blue', 0, 255, this.blue, new Point(5 + 54, 10), 20, 255, 'up', 'gray', blueFill, 'gray', pointerHandler));
-        this.normalizeIndices();
+        this.buttons.push(new Button('ok', 'OK', new Point(this.leftEdge, 235), 125, 25, pointerHandler));
+        this.buttons.push(new Button('play', 'Play', new Point(this.leftEdge, 270), 125, 25, pointerHandler));
+        this.sliders.push(new Slider('red', 0, 255, this.shipWarehouse.getRed(), new Point(5, 10), 20, 255, 'up', 'gray', redFill, 'gray', pointerHandler));
+        this.sliders.push(new Slider('green', 0, 255, this.shipWarehouse.getGreen(), new Point(5 + 27, 10), 20, 255, 'up', 'gray', greenFill, 'gray', pointerHandler));
+        this.sliders.push(new Slider('blue', 0, 255, this.shipWarehouse.getBlue(), new Point(5 + 54, 10), 20, 255, 'up', 'gray', blueFill, 'gray', pointerHandler));
+        this.rebuild();
         this.buttons.forEach(b => b.Subscribe(this));
         this.sliders.forEach(s => s.Subscribe(this));
     }
 
-    calculateColor() {
-        return `#${toHex(this.red, 2)}${toHex(this.green, 2)}${toHex(this.blue, 2)}`;
-    }
-
-    normalizeIndices() {
-        this.fustrumCapacitance = wrapBackwards(this.fustrumCapacitance, this.steps.length);
-        this.modelIndex = wrapBackwards(this.modelIndex, primes.length);
-        this.sweepIndex = wrapBackwards(this.sweepIndex, this.sweep.length);
-        this.rivetIndex = wrapBackwards(this.rivetIndex, this.rivets.length);
-        this.fustrumCapacitance = this.fustrumCapacitance % this.steps.length;
-        this.modelIndex = this.modelIndex % primes.length;
-        this.sweepIndex = this.sweepIndex % this.sweep.length;
-        this.rivetIndex = this.rivetIndex % this.rivets.length;
-        this.qNumber = primes[this.modelIndex] * Math.pow(this.sweep[this.sweepIndex].root, this.rivets[this.rivetIndex])
-        this.stepSize = this.steps[this.fustrumCapacitance];
-        this.color = this.calculateColor();
-        this.state.shipNumber = this.qNumber;
-        this.state.shipStepSize = this.stepSize;
-        this.state.shipColor = this.color;
-        this.state.shipHull = this.color;
-
-
-        setItem('f', this.fustrumCapacitance);
-        setItem('m', this.modelIndex);
-        setItem('s', this.sweepIndex);
-        setItem('r', this.rivetIndex);
-        setItem('sr', this.red);
-        setItem('sg', this.green);
-        setItem('sb', this.blue);
+    rebuild() {
+        this.state = {...this.state, ...(this.shipWarehouse.buildShipState())};
         this.ship = new Ship(new Point(this.upperBounds.x / 2, this.upperBounds.y / 2), this.upperBounds, this.keyHandler, this.state, 500, false, true);
     }
 
@@ -131,79 +74,81 @@ export default class ShipSelector extends GameScreenBase {
     updateValue(name, value, slider) {
         switch (name) {
             case 'red':
-                this.red = value;
+                this.shipWarehouse.setRed(value);
                 break
             case 'green':
-                this.green = value;
+                this.shipWarehouse.setGreen(value);
                 break
             case 'blue':
-                this.blue = value;
+                this.shipWarehouse.setBlue(value);
                 break
         }
-        this.normalizeIndices();
+        this.rebuild();
     }
 
     click(x, button) {
+        const wh = this.shipWarehouse;
         switch (x) {
             case 'plus': {
-                this.modelIndex += 1;
+                wh.incModelIndex();
             }
                 break;
             case 'minus': {
-                this.modelIndex -= 1;
+                wh.decModelIndex();
             }
                 break;
             case 'plusF': {
-                this.fustrumCapacitance += 1;
+                wh.incFustrumCapacitance();
             }
                 break;
             case 'minusF': {
-                this.fustrumCapacitance -= 1;
+                wh.decFustrumCapacitance();
             }
                 break;
             case 'plusS': {
-                this.sweepIndex += 1;
+                wh.incSweepIndex();
             }
                 break;
             case 'minusS': {
-                this.sweepIndex -= 1;
+                wh.decSweepIndex();
             }
                 break;
             case 'plusR': {
-                this.rivetIndex += 1;
+                wh.incRivetIndex();
             }
                 break;
             case 'minusR': {
-                this.rivetIndex -= 1;
+                wh.decRivetIndex();
             }
                 break;
             case 'random': {
-                this.fustrumCapacitance = randInt(this.steps.length);
-                this.modelIndex = randInt(1500);
-                this.sweepIndex = randInt(this.sweep.length);
-                this.rivetIndex = randInt(this.rivets.length);
+               wh.random();
             }
                 break;
             case 'reset':
                 {
-                    this.fustrumCapacitance = 13;
-                    this.modelIndex = 0;
-                    this.sweepIndex = 0;
-                    this.rivetIndex = 0;
+                   wh.reset();
                 }
                 break;
             case 'ok': {
                 this.done = true;
             }
+            case 'play': {
+                this.play = true;
+            }
                 break;
             default:
             // do nothing
         }
-        this.normalizeIndices();
+        this.rebuild();
     }
 
     update(delta) {
         if (this.done) {
+            //constructor(upperBounds, keyHandler, state, level) 
+            return new StartScreen(this.upperBounds, this.keyHandler, this.state, this.pointerHandler);
+        }
+        if (this.play) {
             //constructor(upperBounds, keyHandler, state, level) 
             return new GameScreenLevel(this.upperBounds, this.keyHandler, this.state);
         }
@@ -213,15 +158,16 @@ export default class ShipSelector extends GameScreenBase {
 
     draw(context) {
         this.buttons.forEach(b => b.draw(context));
+        const wh = this.shipWarehouse;
         context.save();
         context.fillStyle = 'yellow';
         context.font = '12pt Courier';
         context.textAlign = 'center';
         context.textBaseline = 'middle';
-        context.fillText(primes[this.modelIndex], this.leftEdge + this.textCenter, 37);
-        context.fillText(360 / this.steps[this.fustrumCapacitance], this.leftEdge + this.textCenter, 72);
-        context.fillText(this.sweep[this.sweepIndex].symbol, this.leftEdge + this.textCenter, 108);
-        context.fillText(this.rivets[this.rivetIndex], this.leftEdge + this.textCenter, 142);
+        context.fillText(wh.getModel(), this.leftEdge + this.textCenter, 37);
+        context.fillText(wh.getSteps(), this.leftEdge + this.textCenter, 72);
+        context.fillText(wh.getSweep(), this.leftEdge + this.textCenter, 108);
+        context.fillText(wh.getRivets(), this.leftEdge + this.textCenter, 142);
         context.restore();
         this.ship.draw(context);
         this.sliders.forEach(s => s.draw(context));
