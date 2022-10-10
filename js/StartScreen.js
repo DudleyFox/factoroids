@@ -14,12 +14,6 @@ export default class StartScreen extends GameScreenBase {
         this.state = { ...this.state, ...(this.shipWarehouse.buildShipState()) };
         this.play = false;
         this.selectShip = false;
-        this.yDelta = 40;
-        this.leftEdge = this.upperBounds.x / 2 - 60;
-        this.topEdge = this.upperBounds.y / 2 - this.yDelta;
-        this.buttons = [];
-        this.buttons.push(new Button('select', 'Select Ship', new Point(this.leftEdge, this.topEdge), 120, 25, pointerHandler));
-        this.buttons.push(new Button('play', 'Play', new Point(this.leftEdge, this.topEdge + this.yDelta), 120, 25, pointerHandler));
         this.facts = []; // only on this screen.
         for (var i = 0; i < 7; ++i) {
             const qNumber = Math.floor(Math.random() * 10000) + 7;
@@ -27,12 +21,28 @@ export default class StartScreen extends GameScreenBase {
             const y = Math.random() * this.upperBounds.y;
             this.facts.push(new Factoroid(qNumber, new Point(x, y), this.state, new Point(this.upperBounds.x, this.upperBounds.y)));
         }
-        this.buttons.forEach(b => b.Subscribe(this));
+        this.buildButtons();
+        
     }
 
     setUpperBounds(ub) {
         super.setUpperBounds(ub);
         this.facts.forEach(f => f.setUpperBounds(ub));
+        this.buildButtons();
+    }
+
+    buildButtons() {
+        if (this.buttons) {
+            this.buttons.forEach(b => b.Unsubscribe(this));
+        }
+        this.buttons = [];
+        this.yDelta = 40;
+        this.leftEdge = this.upperBounds.x / 2 - 60;
+        this.topEdge = this.upperBounds.y / 2 - this.yDelta;
+       
+        this.buttons.push(new Button('select', 'Select Ship', new Point(this.leftEdge, this.topEdge), 120, 25, this.pointerHandler));
+        this.buttons.push(new Button('play', 'Play', new Point(this.leftEdge, this.topEdge + this.yDelta), 120, 25, this.pointerHandler));
+        this.buttons.forEach(b => b.Subscribe(this));
     }
 
     click(x, button) {
