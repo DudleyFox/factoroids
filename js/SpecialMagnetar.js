@@ -2,7 +2,7 @@ import SpecialBase from './SpecialBase.js';
 
 export default class SpecialMagentar extends SpecialBase {
     constructor() {
-        super(5, '#DD11DD');
+        super(5, '#DD11DD', 'Err');
         this.state = {
             facts: []
         };
