@@ -33,6 +33,7 @@
 
         const keyHandler = new KeyHandler();
         const pointerHandler = new PointerHandler();
+        let resizeNeeded = false;
 
         // goo
         window.requestAnimFrame = (function (callback) {
@@ -48,6 +49,7 @@
         function resizeCanvas() {
             canvas.width = window.innerWidth;
             canvas.height = window.innerHeight;
+            resizeNeeded = true;
         }
 
         resizeCanvas()
@@ -81,7 +83,10 @@
             var context = canvas.getContext('2d');
 
             context.clearRect(0, 0, canvas.width, canvas.height);
-            gs.setUpperBounds(new Point(canvas.width, canvas.height));
+            if (resizeNeeded) {
+                gs.setUpperBounds(new Point(canvas.width, canvas.height));
+                resizeNeeded = false;
+            }
             const tgs = gs.update(time);
             gs.draw(context);
             gs = tgs;
