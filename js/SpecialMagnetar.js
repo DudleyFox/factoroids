@@ -13,6 +13,7 @@ export default class SpecialMagentar extends SpecialBase {
         if (this.active) {
             this.state.facts.forEach(f => { f.magnetarOff(); });
             this.active = false;
+            this.cooldown = 0;
         }
     }
 

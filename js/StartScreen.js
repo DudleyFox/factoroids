@@ -64,7 +64,7 @@ export default class StartScreen extends GameScreenBase {
         this.facts.forEach(f => f.update(delta));
         this.buttons.forEach(b => b.update(delta));
         if (this.play) {
-            return new GameScreenLevel(this.upperBounds, this.keyHandler, this.state, 2);
+            return new GameScreenLevel(this.upperBounds, this.keyHandler, this.state, 2, this.pointerHandler);
         }
         if (this.selectShip) {
             return new ShipSelector(this.upperBounds, this.keyHandler, this.state, this.pointerHandler);

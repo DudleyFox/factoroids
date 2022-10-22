@@ -19,7 +19,7 @@ export default class PowerUpFactory {
     }
 
     tick(delta) {
-        const jackPot = Math.floor(Math.random() * 1000) === 997;
+        const jackPot = Math.floor(Math.random() * 10000) === 997;
         if (jackPot && this.state.powerUps.length === 0) {
            this.boom();
         }
