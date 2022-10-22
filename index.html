@@ -78,16 +78,19 @@
         let lastNow = performance.now();
 
         function animate(now) {
-            var time = (now - lastNow) / 1000.0;
+            let delta = (now - lastNow) / 1000.0;
+            if (delta > 1) {
+                delta = 0; // the screen lost focus
+            }
             lastNow = now;
-            var context = canvas.getContext('2d');
+            var context = canvas.getContext('2d', { alpha: false });
 
             context.clearRect(0, 0, canvas.width, canvas.height);
             if (resizeNeeded) {
-                gs.setUpperBounds(new Point(canvas.width, canvas.height));
+                gs.setUpperBounds(new Point(canvas.width - 1, canvas.height - 1));
                 resizeNeeded = false;
             }
-            const tgs = gs.update(time);
+            const tgs = gs.update(delta);
             gs.draw(context);
             gs = tgs;
 

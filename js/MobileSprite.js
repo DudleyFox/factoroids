@@ -14,9 +14,9 @@ export default class MobileSprite extends BaseSprite {
     constructor(origin, upperBounds, state, vector, magnitude) {
         super(origin, upperBounds, state);
         this.vector = vector || Math.random() * 360;
-        this.magnitude = magnitude;
-        this.xVelocity = Math.cos(degreesToRadians(this.vector)) * magnitude;
-        this.yVelocity = Math.sin(degreesToRadians(this.vector)) * magnitude;
+        this.magnitude = magnitude || (Math.random() * 20 + 10);
+        this.xVelocity = Math.cos(degreesToRadians(this.vector)) * this.magnitude;
+        this.yVelocity = Math.sin(degreesToRadians(this.vector)) * this.magnitude;
 
         this.generateCenters();
     }

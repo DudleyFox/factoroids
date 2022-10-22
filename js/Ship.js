@@ -188,7 +188,7 @@ export default class Ship extends MobileSprite {
             return;
         }
         if (this.collisionShieldCountdown > 0) {
-            this.collisionShieldCountdown -= delta;
+           this.collisionShieldCountdown -= delta;
         }
         if (this.keyHandler.left()) {
             this.rotation -= this.leftRotation;

@@ -11,7 +11,7 @@ import {
 } from './AAAHelpers.js';
 
 export default class Factoroid extends MobileSprite {
-    constructor(product, origin, state, upperBounds, vector, magnitude = 10) {
+    constructor(product, origin, state, upperBounds, vector, magnitude, cg) {
         super(origin, upperBounds, state, vector, magnitude);
         this.product = product;
         this.points = new Array();
@@ -21,13 +21,18 @@ export default class Factoroid extends MobileSprite {
         this.minRadius = 100000;
         this.rotationSpeed = this.adjustDirection(Math.random());
         this.rotation = 0;
-        this.color = generateColor(this.product);
         this.dead = false;
         this.centers;
         this.maxSize = product * 7;
         this.spawn = [];
         this.hasSpawn = false;
         this.magnetar = false;
+
+        if (cg) {
+            this.color = cg();
+        } else {
+            this.color = generateColor(this.product);
+        }
 
         this.factors = generateFactors(this.product);
         this.generatePoints();
@@ -47,10 +52,72 @@ export default class Factoroid extends MobileSprite {
         return src;
     }
 
+    findShortestDistanceToShip() {
+        let shortest = 99999999;
+        const offsets = [
+            { // ships original position
+                x: 0,
+                y: 0,
+            },
+            { // off screen left
+                x: -1,
+                y: 0
+            },
+            { // off screen upper left
+                x: -1,
+                y: -1,
+            },
+            { // off screen upper center
+                x: 0,
+                y: -1,
+            },
+            { // off screen upper right
+                x:1,
+                y: -1,
+            },
+            { // off screen right
+                x: 1,
+                y: 0
+            },
+            { // off screen bottom right
+                x: 1,
+                y: 1
+            },
+            { // off screen bottom center
+                x: 0,
+                y: 1
+            },
+            { // off screen bottom left
+                x: -1,
+                y: 1
+            }
+        ];
+        const shipX = this.state.ship.xPos;
+        const shipY = this.state.ship.yPos;
+        const thisX = this.xPos;
+        const thisY = this.yPos;
+        let shortestX;
+        let shortestY;
+        offsets.forEach( o => {
+            const testX = shipX + this.upperBounds.x * o.x;
+            const testY = shipY + this.upperBounds.x * o.y;
+            const dx = thisX - testX;
+            const dy = thisY - testY;
+            const dist = dx*dx+dy*dy;
+            if (dist < shortest) {
+                shortestX = testX;
+                shortestY = testY;
+                shortest = dist;
+            }
+        });
+
+        return [shortestX, shortestY]
+
+    }
+
     calculateMagnetarPosition(delta) {
         const magnetarVelocity = 80;
-        const x = this.state.ship.xPos;
-        const y = this.state.ship.yPos;
+        const [x,y] = this.findShortestDistanceToShip();
         const dx = Math.abs(this.xPos - x);
         const dy = Math.abs(this.yPos - y);
         const hypo = Math.sqrt(dx * dx + dy * dy);
