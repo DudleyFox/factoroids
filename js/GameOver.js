@@ -20,12 +20,13 @@ export default class GameScreenOver extends GameScreenBase {
         this.menuButton = new Button('menu', 'Main Menu', new Point(x + 125, y), 100, 25, this.pointerHandler);
         let primesIndex = 0;
         this.buttonState = 'wait';
-        while (primes[primesIndex] <= level) {
+        while (primes[primesIndex] < level) {
             const x = Math.random() * this.upperBounds.x;
             const y = Math.random() * this.upperBounds.y;
-            this.facts.push(new Factoroid(primes[primesIndex], new Point(x, y), this.state, new Point(this.upperBounds.x, this.upperBounds.y)));
+            this.facts.push(new Factoroid(primes[primesIndex], new Point(x, y), this.state, new Point(this.upperBounds.x, this.upperBounds.y),0,0,()=>'gold'));
             primesIndex += 1;
         }
+        this.facts.push(new Factoroid(level, new Point(x, y), this.state, new Point(this.upperBounds.x, this.upperBounds.y)));
         this.playAgainButton.Subscribe(this);
         this.menuButton.Subscribe(this);
         this.state.lifeCount = 3;
