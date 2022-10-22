@@ -58,7 +58,11 @@ export default class ShipSelector extends GameScreenBase {
     }
 
     rebuild() {
-        this.state = {...this.state, ...(this.shipWarehouse.buildShipState())};
+        const shipState = this.shipWarehouse.buildShipState();
+        this.state.shipNumber = shipState.shipNumber;
+        this.state.shipStepSize = shipState.shipStepSize;
+        this.state.shipColor = shipState.shipColor;
+        this.shipHull = shipState.shipHull;
         this.ship = new Ship(new Point(this.upperBounds.x / 2, this.upperBounds.y / 2), this.upperBounds, this.keyHandler, this.state, 500, false, true);
     }
 
@@ -150,7 +154,7 @@ export default class ShipSelector extends GameScreenBase {
         }
         if (this.play) {
             //constructor(upperBounds, keyHandler, state, level) 
-            return new GameScreenLevel(this.upperBounds, this.keyHandler, this.state, this.pointerHandler);
+            return new GameScreenLevel(this.upperBounds, this.keyHandler, this.state, 2, this.pointerHandler);
         }
         this.ship.update(delta);
         return this;
