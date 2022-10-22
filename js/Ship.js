@@ -14,7 +14,7 @@ function fireBullet(ship, b) {
         ship.upperBounds,
         ship.state,
         ship.rotation - 90,
-        ship.xVelocity + ship.yVelocity + 1000
+        Math.abs(ship.xVelocity) + Math.abs(ship.yVelocity) + 1000
     ));
 }
 

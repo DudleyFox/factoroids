@@ -8,17 +8,17 @@ export default class GameScreenBase {
         this.keyHandler = KeyHandler;
         this.upperBounds = upperBounds;
         this.state = state;
+        this.upperBoundsChanged = false;
     }
 
     update (delta) {
-
     }
 
     draw(context) {
-
     }
 
     setUpperBounds(ub) {
         this.upperBounds = ub;
+        this.upperBoundsChanged = true;
     }
 }

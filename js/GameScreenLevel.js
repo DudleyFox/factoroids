@@ -1,4 +1,5 @@
 import GameScreenBase from './GameScreenBase.js';
+import GameOver from './GameOver.js';
 import Ship from './Ship.js';
 import GhostShip from './GhostShip.js';
 import Factoroid from './Factoroid.js';
@@ -9,8 +10,9 @@ import { degreesToRadians } from './AAAHelpers.js';
 import PowerUpFactory from './PowerUpFactory.js';
 
 export default class GameScreenLevel extends GameScreenBase {
-    constructor(upperBounds, keyHandler, state, level) {
+    constructor(upperBounds, keyHandler, state, level, pointerHandler) {
         super(upperBounds, keyHandler, state);
+        this.pointerHandler = pointerHandler;
         this.level = level || 2;
         this.gameOverCountdownValue = 10;
         this.gameOverCountdown = this.gameOverCountdownValue;
@@ -64,13 +66,32 @@ export default class GameScreenLevel extends GameScreenBase {
         }
     }
 
+    resize(){
+        for (var i = 0; i < this.state.facts.length; ++i) {
+            this.state.facts[i].setUpperBounds(new Point(this.upperBounds.x, this.upperBounds.y));
+        }
+        this.state.ship.setUpperBounds(new Point(this.upperBounds.x, this.upperBounds.y));
+        if (this.state.bullets.length > 0){
+        const bullet = this.state.bullets[0];
+        bullet.setUpperBounds(new Point(this.upperBounds.x, this.upperBounds.y));
+        }
+        this.state.lives.forEach(gs => {
+            gs.setUpperBounds(new Point(this.upperBounds.x, this.upperBounds.y))
+        });
+        this.upperBoundsChanged = false;
+    }
+
     update(delta) {
         if (this.state.facts.length === 0) {
             if (this.level !== 'debug') {
                 const index = primes.findIndex(l => l === this.level) + 1;
                 this.level = primes[index];
             }
-            return new GameScreenLevel(this.upperBounds, this.keyHandler, this.state, this.level)
+            return new GameScreenLevel(this.upperBounds, this.keyHandler, this.state, this.level, this.pointerHandler)
+        }
+
+        if (this.upperBoundsChanged) {
+            this.resize();
         }
 
         if (this.keyHandler.powerUp()) {
@@ -87,17 +108,7 @@ export default class GameScreenLevel extends GameScreenBase {
         if (this.state.lifeCount === 0 && this.gameOverCountdown > 0) {
             this.gameOverCountdown -= delta;
             if (this.gameOverCountdown <= 0) {
-                this.state.lifeCount = 3;
-                const delta = 48;
-                for (let i = 0; i < this.state.lifeCount - 1; ++i) {
-                    this.state.lives.push(new GhostShip(new Point(this.upperBounds.x - delta, delta + delta * i), new Point(this.upperBounds.x, this.upperBounds.y), this.state.ship.number, this.state.ship.stepSize, 50));
-                }
-                this.state.ship.reset();
-                this.level = 2;
-                this.state.facts = [];
-                this.populateLevel(this.level);
-                this.gameOverCountdown = this.gameOverCountdownValue;
-                this.state.lifeCount = 3;
+                return new GameOver(this.upperBounds, this.keyHandler, this.state, this.level, this.pointerHandler);
             }
         }
 
@@ -118,23 +129,18 @@ export default class GameScreenLevel extends GameScreenBase {
             this.state.facts = this.state.facts.concat(newFactoroids);
         }
 
-
-
         for (var i = 0; i < this.state.facts.length; ++i) {
-            this.state.facts[i].setUpperBounds(new Point(this.upperBounds.x, this.upperBounds.y));
             if (this.state.lifeCount > 0) {
                 this.state.facts[i].update(delta);
             }
         }
 
-        this.state.ship.setUpperBounds(new Point(this.upperBounds.x, this.upperBounds.y));
         if (this.state.lifeCount === 0) {
             this.state.ship.gameOver();
         }
         this.state.ship.update(delta);
         if (this.state.bullets.length > 0) {
             const bullet = this.state.bullets[0];
-            bullet.setUpperBounds(new Point(this.upperBounds.x, this.upperBounds.y));
             bullet.update(delta);
             if (bullet.expired()) {
                 this.state.bullets.pop();
@@ -143,7 +149,6 @@ export default class GameScreenLevel extends GameScreenBase {
         this.state.lives.forEach(gs => {
             gs.rotation = this.state.ship.rotation;
             gs.update(delta);
-            gs.setUpperBounds(new Point(this.upperBounds.x, this.upperBounds.y))
         });
 
         if (this.keyHandler.factoroidBehavior() && this.state.fbCooldown === 0) {

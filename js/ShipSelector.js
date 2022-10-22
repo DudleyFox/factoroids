@@ -150,7 +150,7 @@ export default class ShipSelector extends GameScreenBase {
         }
         if (this.play) {
             //constructor(upperBounds, keyHandler, state, level) 
-            return new GameScreenLevel(this.upperBounds, this.keyHandler, this.state);
+            return new GameScreenLevel(this.upperBounds, this.keyHandler, this.state, this.pointerHandler);
         }
         this.ship.update(delta);
         return this;
