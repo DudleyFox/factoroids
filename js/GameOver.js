@@ -81,5 +81,12 @@ export default class GameScreenOver extends GameScreenBase {
         this.facts.forEach(f => f.draw(context));
         this.playAgainButton.draw(context);
         this.menuButton.draw(context);
+
+        context.fillStyle = 'yellow';
+        context.font = '64pt Courier';
+        context.textAlign = 'center';
+        context.textBaseline = 'middle';
+        context.fillText('GAME OVER', this.upperBounds.x / 2, (this.upperBounds.y / 2) - 47);
+
     }
 }

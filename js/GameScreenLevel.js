@@ -8,6 +8,7 @@ import Point from './Point.js';
 import SpecialFlip from './SpecialFlip.js';
 import { degreesToRadians } from './AAAHelpers.js';
 import PowerUpFactory from './PowerUpFactory.js';
+import LevelTransition from './LevelTransition.js';
 
 export default class GameScreenLevel extends GameScreenBase {
     constructor(upperBounds, keyHandler, state, level, pointerHandler) {
@@ -83,11 +84,7 @@ export default class GameScreenLevel extends GameScreenBase {
 
     update(delta) {
         if (this.state.facts.length === 0) {
-            if (this.level !== 'debug') {
-                const index = primes.findIndex(l => l === this.level) + 1;
-                this.level = primes[index];
-            }
-            return new GameScreenLevel(this.upperBounds, this.keyHandler, this.state, this.level, this.pointerHandler)
+            return new LevelTransition(this.upperBounds, this.keyHandler, this.state, this.level, this.pointerHandler)
         }
 
         if (this.upperBoundsChanged) {
