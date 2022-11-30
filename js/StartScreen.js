@@ -5,13 +5,13 @@ import ShipWarehouse from "./ShipWarehouse.js";
 import ShipSelector from "./ShipSelector.js";
 import Button from "./Button.js";
 import Point from "./Point.js";
+import stateFactory from './StateFactory.js';
 
 export default class StartScreen extends GameScreenBase {
     constructor(upperBounds, keyhandler, state, pointerHandler) {
-        super(upperBounds, keyhandler, state);
+        super(upperBounds, keyhandler, stateFactory(upperBounds, keyhandler));
         this.pointerHandler = pointerHandler;
         this.shipWarehouse = new ShipWarehouse
-        this.state = { ...this.state, ...(this.shipWarehouse.buildShipState()) };
         this.play = false;
         this.selectShip = false;
         this.facts = []; // only on this screen.

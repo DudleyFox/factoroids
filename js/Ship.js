@@ -4,7 +4,8 @@ import Point from './Point.js';
 import {
     generateFactors,
     sumTheFactors,
-    degreesToRadians
+    degreesToRadians,
+    coinToss
 } from './AAAHelpers.js';
 
 // TODO: 2022-09-02 D. Fox - Find a better home for the firing solutions.
@@ -316,8 +317,7 @@ export default class Ship extends MobileSprite {
                 this.drawRadii(context, x, y)
             }
         } else {
-            const points = [];
-            for (let i = 0; i < 10; ++i) {
+            for (let i = 0; i < 20; ++i) {
                 const range = this.radius + this.particleCloudExtent;
                 const angle = Math.random() * 2 * Math.PI;
                 const xR = (Math.random() * range) * Math.cos(angle);
@@ -325,7 +325,8 @@ export default class Ship extends MobileSprite {
                 const size = Math.random() * 2;
                 context.beginPath();
                 context.arc(x + xR, y + yR, size, 0, 2 * Math.PI);
-                context.fillStyle = this.color;
+                const color = coinToss() > 0 ? this.color : 'white';
+                context.fillStyle = color;
                 context.fill();
                 context.closePath();
             }
