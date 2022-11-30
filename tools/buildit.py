@@ -97,7 +97,7 @@ def copyFile(name, jsFileNames, category, version):
 
     
 
-# Build primes, because primes are are version number. :)
+# Build primes, because primes are our version number. :)
 primes = []
 primes.append(2)
 primes.append(3)
