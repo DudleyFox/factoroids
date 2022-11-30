@@ -1,11 +1,10 @@
 import GameScreenBase from './GameScreenBase.js';
 import GameOver from './GameOver.js';
-import Ship from './Ship.js';
-import GhostShip from './GhostShip.js';
+
 import Factoroid from './Factoroid.js';
 import primes from './Primes.js';
 import Point from './Point.js';
-import SpecialFlip from './SpecialFlip.js';
+
 import { degreesToRadians } from './AAAHelpers.js';
 import PowerUpFactory from './PowerUpFactory.js';
 import LevelTransition from './LevelTransition.js';
@@ -17,23 +16,11 @@ export default class GameScreenLevel extends GameScreenBase {
         this.level = level || 2;
         this.gameOverCountdownValue = 10;
         this.gameOverCountdown = this.gameOverCountdownValue;
-        this.steps = [5, 6, 8, 9, 10, 12, 15, 18, 20, 24, 30, 36, 40, 45];
 
         this.powerUpFactory = new PowerUpFactory(upperBounds, state);
        
-        if (!this.state.ship) {
-            this.state.ship = new Ship(new Point(this.upperBounds.x / 2, this.upperBounds.y / 2), new Point(this.upperBounds.x, this.upperBounds.y), this.keyHandler, this.state, 50);
-            const delta = 48;
-            for (let i = 0; i < this.state.lifeCount - 1; ++i) {
-                this.state.lives.push(new GhostShip(new Point(this.upperBounds.x - delta, delta + delta * i), new Point(this.upperBounds.x, this.upperBounds.y), this.state.shipNumber, this.state.shipStepSize, 50));
-            }
-            this.state.ship.setSpecial(new SpecialFlip());
-        } else {
-            this.state.ship.reset();
-        }
-
+        this.state.ship.reset();
         this.populateLevel(this.level);
-
     }
 
     generateColor(p) {

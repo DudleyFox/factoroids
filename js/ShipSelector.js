@@ -63,7 +63,18 @@ export default class ShipSelector extends GameScreenBase {
         this.state.shipStepSize = shipState.shipStepSize;
         this.state.shipColor = shipState.shipColor;
         this.shipHull = shipState.shipHull;
+        let oldAngle = 0;
+        let leftRotation = 0;
+        let rightRotation = 0;
+        if (this.ship) {
+            oldAngle = this.ship.rotation;
+            leftRotation = this.ship.leftRotation;
+            rightRotation = this.ship.rightRotation;
+        }
         this.ship = new Ship(new Point(this.upperBounds.x / 2, this.upperBounds.y / 2), this.upperBounds, this.keyHandler, this.state, 500, false, true);
+        this.ship.rotation = oldAngle;
+        this.ship.leftRotation = leftRotation;
+        this.ship.rightRotation = rightRotation;
     }
 
     setUpperBounds(ub) {

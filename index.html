@@ -33,6 +33,7 @@
 
         const keyHandler = new KeyHandler();
         const pointerHandler = new PointerHandler();
+
         let resizeNeeded = false;
 
         // goo
@@ -54,27 +55,8 @@
 
         resizeCanvas()
         window.addEventListener('resize', resizeCanvas, false);
-        let state = {
-            facts: [],
-            bullets: [],
-            lives: [],
-            powerUps: [],
-            lifeCount: 3,
-            fb: [
-                {
-                    name: 'Default',
-                },
-                {
-                    name: 'Splinter'
-                }
-            ],
-            fbIndex: 0,
-            fbCooldown: 0,
-            shipNumber: 2,
-            shipStepSize: 5
-        };
         
-        let gs = new StartScreen(new Point(canvas.width, canvas.height), keyHandler, state, pointerHandler)
+        let gs = new StartScreen(new Point(canvas.width, canvas.height), keyHandler, {}, pointerHandler)
         let lastNow = performance.now();
 
         function animate(now) {
