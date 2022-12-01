@@ -37,6 +37,12 @@ export default class GameScreenLevel extends GameScreenBase {
         return product;
     }
 
+    calculateFactoroidCount(level) {
+        // stretch the sign wave out, lift it to two
+        const theta = 2.6 * level;
+        return Math.round(level * (Math.sin(theta) + 2));
+    }
+
     populateLevel(level) {
         if (level === 'debug') {
             const x = Math.random() * this.upperBounds.x;
@@ -44,7 +50,7 @@ export default class GameScreenLevel extends GameScreenBase {
             // facts.push(new Factoroid(2 * 3 * 5 * 7 * 11, new Point(x, y), new Point(this.upperBounds.x, this.upperBounds.y)));
             this.state.facts.push(new Factoroid(1172490, new Point(x, y), this.state, new Point(this.upperBounds.x, this.upperBounds.y)));
         } else {
-            const factoroids = Math.max(Math.floor(Math.abs(level * Math.sin(degreesToRadians(level)))), 2);
+            const factoroids = this.calculateFactoroidCount(level);
             for (var i = 0; i < factoroids; ++i) {
                 const qNumber = this.getProductFromLevelSimpleMax(level);
                 const x = Math.random() * this.upperBounds.x;
@@ -152,7 +158,7 @@ export default class GameScreenLevel extends GameScreenBase {
         context.font = '16pt Courier';
         context.textAlign = 'left';
         context.textBaseline = 'middle';
-        context.fillText(`Level: ${level} (%category x%)`, 5, 10);
+        context.fillText(`Level: ${level} (%category x%) (${this.state.facts.length})`, 5, 10);
     }
 
     paintFiringSolution(context, ship) {
