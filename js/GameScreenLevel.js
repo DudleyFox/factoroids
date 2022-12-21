@@ -29,18 +29,25 @@ export default class GameScreenLevel extends GameScreenBase {
         return `#7777${(0x77 + blue).toString(16)}`
     }
 
+    // getProductFromLevelSimpleMax(level) {
+    //     const phi = 1.618033988749895;
+    //     const index = primes.findIndex(p => p === level);
+    //     const max =  phi * (primes[index + 1]) + 1;
+    //     const product = Math.max(2, Math.floor(Math.random() * max));
+    //     return product;
+    // }
+
     getProductFromLevelSimpleMax(level) {
-        const phi = 1.618033988749895;
-        const index = primes.findIndex(p => p === level);
-        const max =  phi * (primes[index + 1]) + 1;
+        const max = level * 2;
         const product = Math.max(2, Math.floor(Math.random() * max));
         return product;
     }
 
     calculateFactoroidCount(level) {
         // stretch the sign wave out, lift it to two
-        const theta = 2.6 * level;
-        return Math.round(level * (Math.sin(theta) + 2));
+        const theta = 20 * level;
+        const count = Math.round(level * (Math.sin(theta)/4 + .75));
+        return Math.max(1, count);
     }
 
     populateLevel(level) {
