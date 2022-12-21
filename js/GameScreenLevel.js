@@ -29,12 +29,25 @@ export default class GameScreenLevel extends GameScreenBase {
         return `#7777${(0x77 + blue).toString(16)}`
     }
 
+    // getProductFromLevelSimpleMax(level) {
+    //     const phi = 1.618033988749895;
+    //     const index = primes.findIndex(p => p === level);
+    //     const max =  phi * (primes[index + 1]) + 1;
+    //     const product = Math.max(2, Math.floor(Math.random() * max));
+    //     return product;
+    // }
+
     getProductFromLevelSimpleMax(level) {
-        const phi = 1.618033988749895;
-        const index = primes.findIndex(p => p === level);
-        const max =  phi * (primes[index + 1]) + 1;
+        const max = level * 2;
         const product = Math.max(2, Math.floor(Math.random() * max));
         return product;
+    }
+
+    calculateFactoroidCount(level) {
+        // stretch the sign wave out, lift it to two
+        const theta = 20 * level;
+        const count = Math.round(level * (Math.sin(theta)/4 + .75));
+        return Math.max(1, count);
     }
 
     populateLevel(level) {
@@ -44,7 +57,7 @@ export default class GameScreenLevel extends GameScreenBase {
             // facts.push(new Factoroid(2 * 3 * 5 * 7 * 11, new Point(x, y), new Point(this.upperBounds.x, this.upperBounds.y)));
             this.state.facts.push(new Factoroid(1172490, new Point(x, y), this.state, new Point(this.upperBounds.x, this.upperBounds.y)));
         } else {
-            const factoroids = Math.max(Math.floor(Math.abs(level * Math.sin(degreesToRadians(level)))), 2);
+            const factoroids = this.calculateFactoroidCount(level);
             for (var i = 0; i < factoroids; ++i) {
                 const qNumber = this.getProductFromLevelSimpleMax(level);
                 const x = Math.random() * this.upperBounds.x;
@@ -152,7 +165,7 @@ export default class GameScreenLevel extends GameScreenBase {
         context.font = '16pt Courier';
         context.textAlign = 'left';
         context.textBaseline = 'middle';
-        context.fillText(`Level: ${level} (%category x%)`, 5, 10);
+        context.fillText(`Level: ${level} (%category x%) (${this.state.facts.length})`, 5, 10);
     }
 
     paintFiringSolution(context, ship) {
