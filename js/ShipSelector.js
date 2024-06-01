@@ -7,6 +7,9 @@ import Ship from './Ship.js';
 import Slider from './Slider.js';
 import ShipWarehouse from './ShipWarehouse.js';
 import StartScreen from './StartScreen.js';
+import {
+    randInt
+} from './AAAHelpers.js';
 
 export default class ShipSelector extends GameScreenBase {
     constructor(upperBounds, keyhandler, state, pointerHandler) {
@@ -15,6 +18,7 @@ export default class ShipSelector extends GameScreenBase {
         this.pointerHandler = pointerHandler;
         this.buttons = [];
         this.sliders = [];
+        this.rando = null;
 
         const gradientFill = (color) => (ctx, slider) => {
             // This assume the direction is up for the slider
@@ -52,9 +56,11 @@ export default class ShipSelector extends GameScreenBase {
         this.sliders.push(new Slider('red', 0, 255, this.shipWarehouse.getRed(), new Point(5, 10), 20, 255, 'up', 'gray', redFill, 'gray', pointerHandler));
         this.sliders.push(new Slider('green', 0, 255, this.shipWarehouse.getGreen(), new Point(5 + 27, 10), 20, 255, 'up', 'gray', greenFill, 'gray', pointerHandler));
         this.sliders.push(new Slider('blue', 0, 255, this.shipWarehouse.getBlue(), new Point(5 + 54, 10), 20, 255, 'up', 'gray', blueFill, 'gray', pointerHandler));
+        this.rando = new Button('random_color', 'Random', new Point(5, 255 + 20), 74, 25, pointerHandler);
         this.rebuild();
         this.buttons.forEach(b => b.Subscribe(this));
         this.sliders.forEach(s => s.Subscribe(this));
+        this.rando.Subscribe(this);
     }
 
     rebuild() {
@@ -140,6 +146,10 @@ export default class ShipSelector extends GameScreenBase {
                wh.random();
             }
                 break;
+            case 'random_color': {
+                this.sliders.forEach(s => s.setValue(randInt(256)));
+             }
+                break;
             case 'reset':
                 {
                    wh.reset();
@@ -186,5 +196,6 @@ export default class ShipSelector extends GameScreenBase {
         context.restore();
         this.ship.draw(context);
         this.sliders.forEach(s => s.draw(context));
+        this.rando.draw(context);
     }
 }

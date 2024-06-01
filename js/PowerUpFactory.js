@@ -4,6 +4,9 @@ import SpecialFlip from './SpecialFlip.js';
 import SpecialHyper from './SpecialHyper.js';
 import SpecialDeadStop from './SpecialDeadStop.js';
 import SpecialMagnetar from './SpecialMagnetar.js';
+import {
+    randInt
+} from './AAAHelpers.js'
 
 export default class PowerUpFactory {
     constructor(upperBounds, state) {
@@ -19,7 +22,7 @@ export default class PowerUpFactory {
     }
 
     tick(delta) {
-        const jackPot = Math.floor(Math.random() * 10000) === 997;
+        const jackPot = randInt(10000) === 997;
         if (jackPot && this.state.powerUps.length === 0) {
            this.boom();
         }
@@ -30,10 +33,10 @@ export default class PowerUpFactory {
     }
 
     boom() {
-        const index = Math.floor(Math.random() * this.specials.length);
+        const index = randInt(this.specials.length);
         const special = new this.specials[index]();
-        const x = Math.random() * this.upperBounds.x;
-        const y = Math.random() * this.upperBounds.y;
+        const x = randFloat(this.upperBounds.x);
+        const y = randFloat(this.upperBounds.y);
         this.state.powerUps.push(new PowerUp(new Point(x,y), this.upperBounds, this.state, special))
     }
 

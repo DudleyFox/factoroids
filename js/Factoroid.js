@@ -7,7 +7,9 @@ import {
     generateFactors,
     sumTheFactors,
     coinToss,
-    generateColor
+    generateColor,
+    randInt,
+    randFloat
 } from './AAAHelpers.js';
 
 export default class Factoroid extends MobileSprite {
@@ -19,7 +21,7 @@ export default class Factoroid extends MobileSprite {
         this.radii = new Array();
         this.maxRadius = 0;
         this.minRadius = 100000;
-        this.rotationSpeed = this.adjustDirection(Math.random());
+        this.rotationSpeed = this.adjustDirection(randFloat(1));
         this.rotation = 0;
         this.dead = false;
         this.centers;
@@ -193,10 +195,10 @@ export default class Factoroid extends MobileSprite {
 
     stabilize() {
         let num = this.product;
-        const vector = Math.random() * 360;
+        const vector = randFloat(360);
         const stableFactoroids = [];
         while (num > 2) {
-            let s = Math.floor(Math.random() * num);
+            let s = randInt(num);
             if (s >= 2) {
                 num -= s;
                 if (num < 2) {
@@ -204,7 +206,7 @@ export default class Factoroid extends MobileSprite {
                     num = 0;
                 }
                 const v = coinToss() === 1 ? vector : vector + 180;
-                const f = new Factoroid(s, new Point(this.xPos, this.yPos), this.state, this.upperBounds, v, Math.random() * 50);
+                const f = new Factoroid(s, new Point(this.xPos, this.yPos), this.state, this.upperBounds, v, randFloat(50));
                 stableFactoroids.push(f);
             }
 
@@ -263,8 +265,8 @@ export default class Factoroid extends MobileSprite {
                     this.dead = true;
                     return 1;
                 } else {
-                    const vector = this.vector + (180 + (Math.random() * 20 * coinToss()));
-                    const magnitude = this.magnitude * ((Math.random() * 5) + 1)
+                    const vector = this.vector + (180 + (randFloat(20) * coinToss()));
+                    const magnitude = this.magnitude * ((randFloat(5) + 1));
                     const f = new Factoroid(number, new Point(this.xPos, this.yPos), this.state, this.upperBounds, vector, magnitude);
                     if (this.state.fb[this.state.fbIndex].name === 'Splinter') {
                         this.hasSpawn = true;

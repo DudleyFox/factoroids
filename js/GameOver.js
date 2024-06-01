@@ -7,6 +7,9 @@ import Factoroid from './Factoroid.js';
 import Button from './Button.js';
 import primes from './Primes.js';
 import Point from './Point.js';
+import {
+    randFloat
+} from './AAAHelpers.js';
 
 export default class GameScreenOver extends GameScreenBase {
     constructor(upperBounds, keyHandler, state, level, pointerHandler) {
@@ -21,8 +24,8 @@ export default class GameScreenOver extends GameScreenBase {
         let primesIndex = 0;
         this.buttonState = 'wait';
         while (primes[primesIndex] < level) {
-            const x = Math.random() * this.upperBounds.x;
-            const y = Math.random() * this.upperBounds.y;
+            const x = randFloat(this.upperBounds.x);
+            const y = randFloat(this.upperBounds.y);
             this.facts.push(new Factoroid(primes[primesIndex], new Point(x, y), this.state, new Point(this.upperBounds.x, this.upperBounds.y),0,0,()=>'gold'));
             primesIndex += 1;
         }

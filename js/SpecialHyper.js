@@ -1,4 +1,7 @@
 import SpecialBase from "./SpecialBase.js";
+import {
+    randFloat
+} from './AAAHelpers.js';
 
 export default class SpecialHyper extends SpecialBase {
     constructor() {
@@ -7,9 +10,9 @@ export default class SpecialHyper extends SpecialBase {
 
     invoke(ship) {
         if (this.cooldown === 0) {
-            const newX = Math.random() * ship.upperBounds.x;
-            const newY = Math.random() * ship.upperBounds.y;
-            const newR = Math.random() * 360;
+            const newX = randFloat(ship.upperBounds.x);
+            const newY = randFloat(ship.upperBounds.y);
+            const newR = randFloat(360);
             ship.xPos = newX;
             ship.yPos = newY;
             ship.rotation = newR;

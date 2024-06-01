@@ -6,6 +6,10 @@ import ShipSelector from "./ShipSelector.js";
 import Button from "./Button.js";
 import Point from "./Point.js";
 import stateFactory from './StateFactory.js';
+import {
+    randFloat,
+    randInt
+} from './AAAHelpers.js';
 
 export default class StartScreen extends GameScreenBase {
     constructor(upperBounds, keyhandler, state, pointerHandler) {
@@ -16,9 +20,9 @@ export default class StartScreen extends GameScreenBase {
         this.selectShip = false;
         this.facts = []; // only on this screen.
         for (var i = 0; i < 7; ++i) {
-            const qNumber = Math.floor(Math.random() * 10000) + 7;
-            const x = Math.random() * this.upperBounds.x;
-            const y = Math.random() * this.upperBounds.y;
+            const qNumber = randInt(10000) + 7;
+            const x = randFloat(this.upperBounds.x);
+            const y = randFloat(this.upperBounds.y);
             this.facts.push(new Factoroid(qNumber, new Point(x, y), this.state, new Point(this.upperBounds.x, this.upperBounds.y)));
         }
         this.buildButtons();

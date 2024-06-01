@@ -5,7 +5,7 @@ import Factoroid from './Factoroid.js';
 import primes from './Primes.js';
 import Point from './Point.js';
 
-import { degreesToRadians } from './AAAHelpers.js';
+import { degreesToRadians, randFloat, randInt } from './AAAHelpers.js';
 import PowerUpFactory from './PowerUpFactory.js';
 import LevelTransition from './LevelTransition.js';
 
@@ -33,13 +33,13 @@ export default class GameScreenLevel extends GameScreenBase {
     //     const phi = 1.618033988749895;
     //     const index = primes.findIndex(p => p === level);
     //     const max =  phi * (primes[index + 1]) + 1;
-    //     const product = Math.max(2, Math.floor(Math.random() * max));
+    //     const product = Math.max(2, randInt(max)));
     //     return product;
     // }
 
     getProductFromLevelSimpleMax(level) {
         const max = level * level;
-        const product = Math.max(2, Math.floor(Math.random() * max));
+        const product = Math.max(2, randInt(max));
         return product;
     }
 
@@ -53,16 +53,16 @@ export default class GameScreenLevel extends GameScreenBase {
 
     populateLevel(level) {
         if (level === 'debug') {
-            const x = Math.random() * this.upperBounds.x;
-            const y = Math.random() * this.upperBounds.y;
+            const x = randFloat(this.upperBounds.x);
+            const y = randFloat(this.upperBounds.y);
             // facts.push(new Factoroid(2 * 3 * 5 * 7 * 11, new Point(x, y), new Point(this.upperBounds.x, this.upperBounds.y)));
             this.state.facts.push(new Factoroid(1172490, new Point(x, y), this.state, new Point(this.upperBounds.x, this.upperBounds.y)));
         } else {
             const factoroids = this.calculateFactoroidCount(level);
             for (var i = 0; i < factoroids; ++i) {
                 const qNumber = this.getProductFromLevelSimpleMax(level);
-                const x = Math.random() * this.upperBounds.x;
-                const y = Math.random() * this.upperBounds.y;
+                const x = randFloat(this.upperBounds.x);
+                const y = randFloat(this.upperBounds.y);
                 this.state.facts.push(new Factoroid(qNumber, new Point(x, y), this.state, new Point(this.upperBounds.x, this.upperBounds.y)));
             }
         }
