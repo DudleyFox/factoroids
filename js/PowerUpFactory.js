@@ -5,7 +5,8 @@ import SpecialHyper from './SpecialHyper.js';
 import SpecialDeadStop from './SpecialDeadStop.js';
 import SpecialMagnetar from './SpecialMagnetar.js';
 import {
-    randInt
+    randInt,
+    randFloat
 } from './AAAHelpers.js'
 
 export default class PowerUpFactory {

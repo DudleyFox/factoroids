@@ -5,7 +5,8 @@ import {
     generateFactors,
     sumTheFactors,
     degreesToRadians,
-    coinToss
+    coinToss,
+    randFloat
 } from './AAAHelpers.js';
 
 // TODO: 2022-09-02 D. Fox - Find a better home for the firing solutions.
