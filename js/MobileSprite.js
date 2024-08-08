@@ -2,6 +2,7 @@ import BaseSprite from './BaseSprite.js';
 import Point from './Point.js';
 import {
     degreesToRadians,
+    randFloat
 } from './AAAHelpers.js';
 
 /**
@@ -13,8 +14,8 @@ import {
 export default class MobileSprite extends BaseSprite {
     constructor(origin, upperBounds, state, vector, magnitude) {
         super(origin, upperBounds, state);
-        this.vector = vector || Math.random() * 360;
-        this.magnitude = magnitude || (Math.random() * 20 + 10);
+        this.vector = vector || randFloat(360);
+        this.magnitude = magnitude || randFloat(30, 10);
         this.xVelocity = Math.cos(degreesToRadians(this.vector)) * this.magnitude;
         this.yVelocity = Math.sin(degreesToRadians(this.vector)) * this.magnitude;
 

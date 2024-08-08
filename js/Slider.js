@@ -73,12 +73,21 @@ export default class Slider {
             const relativeY = y - this.tl.y;
             const relativeX = x = this.tl.x;
             const newValue = this.calculteValue(relativeX, relativeY);
-            this.calculteBarPosition(relativeX, relativeY, newValue);
-            if (this.value !== newValue) {
-                this.value = Math.max(Math.min(newValue, this.upper), this.lower);
-                this.updateValue();
-            }
+            this.calculteBarPosition(relativeX, relativeY);
+            this.onNewValue(newValue);
             evt.preventDefault();
+        }
+    }
+
+    setValue(newValue){
+        this.onNewValue(newValue);
+        this.calculateStartBarPosition(this.value);
+    }
+
+    onNewValue(newValue) {
+        if (this.value !== newValue) {
+            this.value = Math.max(Math.min(newValue, this.upper), this.lower);
+            this.updateValue();
         }
     }
 

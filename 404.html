@@ -30,6 +30,9 @@
 
         import Factoroid from './js/Factoroid.js';
         import Point from './js/Point.js';
+        import {
+            randInt
+        } from './js/AAAHelpers.js';
 
         const state = { facts: [] };
 
@@ -59,7 +62,6 @@
                 f.yPos = y1;
                 f.xVelocity = dx/dt;
                 f.yVelocity = dy/dt;
-                console.log(dx,dy,dt, f.xVelocity, f.yVelocity);
             }
         }
 
@@ -96,8 +98,8 @@
         resizeCanvas()
 
         function populateLevel() {
-            const x = Math.random() * canvas.width;
-            const y = Math.random() * canvas.height;
+            const x = randInt(canvas.width);
+            const y = randInt(canvas.height);
             state.facts.push(new Factoroid(404, new Point(x, y), state, new Point(canvas.width, canvas.height)));
         }
 

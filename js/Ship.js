@@ -5,7 +5,8 @@ import {
     generateFactors,
     sumTheFactors,
     degreesToRadians,
-    coinToss
+    coinToss,
+    randFloat
 } from './AAAHelpers.js';
 
 // TODO: 2022-09-02 D. Fox - Find a better home for the firing solutions.
@@ -319,10 +320,10 @@ export default class Ship extends MobileSprite {
         } else {
             for (let i = 0; i < 20; ++i) {
                 const range = this.radius + this.particleCloudExtent;
-                const angle = Math.random() * 2 * Math.PI;
-                const xR = (Math.random() * range) * Math.cos(angle);
-                const yR = (Math.random() * range) * Math.sin(angle);
-                const size = Math.random() * 2;
+                const angle = randFloat(2 * Math.PI);
+                const xR = randFloat(range) * Math.cos(angle);
+                const yR = randFloat(range) * Math.sin(angle);
+                const size = randFloat(2);
                 context.beginPath();
                 context.arc(x + xR, y + yR, size, 0, 2 * Math.PI);
                 const color = coinToss() > 0 ? this.color : 'white';

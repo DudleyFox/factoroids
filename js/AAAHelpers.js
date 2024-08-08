@@ -156,3 +156,12 @@ export function sumTheFactors(theta, factors) {
 
     return sum;
 }
+
+export function randInt(upper, lower=0) {
+    return Math.floor(Math.random() * (upper - lower) + lower);
+}
+
+export function randFloat(upper, lower=0) {
+    return Math.random() * (upper - lower) + lower;
+}
+

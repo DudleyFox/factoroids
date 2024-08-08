@@ -3,9 +3,7 @@ import {
     getItemInt,
     setItem
 } from './Storage.js';
-import { toHex } from './AAAHelpers.js';
-
-const randInt = (max) => Math.floor(Math.random() * max);
+import { toHex, randInt } from './AAAHelpers.js';
 
 /**
  * Class to read and write ship settings to and from storage
@@ -33,9 +31,9 @@ export default class ShipWarehouse {
         this.fustrumCapacitance = getItemInt('f', 13);
         this.sweepIndex = getItemInt('s', 0);
         this.rivetIndex = getItemInt('r', 0);
-        this.red = getItemInt('sr', 255);
-        this.green = getItemInt('sg', 255);
-        this.blue = getItemInt('sb', 0);
+        this.red = getItemInt('sr', randInt(256));
+        this.green = getItemInt('sg', randInt(256));
+        this.blue = getItemInt('sb', randInt(256));
     }
 
     getSteps() {

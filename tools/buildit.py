@@ -81,18 +81,21 @@ def makeNewFileName(name, jsFileNames, category, version):
             newPaths.append(p)
     return os.path.join(*newPaths)
         
-def copyFile(name, jsFileNames, category, version):
+def copyFile(name, jsFileNames, category, version, straightCopy):
     newName = makeNewFileName(name, jsFileNames, category, version)
-    lines = getFileLines(name)
-    with open(newName, 'w') as f:
-        for l in lines:
-            if l.find('from') != -1:
-                for js in jsFileNames:
-                    l = l.replace(js, makeNewName(js, category, version))
-            elif l.find('%category x%') != -1:
-                l = l.replace('%category x%', f'{category} {version}')
+    if straightCopy:
+        shutil.copyfile(name, newName)
+    else:
+        lines = getFileLines(name)
+        with open(newName, 'w') as f:
+            for l in lines:
+                if l.find('from') != -1:
+                    for js in jsFileNames:
+                        l = l.replace(js, makeNewName(js, category, version))
+                elif l.find('%category x%') != -1:
+                    l = l.replace('%category x%', f'{category} {version}')
             
-            f.write(l)
+                f.write(l)
     print (f'Copied {name} to {newName}')
 
     
@@ -145,8 +148,14 @@ for d in dirs:
     os.mkdir(newDirName)
 
 # copy the files
+copyOnly = [
+    os.path.join('..','favicon.ico')
+]
 for f in files:
-    copyFile(f, jsFileNames, category, version)
+    try:
+        copyFile(f, jsFileNames, category, version, f in copyOnly)
+    except Exception as e:
+        print(f'Failed to copy {f}:',e)
 
 #update the version
 writeNewVersion(category, index)
