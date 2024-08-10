@@ -261,6 +261,7 @@ export default class Factoroid extends MobileSprite {
             const number = this.factors.find(x => x === bullet.number);
             if (number) {
                 this.product = this.product / number;
+                this.color = generateColor(this.product);
                 if (this.product === 1) {
                     this.dead = true;
                     return 1;
