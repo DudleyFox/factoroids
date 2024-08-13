@@ -10,7 +10,7 @@ export default class PowerUp extends MobileSprite {
         this.special = special;
         this.maxRadius = 25;
         this.active = true;
-        this.ttl = 7;
+        this.ttl = 12;
         this.calculator = new Calculator(this.special.color(), this.special.text());
     }
 
