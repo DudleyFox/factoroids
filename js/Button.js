@@ -41,15 +41,12 @@ export default class Button {
             this.downInButton = true;
             [this.edge, this.face] = [this.face, this.edge];
             this.swapped = true;
+            this.click();
         }
 
     }
 
     OnUp(evt, x, y) {
-        if (this.inButton(x, y) && this.downInButton) {
-            this.click()
-        }
-
         // reset for next time
         this.downInButton = false;
         if (this.swapped) {
