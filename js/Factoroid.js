@@ -298,6 +298,10 @@ export default class Factoroid extends MobileSprite {
         }
     }
 
+    getLabel() {
+        return this.product;
+    }
+
     privateDraw(context, xLoc, yLoc) {
         context.save();
         context.beginPath();
@@ -319,7 +323,8 @@ export default class Factoroid extends MobileSprite {
         context.font = '14pt Courier';
         context.textAlign = 'center';
         context.textBaseline = 'middle';
-        context.fillText(this.product, xLoc, yLoc);
+        const label = this.getLabel()
+        context.fillText(label, xLoc, yLoc);
         context.restore();
     }
 

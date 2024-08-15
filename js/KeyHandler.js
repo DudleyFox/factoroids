@@ -85,6 +85,11 @@ export default class KeyHandler {
         return this.map[40] || this.map[83];
     }
 
+    escape() {
+        // ESC
+        return this.map[27];
+    }
+
     number() {
         return this.storedNumber;
     }

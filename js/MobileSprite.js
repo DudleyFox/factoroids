@@ -18,6 +18,7 @@ export default class MobileSprite extends BaseSprite {
         this.magnitude = magnitude || randFloat(30, 10);
         this.xVelocity = Math.cos(degreesToRadians(this.vector)) * this.magnitude;
         this.yVelocity = Math.sin(degreesToRadians(this.vector)) * this.magnitude;
+        this.nowrap = false;
 
         this.generateCenters();
     }
@@ -40,46 +41,49 @@ export default class MobileSprite extends BaseSprite {
 
     generateCenters() {
         this.centers = [new Point(this.xPos, this.yPos)];
-        if (this.onRight()) {
-            this.centers.push(new Point(
-                this.xPos - this.upperBounds.x,
-                this.yPos));
-            if (this.onTop()) {
+        const wrap = !this.nowrap;
+        if (wrap) {
+            if (this.onRight()) {
                 this.centers.push(new Point(
                     this.xPos - this.upperBounds.x,
-                    this.yPos + this.upperBounds.y));
-            }
-            if (this.onBottom()) {
-                this.centers.push(new Point(
-                    this.xPos - this.upperBounds.x,
-                    this.yPos - this.upperBounds.y));
-            }
+                    this.yPos));
+                if (this.onTop()) {
+                    this.centers.push(new Point(
+                        this.xPos - this.upperBounds.x,
+                        this.yPos + this.upperBounds.y));
+                }
+                if (this.onBottom()) {
+                    this.centers.push(new Point(
+                        this.xPos - this.upperBounds.x,
+                        this.yPos - this.upperBounds.y));
+                }
 
-        }
-        if (this.onLeft()) {
-            this.centers.push(new Point(
-                this.xPos + this.upperBounds.x,
-                this.yPos));
-            if (this.onTop()) {
+            }
+            if (this.onLeft()) {
                 this.centers.push(new Point(
                     this.xPos + this.upperBounds.x,
-                    this.yPos + this.upperBounds.y));
+                    this.yPos));
+                if (this.onTop()) {
+                    this.centers.push(new Point(
+                        this.xPos + this.upperBounds.x,
+                        this.yPos + this.upperBounds.y));
+                }
+                if (this.onBottom()) {
+                    this.centers.push(new Point(
+                        this.xPos + this.upperBounds.x,
+                        this.yPos - this.upperBounds.y));
+                }
             }
             if (this.onBottom()) {
                 this.centers.push(new Point(
-                    this.xPos + this.upperBounds.x,
+                    this.xPos,
                     this.yPos - this.upperBounds.y));
             }
-        }
-        if (this.onBottom()) {
-            this.centers.push(new Point(
-                this.xPos,
-                this.yPos - this.upperBounds.y));
-        }
-        if (this.onTop()) {
-            this.centers.push(new Point(
-                this.xPos,
-                this.yPos + this.upperBounds.y));
+            if (this.onTop()) {
+                this.centers.push(new Point(
+                    this.xPos,
+                    this.yPos + this.upperBounds.y));
+            }
         }
 
         return this.centers;
