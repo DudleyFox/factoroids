@@ -9,8 +9,9 @@ import {
 } from './AAAHelpers.js';
 
 export default class CreditsScreen extends GameScreenBase {
-    constructor(upperBounds, keyHandler, state, pointerHandler) {
-        super(upperBounds, keyHandler, state);
+    constructor(options) {
+        super(options);
+        const {upperBounds, keyHandler, state, pointerHandler} = options;
         this.pointerHandler = pointerHandler;
         this.startScreen = false;
 
@@ -40,12 +41,17 @@ export default class CreditsScreen extends GameScreenBase {
         }
     }
 
+    buildOptions() {
+        const {upperBounds, keyHandler, state, pointerHandler} = this;
+        return {upperBounds, keyHandler, state, pointerHandler};
+    }
+
     update(delta) {
         this.facts.forEach(f => this.handleFactoroidUpdate(f, delta)); 
         this.facts = this.facts.filter(f => !f.dead);
         this.startScreen = this.keyHandler.escape();
         if (this.startScreen) {
-            return new StartScreen(this.upperBounds, this.keyHandler, this.state, this.pointerHandler);
+            return new StartScreen(this.buildOptions());
         }
         return this;
     }

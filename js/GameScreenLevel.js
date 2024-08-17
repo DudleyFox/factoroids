@@ -10,8 +10,9 @@ import PowerUpFactory from './PowerUpFactory.js';
 import LevelTransition from './LevelTransition.js';
 
 export default class GameScreenLevel extends GameScreenBase {
-    constructor(upperBounds, keyHandler, state, level, pointerHandler) {
-        super(upperBounds, keyHandler, state);
+    constructor(options) {
+        super(options);
+        const {upperBounds, keyHandler, state, level, pointerHandler} = options;
         this.pointerHandler = pointerHandler;
         this.level = level || 2;
         this.gameOverCountdownValue = 10;
@@ -82,9 +83,14 @@ export default class GameScreenLevel extends GameScreenBase {
         this.upperBoundsChanged = false;
     }
 
+    buildOptions() {
+        const {upperBounds, keyHandler, state, level, pointerHandler} = this;
+        return {upperBounds, keyHandler, state, level, pointerHandler};
+    }
+
     update(delta) {
         if (this.state.facts.length === 0) {
-            return new LevelTransition(this.upperBounds, this.keyHandler, this.state, this.level, this.pointerHandler)
+            return new LevelTransition(this.buildOptions());
         }
 
         if (this.upperBoundsChanged) {
@@ -105,7 +111,7 @@ export default class GameScreenLevel extends GameScreenBase {
         if (this.state.lifeCount === 0 && this.gameOverCountdown > 0) {
             this.gameOverCountdown -= delta;
             if (this.gameOverCountdown <= 0) {
-                return new GameOver(this.upperBounds, this.keyHandler, this.state, this.level, this.pointerHandler);
+                return new GameOver(this.buildOptions());
             }
         }
 

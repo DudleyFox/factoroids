@@ -4,10 +4,10 @@
 // * animation loop.
 // *
 export default class GameScreenBase {
-    constructor(upperBounds, KeyHandler, state) {
-        this.keyHandler = KeyHandler;
-        this.upperBounds = upperBounds;
-        this.state = state;
+    constructor(options) {
+        this.keyHandler = options.keyHandler;
+        this.upperBounds = options.upperBounds;
+        this.state = options.state;
         this.upperBoundsChanged = false;
     }
 

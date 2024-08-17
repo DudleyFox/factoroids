@@ -13,10 +13,11 @@ import {
 } from './AAAHelpers.js';
 
 export default class StartScreen extends GameScreenBase {
-    constructor(upperBounds, keyhandler, state, pointerHandler) {
-        super(upperBounds, keyhandler, stateFactory(upperBounds, keyhandler));
+    constructor(options) {
+        super(options);
+        const {upperBounds, keyHandler, state, pointerHandler } = options
+        this.state=stateFactory({upperBounds, keyHandler});
         this.pointerHandler = pointerHandler;
-        this.shipWarehouse = new ShipWarehouse
         this.play = false;
         this.selectShip = false;
         this.howToPlay = false;
@@ -29,7 +30,6 @@ export default class StartScreen extends GameScreenBase {
             this.facts.push(new Factoroid(qNumber, new Point(x, y), this.state, new Point(this.upperBounds.x, this.upperBounds.y)));
         }
         this.buildButtons();
-        
     }
 
     setUpperBounds(ub) {
@@ -62,20 +62,31 @@ export default class StartScreen extends GameScreenBase {
         console.log(x)
     }
 
+    buildOptions() {
+        const options = {
+            upperBounds: this.upperBounds,
+            keyHandler: this.keyHandler,
+            state: this.state, 
+            level: 2,
+            pointerHandler: this.pointerHandler
+        };
+        return options;
+    }
+
     update(delta) {
         this.facts.forEach(f => f.update(delta));
         this.buttons.forEach(b => b.update(delta));
         if (this.play) {
-            return new GameScreenLevel(this.upperBounds, this.keyHandler, this.state, 2, this.pointerHandler);
+            return new GameScreenLevel(this.buildOptions());
         }
         if (this.selectShip) {
-            return new ShipSelector(this.upperBounds, this.keyHandler, this.state, this.pointerHandler);
+            return new ShipSelector(this.buildOptions());
         }
         if (this.howToPlay) {
             // do something
         }
         if (this.credits) {
-            return new CreditsScreen(this.upperBounds, this.keyHandler, this.state, this.pointerHandler);
+            return new CreditsScreen(this.buildOptions());
         }
         return this;
     }

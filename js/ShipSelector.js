@@ -10,10 +10,12 @@ import StartScreen from './StartScreen.js';
 import {
     randInt
 } from './AAAHelpers.js';
+import stateFactory from './StateFactory.js';
 
 export default class ShipSelector extends GameScreenBase {
-    constructor(upperBounds, keyhandler, state, pointerHandler) {
-        super(upperBounds, keyhandler, state)
+    constructor(options) {
+        super(options);
+        const {upperBounds, keyHandler, state, pointerHandler } = options;
         this.shipWarehouse = new ShipWarehouse();
         this.pointerHandler = pointerHandler;
         this.buttons = [];
@@ -68,6 +70,7 @@ export default class ShipSelector extends GameScreenBase {
         this.state.shipNumber = shipState.shipNumber;
         this.state.shipStepSize = shipState.shipStepSize;
         this.state.shipColor = shipState.shipColor;
+        console.log(`Ship rebuild color ${this.state.shipColor}`);
         this.shipHull = shipState.shipHull;
         let oldAngle = 0;
         let leftRotation = 0;
@@ -168,14 +171,18 @@ export default class ShipSelector extends GameScreenBase {
         this.rebuild();
     }
 
+    buildOptions(level) {
+        const {upperBounds, keyHandler, pointerHandler} = this;
+        const state = stateFactory({upperBounds, keyHandler});
+        return {upperBounds, keyHandler, state, level, pointerHandler};
+    }
+
     update(delta) {
         if (this.done) {
-            //constructor(upperBounds, keyHandler, state, level) 
-            return new StartScreen(this.upperBounds, this.keyHandler, this.state, this.pointerHandler);
+            return new StartScreen(this.buildOptions(2));
         }
         if (this.play) {
-            //constructor(upperBounds, keyHandler, state, level) 
-            return new GameScreenLevel(this.upperBounds, this.keyHandler, this.state, 2, this.pointerHandler);
+            return new GameScreenLevel(this.buildOptions(2));
         }
         this.ship.update(delta);
         return this;

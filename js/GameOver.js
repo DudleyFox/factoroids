@@ -12,8 +12,9 @@ import {
 } from './AAAHelpers.js';
 
 export default class GameScreenOver extends GameScreenBase {
-    constructor(upperBounds, keyHandler, state, level, pointerHandler) {
-        super(upperBounds, keyHandler, state);
+    constructor(options) {
+        super(options);
+        const {upperBounds, keyHandler, state, level, pointerHandler} = options;
         this.pointerHandler = pointerHandler;
         this.level = level;
         this.facts = [];
@@ -63,6 +64,11 @@ export default class GameScreenOver extends GameScreenBase {
         this.upperBoundsChanged = false;
     }
 
+    buildOptions() {
+        const {upperBounds, keyHandler, state, pointerHandler} = this;
+        return {upperBounds, keyHandler, state, level:2, pointerHandler};
+    }
+
     update(delta) {
         if (this.upperBoundsChanged) {
             this.resize();
@@ -72,10 +78,10 @@ export default class GameScreenOver extends GameScreenBase {
         this.facts.forEach(f => f.update(delta));
         if (this.buttonState === 'again') {
             this.cleanUp();
-            return new GameScreenLevel(this.upperBounds, this.keyHandler, this.state, 2, this.pointerHandler);
+            return new GameScreenLevel(this.buildOptions());
         } else if (this.buttonState === 'menu') {
             this.cleanUp();
-            return new StartScreen(this.upperBounds, this.keyHandler, this.state, this.pointerHandler);
+            return new StartScreen(this.buildOptions());
         }
         return this;
     }

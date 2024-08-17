@@ -4,7 +4,8 @@ import GhostShip from './GhostShip.js';
 import SpecialFlip from './SpecialFlip.js';
 import Point from './Point.js';
 
-export default function (upperBounds, keyHandler) {
+export default function (options) {
+        const {upperBounds, keyHandler} = options
         const shipWarehouse = new ShipWarehouse();
         const state = {
             facts: [],
