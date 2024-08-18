@@ -80,7 +80,16 @@ export default class ShipSelector extends GameScreenBase {
             leftRotation = this.ship.leftRotation;
             rightRotation = this.ship.rightRotation;
         }
-        this.ship = new Ship(new Point(this.upperBounds.x / 2, this.upperBounds.y / 2), this.upperBounds, this.keyHandler, this.state, 500, false, true);
+        const options = {
+            origin: new Point(this.upperBounds.x / 2, this.upperBounds.y / 2), 
+            upperBounds, 
+            keyHandler, 
+            state, 
+            maxSize: 500, 
+            drawRadii: false, 
+            demo: true
+        };
+        this.ship = new Ship(options);
         this.ship.rotation = oldAngle;
         this.ship.leftRotation = leftRotation;
         this.ship.rightRotation = rightRotation;

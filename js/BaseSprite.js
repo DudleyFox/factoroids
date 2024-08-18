@@ -1,9 +1,9 @@
 export default class BaseSprite {
-    constructor(origin, upperBounds, state) {
-        this.upperBounds = upperBounds;
-        this.xPos = origin.x;
-        this.yPos = origin.y;
-        this.state = state;
+    constructor(options) {
+        this.upperBounds = options.upperBounds;
+        this.xPos = options.origin.x;
+        this.yPos = options.origin.y;
+        this.state = options.state;
     }
     setUpperBounds(ub) {
         this.upperBounds = ub;

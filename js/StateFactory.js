@@ -31,7 +31,16 @@ export default function (options) {
         state.shipStepSize = shipState.shipStepSize;
         state.shipColor = shipState.shipColor;
         const shipHull = shipState.shipHull;
-        state.ship = new Ship(new Point(upperBounds.x / 2, upperBounds.y / 2), new Point(upperBounds.x, upperBounds.y), keyHandler, state, 50);
+        const shipOptions = {
+            origin: new Point(upperBounds.x / 2, upperBounds.y
+            / 2),
+            upperBounds: new Point(upperBounds.x,
+            upperBounds.y),
+            keyHandler,
+            state,
+            maxSize:50
+        };
+        state.ship = new Ship(shipOptions);
         const delta = 48;
         for (let i = 0; i < state.lifeCount - 1; ++i) {
             state.lives.push(new GhostShip(new Point(upperBounds.x - delta, delta + delta * i), new Point(upperBounds.x, upperBounds.y), state.shipNumber, state.shipStepSize, 50));

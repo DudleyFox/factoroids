@@ -5,16 +5,15 @@ import {
 import Calculator from './Calculator.js';
 
 export default class PowerUp extends MobileSprite {
-    constructor(origins, upperBounds, state, special) {
-        super(origins, upperBounds, state, undefined, 80);
+    constructor(options) {
+        super({...options, vector:undefined, magnitude:80});
+        const { origins, upperBounds, state, special } = options;
         this.special = special;
         this.maxRadius = 25;
         this.active = true;
         this.ttl = 12;
         this.calculator = new Calculator(this.special.color(), this.special.text());
     }
-
-   
 
     privateDraw(context, x, y) {
         this.calculator.draw(context, x, y);

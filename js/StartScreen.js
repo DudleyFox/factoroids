@@ -27,7 +27,13 @@ export default class StartScreen extends GameScreenBase {
             const qNumber = randInt(10000) + 7;
             const x = randFloat(this.upperBounds.x);
             const y = randFloat(this.upperBounds.y);
-            this.facts.push(new Factoroid(qNumber, new Point(x, y), this.state, new Point(this.upperBounds.x, this.upperBounds.y)));
+            const options = {
+                product: qNumber,
+                origin: new Point(x, y),
+                state: this.state,
+                upperBounds: this.upperBounds
+            };
+            this.facts.push(new Factoroid(options));
         }
         this.buildButtons();
     }

@@ -13,8 +13,9 @@ import {
 } from './AAAHelpers.js';
 
 export default class Factoroid extends MobileSprite {
-    constructor(product, origin, state, upperBounds, vector, magnitude, cg) {
-        super(origin, upperBounds, state, vector, magnitude);
+    constructor(options) {
+        super(options);
+        const {product, origin, state, upperBounds} = options;
         this.product = product;
         this.points = new Array();
         this.innerPoints = new Array();
@@ -30,7 +31,7 @@ export default class Factoroid extends MobileSprite {
         this.hasSpawn = false;
         this.magnetar = false;
 
-        if (cg) {
+        if (options.cg) {
             this.color = cg();
         } else {
             this.color = generateColor(this.product);
@@ -206,10 +207,17 @@ export default class Factoroid extends MobileSprite {
                     num = 0;
                 }
                 const v = coinToss() === 1 ? vector : vector + 180;
-                const f = new Factoroid(s, new Point(this.xPos, this.yPos), this.state, this.upperBounds, v, randFloat(50));
+                const options = {
+                    product: s,
+                    origin: new Point(this.xPos, this.yPos),
+                    state: this.state,
+                    upperBounds: this.upperBounds,
+                    vector: v,
+                    magnitude: randFloat(50)
+                };
+                const f = new Factoroid(options);
                 stableFactoroids.push(f);
             }
-
         }
         return stableFactoroids;
     }
@@ -268,7 +276,15 @@ export default class Factoroid extends MobileSprite {
                 } else {
                     const vector = this.vector + (180 + (randFloat(20) * coinToss()));
                     const magnitude = this.magnitude * ((randFloat(5) + 1));
-                    const f = new Factoroid(number, new Point(this.xPos, this.yPos), this.state, this.upperBounds, vector, magnitude);
+                    const options = {
+                        product: number,
+                        origin: new Point(this.xPos, this.yPos),
+                        state: this.state,
+                        upperBounds: this.upperBounds,
+                        vector,
+                        magnitude
+                    };
+                    const f = new Factoroid(options);
                     if (this.state.fb[this.state.fbIndex].name === 'Splinter') {
                         this.hasSpawn = true;
                         this.spawn.push(this);

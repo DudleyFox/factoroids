@@ -14,7 +14,14 @@ export default class LevelTransition extends GameScreenBase {
         const {upperBounds, keyHandler, state, level, pointerHandler} = options
         this.pointerHandler = pointerHandler;
         this.level = level;
-        this.fact = new Factoroid(this.level, new Point(this.upperBounds.x / 2, this.upperBounds.y / 2), this.state, new Point(this.upperBounds.x, this.upperBounds.y),0,0,()=>'gold');
+        const factOptions = {
+            product: this.level,
+            origin: new Point(this.upperBounds.x / 2, this.upperBounds.y / 2),
+            state: this.state,
+            upperBound: this.upperBounds,
+            cg: ()=>'gold'
+        };
+        this.fact = new Factoroid(factOptions);
         this.fact.xVelocity = 0;
         this.fact.yVelocity = 0;
         const x = this.upperBounds.x / 2 - 225 / 2;

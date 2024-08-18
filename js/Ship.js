@@ -67,8 +67,11 @@ function generateFiringSolutions(ship) {
 
 
 export default class Ship extends MobileSprite {
-    constructor(origin, upperBounds, keyHandler, state, maxSize, drawRadii = false, demo = false) {
-        super(origin, upperBounds, state, 0, 0);
+    constructor(options) {
+        super({...options, vector:0, magnitude:0});
+        const { origin, upperBounds, keyHandler, state, maxSize } = options;
+        const drawRadii = options.drawRadii || false;
+        const demo = options.demo || false;
         this.origin = origin;
         this.breachNumber = 0;
         this.keyHandler = keyHandler;

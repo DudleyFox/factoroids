@@ -27,10 +27,23 @@ export default class GameScreenOver extends GameScreenBase {
         while (primes[primesIndex] < level) {
             const x = randFloat(this.upperBounds.x);
             const y = randFloat(this.upperBounds.y);
-            this.facts.push(new Factoroid(primes[primesIndex], new Point(x, y), this.state, new Point(this.upperBounds.x, this.upperBounds.y),0,0,()=>'gold'));
+            const goldOptions = {
+                product: primes[primeIndex],
+                origin: new Point(x, y),
+                state: this.state,
+                upperBounds: this.upperBounds,
+                cg: ()=>'gold'
+            };
+            this.facts.push(new Factoroid(goldOptions));
             primesIndex += 1;
         }
-        this.facts.push(new Factoroid(level, new Point(x, y), this.state, new Point(this.upperBounds.x, this.upperBounds.y)));
+        const blueOptions = {
+            product: level,
+            origin: new Point(x, y),
+            state: this.state,
+            upperBounds: this.upperBounds
+        };
+        this.facts.push(blueOptions);
         this.playAgainButton.Subscribe(this);
         this.menuButton.Subscribe(this);
         this.state.lifeCount = 3;

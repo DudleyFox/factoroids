@@ -56,14 +56,26 @@ export default class GameScreenLevel extends GameScreenBase {
         if (level === 'debug') {
             const x = randFloat(this.upperBounds.x);
             const y = randFloat(this.upperBounds.y);
-            this.state.facts.push(new Factoroid(1172490, new Point(x, y), this.state, new Point(this.upperBounds.x, this.upperBounds.y)));
+            const options = {
+                product: 1172490,
+                origin: new Point(x, y),
+                state: this.state,
+                upperBounds: this.upperBounds
+            };
+            this.state.facts.push(new Factoroid(options));
         } else {
             const factoroids = this.levelCount;
             for (var i = 0; i < factoroids; ++i) {
                 const qNumber = this.getRandomProduct(this.levelMax);
                 const x = randFloat(this.upperBounds.x);
                 const y = randFloat(this.upperBounds.y);
-                this.state.facts.push(new Factoroid(qNumber, new Point(x, y), this.state, new Point(this.upperBounds.x, this.upperBounds.y)));
+                const options = {
+                    product: qNumber,
+                    origin: new Point(x, y),
+                    state: this.state,
+                    upperBounds: this.upperBounds
+                };
+                this.state.facts.push(new Factoroid(options));
             }
         }
     }

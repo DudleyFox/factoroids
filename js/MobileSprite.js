@@ -5,6 +5,16 @@ import {
     randFloat
 } from './AAAHelpers.js';
 
+
+// Given a value, return the defVal if it is undefine or null,
+// otherwise use the number as it is. This helps where the
+// number could be zero.
+const getNumericOption = (option, defVal) => {
+    if (option === undefined || option === null) {
+        return defValue;
+    }
+    return option;
+}
 /**
  * Handles motion and detecting how close we are to the edge, so we can draw extra
  * for the wrap around effect.
@@ -12,10 +22,11 @@ import {
  * The child class needs to provide a drawPrivate method that takes a context, and an x and y location.
  */
 export default class MobileSprite extends BaseSprite {
-    constructor(origin, upperBounds, state, vector, magnitude) {
-        super(origin, upperBounds, state);
-        this.vector = vector || randFloat(360);
-        this.magnitude = magnitude || randFloat(30, 10);
+    constructor(options) {
+        super(options);
+        const {origin, upperBounds, state} = options;
+        this.vector = getNumericOption(options.vector, randFloat(360));
+        this.magnitude = getNumericOption(options.magnitude, randFloat(30, 10));
         this.xVelocity = Math.cos(degreesToRadians(this.vector)) * this.magnitude;
         this.yVelocity = Math.sin(degreesToRadians(this.vector)) * this.magnitude;
         this.nowrap = false;
