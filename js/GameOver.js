@@ -43,7 +43,7 @@ export default class GameScreenOver extends GameScreenBase {
             state: this.state,
             upperBounds: this.upperBounds
         };
-        this.facts.push(blueOptions);
+        this.facts.push(new Factoroid(blueOptions));
         this.playAgainButton.Subscribe(this);
         this.menuButton.Subscribe(this);
         this.state.lifeCount = 3;

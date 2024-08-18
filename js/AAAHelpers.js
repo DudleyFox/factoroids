@@ -165,3 +165,11 @@ export function randFloat(upper, lower=0) {
     return Math.random() * (upper - lower) + lower;
 }
 
+export function normalizeIndex(index, length) {
+        if (index < 0) {
+            return length - 1;
+        } else if (index >= length) {
+            return 0;
+        }
+        return index;
+    }

@@ -11,12 +11,11 @@ const computeProductFromLabel = (label) => {
 }
 
 export default class ASCIIRoid extends Factoroid {
-    constructor(label, title, origin, state, upperBounds, vector, magnitude, cg) {
-        const product = computeProductFromLabel(label);
-        super(product, origin, state, upperBounds, vector, magnitude, cg);
-        this.label = label;
-        this.title = title;
-        this.nowrap=true;
+    constructor(options) {
+        const product = computeProductFromLabel(options.label);
+        super({...options, product, noWrap: true});
+        this.label = options.label;
+        this.title = options.title;
     }
 
     getLabel() {

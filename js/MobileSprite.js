@@ -25,11 +25,12 @@ export default class MobileSprite extends BaseSprite {
     constructor(options) {
         super(options);
         const {origin, upperBounds, state} = options;
+        const mScale = options.mScale || 1;
         this.vector = getNumericOption(options.vector, randFloat(360));
-        this.magnitude = getNumericOption(options.magnitude, randFloat(30, 10));
+        this.magnitude = getNumericOption(options.magnitude, randFloat(30*mScale, 10*mScale));
         this.xVelocity = Math.cos(degreesToRadians(this.vector)) * this.magnitude;
         this.yVelocity = Math.sin(degreesToRadians(this.vector)) * this.magnitude;
-        this.nowrap = false;
+        this.wrap = !(options.noWrap || false);
 
         this.generateCenters();
     }
@@ -52,8 +53,7 @@ export default class MobileSprite extends BaseSprite {
 
     generateCenters() {
         this.centers = [new Point(this.xPos, this.yPos)];
-        const wrap = !this.nowrap;
-        if (wrap) {
+        if (this.wrap) {
             if (this.onRight()) {
                 this.centers.push(new Point(
                     this.xPos - this.upperBounds.x,
@@ -104,19 +104,21 @@ export default class MobileSprite extends BaseSprite {
     updatePosition(delta) {
         this.xPos += this.xVelocity * delta;
         this.yPos += this.yVelocity * delta;
-       
 
-        if (this.xPos < 0) {
-            this.xPos = this.upperBounds.x + this.xPos;
-        }
-        else if (this.xPos > this.upperBounds.x) {
-            this.xPos = this.xPos - this.upperBounds.x
-        }
-        if (this.yPos < 0) {
-            this.yPos = this.upperBounds.y + this.yPos;
-        }
-        else if (this.yPos > this.upperBounds.y) {
-            this.yPos = this.yPos - this.upperBounds.y
+
+        if (this.wrap) {
+            if (this.xPos < 0) {
+                this.xPos = this.upperBounds.x + this.xPos;
+            }
+            else if (this.xPos > this.upperBounds.x) {
+                this.xPos = this.xPos - this.upperBounds.x
+            }
+            if (this.yPos < 0) {
+                this.yPos = this.upperBounds.y + this.yPos;
+            }
+            else if (this.yPos > this.upperBounds.y) {
+                this.yPos = this.yPos - this.upperBounds.y
+            }
         }
 
         this.generateCenters();
