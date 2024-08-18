@@ -32,7 +32,7 @@ export default class Factoroid extends MobileSprite {
         this.magnetar = false;
 
         if (options.cg) {
-            this.color = cg();
+            this.color = options.cg();
         } else {
             this.color = generateColor(this.product);
         }

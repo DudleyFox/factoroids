@@ -82,9 +82,9 @@ export default class ShipSelector extends GameScreenBase {
         }
         const options = {
             origin: new Point(this.upperBounds.x / 2, this.upperBounds.y / 2), 
-            upperBounds, 
-            keyHandler, 
-            state, 
+            upperBounds: this.upperBounds, 
+            keyHandler: this.keyHandler, 
+            state: this.state, 
             maxSize: 500, 
             drawRadii: false, 
             demo: true

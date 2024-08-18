@@ -28,7 +28,7 @@ export default class GameScreenOver extends GameScreenBase {
             const x = randFloat(this.upperBounds.x);
             const y = randFloat(this.upperBounds.y);
             const goldOptions = {
-                product: primes[primeIndex],
+                product: primes[primesIndex],
                 origin: new Point(x, y),
                 state: this.state,
                 upperBounds: this.upperBounds,
@@ -49,7 +49,14 @@ export default class GameScreenOver extends GameScreenBase {
         this.state.lifeCount = 3;
         const delta = 48;
         for (let i = 0; i < this.state.lifeCount - 1; ++i) {
-            this.state.lives.push(new GhostShip(new Point(this.upperBounds.x - delta, delta + delta * i), new Point(this.upperBounds.x, this.upperBounds.y), this.state.ship.number, this.state.ship.stepSize, 50));
+            const gsOptions = {
+                origin: new Point(this.upperBounds.x - delta, delta + delta * i),
+                upperBounds,
+                number: this.state.ship.number,
+                stepSize: this.state.ship.stepSize,
+                maxSize: 50
+            };
+            this.state.lives.push(new GhostShip(gsOptions));
         }
         this.state.ship.reset();
         this.state.ship.setSpecial(new SpecialFlip());

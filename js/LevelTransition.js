@@ -18,7 +18,7 @@ export default class LevelTransition extends GameScreenBase {
             product: this.level,
             origin: new Point(this.upperBounds.x / 2, this.upperBounds.y / 2),
             state: this.state,
-            upperBound: this.upperBounds,
+            upperBounds: this.upperBounds,
             cg: ()=>'gold'
         };
         this.fact = new Factoroid(factOptions);

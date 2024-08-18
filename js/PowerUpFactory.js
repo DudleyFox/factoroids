@@ -38,7 +38,13 @@ export default class PowerUpFactory {
         const special = new this.specials[index]();
         const x = randFloat(this.upperBounds.x);
         const y = randFloat(this.upperBounds.y);
-        this.state.powerUps.push(new PowerUp(new Point(x,y), this.upperBounds, this.state, special))
+        const options = {
+            origin: new Point(x,y),
+            upperBounds: this.upperBounds,
+            state: this.state,
+            special: special
+        };
+        this.state.powerUps.push(new PowerUp(options));
     }
 
     create() {

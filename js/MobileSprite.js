@@ -11,7 +11,7 @@ import {
 // number could be zero.
 const getNumericOption = (option, defVal) => {
     if (option === undefined || option === null) {
-        return defValue;
+        return defVal;
     }
     return option;
 }

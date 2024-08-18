@@ -11,13 +11,15 @@ import {
 
 // TODO: 2022-09-02 D. Fox - Find a better home for the firing solutions.
 function fireBullet(ship, b) {
-    ship.state.bullets.push(new Bullet(b,
-        new Point(ship.xPos, ship.yPos),
-        ship.upperBounds,
-        ship.state,
-        ship.rotation - 90,
-        Math.abs(ship.xVelocity) + Math.abs(ship.yVelocity) + 1000
-    ));
+    const bulletOptions = {
+        number: b,
+        origin: new Point(ship.xPos, ship.yPos),
+        upperBounds: ship.upperBounds,
+        state: ship.state,
+        vector: ship.rotation - 90,
+        magnitude: Math.abs(ship.xVelocity) + Math.abs(ship.yVelocity) + 1000
+    };
+    ship.state.bullets.push(new Bullet(bulletOptions));
 }
 
 
