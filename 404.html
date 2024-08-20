@@ -1,7 +1,7 @@
 <html>
 <!-- 
         Copyright � 2022 Dudley Fox
-    -->
+-->
 
 <head>
     <meta http-equiv="X-UA-Compatible" content="chrome=1, IE=edge">
@@ -106,7 +106,13 @@
                 state,
                 upperBounds: new Point(canvas.width, canvas.height)
             };
-            state.facts.push(new Factoroid(404, new Point(x, y), state, new Point(canvas.width, canvas.height)));
+            const fOptions = {
+                product: 404,
+                origin: new Point(x, y),
+                state,
+                upperBounds: new Point(canvas.width, canvas.height)
+            };
+            state.facts.push(new Factoroid(fOptions));
         }
 
         populateLevel();

@@ -1,4 +1,3 @@
-
 import primes from './Primes.js';
 
 const params = new URLSearchParams(window.location.search);
