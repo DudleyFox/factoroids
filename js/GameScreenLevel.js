@@ -74,7 +74,7 @@ export default class GameScreenLevel extends GameScreenBase {
                     origin: new Point(x, y),
                     state: this.state,
                     upperBounds: this.upperBounds,
-                    mScale: 1 + level/10
+                    mScale: 1 + level/73
                 };
                 this.state.facts.push(new Factoroid(options));
             }

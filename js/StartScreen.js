@@ -2,6 +2,7 @@ import Factoroid from "./Factoroid.js";
 import GameScreenBase from "./GameScreenBase.js";
 import GameScreenLevel from "./GameScreenLevel.js";
 import CreditsScreen from "./CreditsScreen.js";
+import HowToPlay from "./HowToPlay.js";
 import ShipWarehouse from "./ShipWarehouse.js";
 import ShipSelector from "./ShipSelector.js";
 import Button from "./Button.js";
@@ -65,7 +66,6 @@ export default class StartScreen extends GameScreenBase {
         this.selectShip = x === 'select';
         this.howToPlay = x === 'howToPlay';
         this.credits = x === 'credits'
-        console.log(x)
     }
 
     buildOptions() {
@@ -89,7 +89,7 @@ export default class StartScreen extends GameScreenBase {
             return new ShipSelector(this.buildOptions());
         }
         if (this.howToPlay) {
-            // do something
+            return new HowToPlay(this.buildOptions()); 
         }
         if (this.credits) {
             return new CreditsScreen(this.buildOptions());

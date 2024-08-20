@@ -55,10 +55,10 @@ export default class ShipSelector extends GameScreenBase {
         this.buttons.push(new Button('reset', 'Reset', new Point(this.leftEdge, 200), 125, 25, pointerHandler));
         this.buttons.push(new Button('ok', 'OK', new Point(this.leftEdge, 235), 125, 25, pointerHandler));
         this.buttons.push(new Button('play', 'Play', new Point(this.leftEdge, 270), 125, 25, pointerHandler));
-        this.sliders.push(new Slider('red', 0, 255, this.shipWarehouse.getRed(), new Point(5, 10), 20, 255, 'up', 'gray', redFill, 'gray', pointerHandler));
-        this.sliders.push(new Slider('green', 0, 255, this.shipWarehouse.getGreen(), new Point(5 + 27, 10), 20, 255, 'up', 'gray', greenFill, 'gray', pointerHandler));
-        this.sliders.push(new Slider('blue', 0, 255, this.shipWarehouse.getBlue(), new Point(5 + 54, 10), 20, 255, 'up', 'gray', blueFill, 'gray', pointerHandler));
-        this.rando = new Button('random_color', 'Random', new Point(5, 255 + 20), 74, 25, pointerHandler);
+        this.sliders.push(new Slider('red', 0, 255, this.shipWarehouse.getRed(), new Point(5, 10), 20, 512, 'up', 'gray', redFill, 'gray', pointerHandler));
+        this.sliders.push(new Slider('green', 0, 255, this.shipWarehouse.getGreen(), new Point(5 + 27, 10), 20, 512, 'up', 'gray', greenFill, 'gray', pointerHandler));
+        this.sliders.push(new Slider('blue', 0, 255, this.shipWarehouse.getBlue(), new Point(5 + 54, 10), 20, 512, 'up', 'gray', blueFill, 'gray', pointerHandler));
+        this.rando = new Button('random_color', 'Random', new Point(5, 512 + 20), 74, 25, pointerHandler);
         this.rebuild();
         this.buttons.forEach(b => b.Subscribe(this));
         this.sliders.forEach(s => s.Subscribe(this));
@@ -70,7 +70,6 @@ export default class ShipSelector extends GameScreenBase {
         this.state.shipNumber = shipState.shipNumber;
         this.state.shipStepSize = shipState.shipStepSize;
         this.state.shipColor = shipState.shipColor;
-        console.log(`Ship rebuild color ${this.state.shipColor}`);
         this.shipHull = shipState.shipHull;
         let oldAngle = 0;
         let leftRotation = 0;

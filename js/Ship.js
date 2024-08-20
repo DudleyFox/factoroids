@@ -96,7 +96,6 @@ export default class Ship extends MobileSprite {
         this.isGameOver = false;
         this.demo = demo;
         this.color = state.shipColor;
-        console.log(`Ship color: ${this.color}`);
         this.rotationMin = 0.1;
         this.rotationMax = 2;
         this.rotationInc = 0.1;

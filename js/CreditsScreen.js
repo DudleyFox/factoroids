@@ -15,6 +15,10 @@ const credits = [
         title: 'Programmer',
     },
     {
+        label: 'Deborah',
+        title: 'Muse',
+    },
+    {
         label: 'Nathan',
         title: 'Tester',
     },
