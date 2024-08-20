@@ -26,7 +26,7 @@ export default class ASCIIRoid extends Factoroid {
         super.privateDraw(context, x, y);
 
         context.save();
-        context.fillStyle = 'grey';
+        context.fillStyle = 'lightblue';
         context.font = '10pt Courier';
         context.textAlign = 'center';
         context.textBaseline = 'middle';
