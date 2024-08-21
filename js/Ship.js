@@ -122,6 +122,8 @@ export default class Ship extends MobileSprite {
         // scale it to our max size
         const ratio = this.maxSize / this.maxRadius;
         this.radii = this.radii.map(r => r * ratio);
+        this.maxRadius = this.maxRadius * ratio;
+        this.minRadius = this.minRadius * ratio;
 
         i = 0;
         this.radii.forEach(r => {

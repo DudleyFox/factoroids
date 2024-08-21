@@ -8,7 +8,7 @@ Just a place to put my idea until I implement them or give up on them.
 - X - Finds the largest prime in the level, highlights the asteroid in gold, loads the bullet.
 - Freeze - Stops the motion of all asteroids
 
-# Settings
+## Settings
 
 Make a settings screen, stored to local storage that allows you to adjust the following:
 
@@ -21,5 +21,9 @@ Make a settings screen, stored to local storage that allows you to adjust the fo
 -- Splinter
 - Prime Highlight
 -- If true prime factoroids are golden instead of blue.
+
+## Mode of Play
+
+- Solitaire - Infinite lives, start with the number 2, and increase by 1 each time.
 
 

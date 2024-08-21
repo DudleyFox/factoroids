@@ -27,8 +27,16 @@ const credits = [
         title: 'Tester',
     },
     {
-        label: 'David P.',
-        title: 'Tester',
+        label: 'Marc',
+        title: 'Philosopher',
+    },
+    {
+        label: 'Derek',
+        title: 'The Antagonist',
+    },
+    {
+        label: 'Sunny Jim',
+        title: 'Closet Extravert',
     },
     {
         label: 'James',
@@ -36,7 +44,15 @@ const credits = [
     },
     {
         label: 'Ojo',
-        title: 'Inspiration',
+        title: 'Prophet',
+    },
+    {
+        label: 'Phillip',
+        title: 'Prime Target',
+    },
+    {
+        label: 'Phillip M. Eberz',
+        title: 'Prime Target',
     },
 
 ];
@@ -75,10 +91,12 @@ export default class CreditsScreen extends GameScreenBase {
             state: this.state,
             upperBounds: this.upperBounds,
             vector: 270,
-            magnitude: 75
+            magnitude: 75,
+            maxSize: 196,
+            cg: label === 'Dudley' ? () => 'gold' : null
         };
         const newA = new ASCIIRoid(opts);
-        newA.yPos = newA.yPos + (newA.maxRadius*2);
+        newA.yPos = newA.yPos + (newA.maxRadius);
         newA.updatePosition(0);// make sure we have the correct starting center
         this.facts.push(newA);
         this.spawnCounter = 3;

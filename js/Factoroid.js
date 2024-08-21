@@ -16,6 +16,7 @@ export default class Factoroid extends MobileSprite {
     constructor(options) {
         super(options);
         const {product, origin, state, upperBounds} = options;
+        this.maxSize = options.maxSize; // can be undefined;
         this.product = product;
         this.points = new Array();
         this.innerPoints = new Array();
@@ -26,7 +27,7 @@ export default class Factoroid extends MobileSprite {
         this.rotation = 0;
         this.dead = false;
         this.centers;
-        this.maxSize = product * 7;
+        this.maxProduct = product * 7;
         this.spawn = [];
         this.hasSpawn = false;
         this.magnetar = false;
@@ -172,6 +173,14 @@ export default class Factoroid extends MobileSprite {
         this.yVelocity = Math.sin(degreesToRadians(this.vector)) * this.magnitude;
     }
 
+    getRatio() {
+        if (this.maxSize) {
+            const max = this.maxSize / 2;
+            return max / this.maxRadius;
+        }
+        return 1;
+    }
+
     generatePoints() {
         this.points = [];
         this.innerPoints = [];
@@ -182,16 +191,29 @@ export default class Factoroid extends MobileSprite {
             var theta = degreesToRadians(Number(i));
             var sum = sumTheFactors(theta, this.factors);
             var radius = (Math.log(this.product) * (5 + sum)) + 7;
+            this.radii.push(radius);
+            this.maxRadius = Math.max(this.maxRadius, radius);
+            this.minRadius = Math.min(this.minRadius, radius);
+
+        }
+
+        // scale it to our max size
+        const ratio = this.getRatio();
+        this.radii = this.radii.map(r => r * ratio);
+        this.maxRadius = this.maxRadius * ratio;
+        this.minRadius = this.minRadius * ratio;
+
+        i = 0;
+        this.radii.forEach(r => {
+            var theta = degreesToRadians(Number(i));
             var x = (radius * Math.cos(theta));
             var y = -(radius * Math.sin(theta));
             var innerX = ((radius - innerDelta) * Math.cos(theta));
             var innerY = -((radius - innerDelta) * Math.sin(theta));
             this.points.push(new Point(x, y));
             this.innerPoints.push(new Point(innerX, innerY));
-            this.radii.push(radius);
-            this.maxRadius = Math.max(this.maxRadius, radius);
-            this.minRadius = Math.min(this.minRadius, radius);
-        }
+            i += 5;
+        });
     }
 
     stabilize() {
@@ -294,7 +316,7 @@ export default class Factoroid extends MobileSprite {
             } else {
                 this.product = this.product * bullet.number;
             }
-            if (this.product > this.maxSize) {
+            if (this.product > this.maxProduct) {
                 this.hasSpawn = true;
                 this.spawn = this.stabilize();
                 return 2;
