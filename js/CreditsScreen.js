@@ -23,10 +23,6 @@ const credits = [
         title: 'Tester',
     },
     {
-        label: 'Dave B.',
-        title: 'Tester',
-    },
-    {
         label: 'Marc',
         title: 'Philosopher',
     },
@@ -39,19 +35,7 @@ const credits = [
         title: 'Closet Extravert',
     },
     {
-        label: 'James',
-        title: 'Tester',
-    },
-    {
-        label: 'Ojo',
-        title: 'Prophet',
-    },
-    {
-        label: 'Phillip',
-        title: 'Prime Target',
-    },
-    {
-        label: 'Phillip M. Eberz',
+        label: 'ojo',
         title: 'Prime Target',
     },
 

@@ -117,8 +117,6 @@ export default class GameScreenLevel extends GameScreenBase {
         }
 
 
-        this.state.powerUps.forEach(p => {p.update(delta); p.detectShipCollision(this.state.ship)});
-        this.state.powerUps = this.state.powerUps.filter(x => x.active);
 
         // TODO: Clean up this mess
         if (this.state.lifeCount === 0 && this.gameOverCountdown > 0) {
@@ -145,8 +143,10 @@ export default class GameScreenLevel extends GameScreenBase {
             this.state.facts = this.state.facts.concat(newFactoroids);
         }
 
-        for (var i = 0; i < this.state.facts.length; ++i) {
-            if (this.state.lifeCount > 0) {
+        if (this.state.lifeCount > 0) {
+            this.state.powerUps.forEach(p => {p.update(delta); p.detectShipCollision(this.state.ship)});
+            this.state.powerUps = this.state.powerUps.filter(x => x.active);
+            for (var i = 0; i < this.state.facts.length; ++i) {
                 this.state.facts[i].update(delta);
             }
         }

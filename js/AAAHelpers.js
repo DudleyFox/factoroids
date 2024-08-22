@@ -43,6 +43,12 @@ export function distanceBetweenTwoPoints(x1, y1, x2, y2) {
     return Math.sqrt(dx + dy);
 }
 
+export function pointInRectangle(x,y, topLeft, bottomRight) {
+    const inX = x >= topLeft.x && x <= bottomRight.x;
+    const inY = y >= topLeft.t && y <= bottomRight.y;
+    return inX && inY;
+}
+
 export function degreesToRadians(degrees) {
     return (degrees * Math.PI) / 180.0;
 }
