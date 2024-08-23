@@ -31,6 +31,10 @@ const credits = [
         title: 'The Antagonist',
     },
     {
+        label: 'Dave!',
+        title: 'Tester',
+    },
+    {
         label: 'Sunny Jim',
         title: 'Closet Extravert',
     },
