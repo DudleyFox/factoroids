@@ -15,7 +15,7 @@ export default class GameScreenLevel extends GameScreenBase {
         const {upperBounds, keyHandler, state, level, pointerHandler} = options;
         this.pointerHandler = pointerHandler;
         this.level = level || 2;
-        this.gameOverCountdownValue = 10;
+        this.gameOverCountdownValue = 5;
         this.gameOverCountdown = this.gameOverCountdownValue;
 
         this.powerUpFactory = new PowerUpFactory(upperBounds, state);
