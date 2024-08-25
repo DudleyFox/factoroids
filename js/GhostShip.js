@@ -7,8 +7,11 @@ degreesToRadians
 } from './AAAHelpers.js';
 
 export default class GhostShip extends BaseSprite {
-    constructor(origin, upperBounds, number, stepSize, maxSize, outline = 'grey', drawRadii = false) {
-        super(origin, upperBounds, null);
+    constructor(options) {
+        super({ ...options, state:null});
+        const { origin, upperBounds, number, stepSize, maxSize} = options;
+        const outline = options.outline || 'grey';
+        const drawRadii = options.drawRadii || false;
         this.origin = origin;
         this.count = 0;
         this.radius = 12;

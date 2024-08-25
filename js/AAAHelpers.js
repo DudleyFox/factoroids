@@ -1,4 +1,3 @@
-
 import primes from './Primes.js';
 
 const params = new URLSearchParams(window.location.search);
@@ -42,6 +41,12 @@ export function distanceBetweenTwoPoints(x1, y1, x2, y2) {
     dy = dy * dy;
 
     return Math.sqrt(dx + dy);
+}
+
+export function pointInRectangle(x,y, topLeft, bottomRight) {
+    const inX = x >= topLeft.x && x <= bottomRight.x;
+    const inY = y >= topLeft.t && y <= bottomRight.y;
+    return inX && inY;
 }
 
 export function degreesToRadians(degrees) {
@@ -165,3 +170,11 @@ export function randFloat(upper, lower=0) {
     return Math.random() * (upper - lower) + lower;
 }
 
+export function normalizeIndex(index, length) {
+        if (index < 0) {
+            return length - 1;
+        } else if (index >= length) {
+            return 0;
+        }
+        return index;
+    }

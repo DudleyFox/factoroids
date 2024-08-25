@@ -10,10 +10,12 @@ import StartScreen from './StartScreen.js';
 import {
     randInt
 } from './AAAHelpers.js';
+import stateFactory from './StateFactory.js';
 
 export default class ShipSelector extends GameScreenBase {
-    constructor(upperBounds, keyhandler, state, pointerHandler) {
-        super(upperBounds, keyhandler, state)
+    constructor(options) {
+        super(options);
+        const {upperBounds, keyHandler, state, pointerHandler } = options;
         this.shipWarehouse = new ShipWarehouse();
         this.pointerHandler = pointerHandler;
         this.buttons = [];
@@ -53,10 +55,10 @@ export default class ShipSelector extends GameScreenBase {
         this.buttons.push(new Button('reset', 'Reset', new Point(this.leftEdge, 200), 125, 25, pointerHandler));
         this.buttons.push(new Button('ok', 'OK', new Point(this.leftEdge, 235), 125, 25, pointerHandler));
         this.buttons.push(new Button('play', 'Play', new Point(this.leftEdge, 270), 125, 25, pointerHandler));
-        this.sliders.push(new Slider('red', 0, 255, this.shipWarehouse.getRed(), new Point(5, 10), 20, 255, 'up', 'gray', redFill, 'gray', pointerHandler));
-        this.sliders.push(new Slider('green', 0, 255, this.shipWarehouse.getGreen(), new Point(5 + 27, 10), 20, 255, 'up', 'gray', greenFill, 'gray', pointerHandler));
-        this.sliders.push(new Slider('blue', 0, 255, this.shipWarehouse.getBlue(), new Point(5 + 54, 10), 20, 255, 'up', 'gray', blueFill, 'gray', pointerHandler));
-        this.rando = new Button('random_color', 'Random', new Point(5, 255 + 20), 74, 25, pointerHandler);
+        this.sliders.push(new Slider('red', 0, 255, this.shipWarehouse.getRed(), new Point(5, 10), 20, 512, 'up', 'gray', redFill, 'gray', pointerHandler));
+        this.sliders.push(new Slider('green', 0, 255, this.shipWarehouse.getGreen(), new Point(5 + 27, 10), 20, 512, 'up', 'gray', greenFill, 'gray', pointerHandler));
+        this.sliders.push(new Slider('blue', 0, 255, this.shipWarehouse.getBlue(), new Point(5 + 54, 10), 20, 512, 'up', 'gray', blueFill, 'gray', pointerHandler));
+        this.rando = new Button('random_color', 'Random', new Point(5, 512 + 20), 74, 25, pointerHandler);
         this.rebuild();
         this.buttons.forEach(b => b.Subscribe(this));
         this.sliders.forEach(s => s.Subscribe(this));
@@ -77,7 +79,16 @@ export default class ShipSelector extends GameScreenBase {
             leftRotation = this.ship.leftRotation;
             rightRotation = this.ship.rightRotation;
         }
-        this.ship = new Ship(new Point(this.upperBounds.x / 2, this.upperBounds.y / 2), this.upperBounds, this.keyHandler, this.state, 500, false, true);
+        const options = {
+            origin: new Point(this.upperBounds.x / 2, this.upperBounds.y / 2), 
+            upperBounds: this.upperBounds, 
+            keyHandler: this.keyHandler, 
+            state: this.state, 
+            maxSize: 500, 
+            drawRadii: false, 
+            demo: true
+        };
+        this.ship = new Ship(options);
         this.ship.rotation = oldAngle;
         this.ship.leftRotation = leftRotation;
         this.ship.rightRotation = rightRotation;
@@ -168,14 +179,18 @@ export default class ShipSelector extends GameScreenBase {
         this.rebuild();
     }
 
+    buildOptions(level) {
+        const {upperBounds, keyHandler, pointerHandler} = this;
+        const state = stateFactory({upperBounds, keyHandler});
+        return {upperBounds, keyHandler, state, level, pointerHandler};
+    }
+
     update(delta) {
         if (this.done) {
-            //constructor(upperBounds, keyHandler, state, level) 
-            return new StartScreen(this.upperBounds, this.keyHandler, this.state, this.pointerHandler);
+            return new StartScreen(this.buildOptions(2));
         }
         if (this.play) {
-            //constructor(upperBounds, keyHandler, state, level) 
-            return new GameScreenLevel(this.upperBounds, this.keyHandler, this.state, 2, this.pointerHandler);
+            return new GameScreenLevel(this.buildOptions(2));
         }
         this.ship.update(delta);
         return this;

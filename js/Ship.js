@@ -11,13 +11,15 @@ import {
 
 // TODO: 2022-09-02 D. Fox - Find a better home for the firing solutions.
 function fireBullet(ship, b) {
-    ship.state.bullets.push(new Bullet(b,
-        new Point(ship.xPos, ship.yPos),
-        ship.upperBounds,
-        ship.state,
-        ship.rotation - 90,
-        Math.abs(ship.xVelocity) + Math.abs(ship.yVelocity) + 1000
-    ));
+    const bulletOptions = {
+        number: b,
+        origin: new Point(ship.xPos, ship.yPos),
+        upperBounds: ship.upperBounds,
+        state: ship.state,
+        vector: ship.rotation - 90,
+        magnitude: Math.abs(ship.xVelocity) + Math.abs(ship.yVelocity) + 1000
+    };
+    ship.state.bullets.push(new Bullet(bulletOptions));
 }
 
 
@@ -67,8 +69,11 @@ function generateFiringSolutions(ship) {
 
 
 export default class Ship extends MobileSprite {
-    constructor(origin, upperBounds, keyHandler, state, maxSize, drawRadii = false, demo = false) {
-        super(origin, upperBounds, state, 0, 0);
+    constructor(options) {
+        super({...options, vector:0, magnitude:0});
+        const { origin, upperBounds, keyHandler, state, maxSize } = options;
+        const drawRadii = options.drawRadii || false;
+        const demo = options.demo || false;
         this.origin = origin;
         this.breachNumber = 0;
         this.keyHandler = keyHandler;
@@ -117,6 +122,8 @@ export default class Ship extends MobileSprite {
         // scale it to our max size
         const ratio = this.maxSize / this.maxRadius;
         this.radii = this.radii.map(r => r * ratio);
+        this.maxRadius = this.maxRadius * ratio;
+        this.minRadius = this.minRadius * ratio;
 
         i = 0;
         this.radii.forEach(r => {

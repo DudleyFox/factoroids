@@ -3,7 +3,7 @@ import {
     getItemInt,
     setItem
 } from './Storage.js';
-import { toHex, randInt } from './AAAHelpers.js';
+import { toHex, randInt, normalizeIndex } from './AAAHelpers.js';
 
 /**
  * Class to read and write ship settings to and from storage
@@ -52,15 +52,6 @@ export default class ShipWarehouse {
         return `#${toHex(this.red, 2)}${toHex(this.green, 2)}${toHex(this.blue, 2)}`;
     }
 
-    normalizeIndex(index, length) {
-        if (index < 0) {
-            return length - 1;
-        } else if (index >= length) {
-            return 0;
-        }
-        return index;
-    }
-
     random() {
         this.setFustrumCapacitance(randInt(this.steps.length));
         this.setModelIndex(randInt(1500));
@@ -77,7 +68,7 @@ export default class ShipWarehouse {
 
 
     setModelIndex(i) {
-        this.modelIndex = this.normalizeIndex(i, primes.length);
+        this.modelIndex = normalizeIndex(i, primes.length);
         setItem('m', this.modelIndex);    
     }
 
@@ -90,7 +81,7 @@ export default class ShipWarehouse {
     }
 
     setFustrumCapacitance(i) {
-        this.fustrumCapacitance = this.normalizeIndex(i, this.steps.length);
+        this.fustrumCapacitance = normalizeIndex(i, this.steps.length);
         setItem('f', this.fustrumCapacitance);
     }
 
@@ -103,7 +94,7 @@ export default class ShipWarehouse {
     }
 
     setSweepIndex(i) {
-        this.sweepIndex = this.normalizeIndex(i, this.sweep.length);
+        this.sweepIndex = normalizeIndex(i, this.sweep.length);
         setItem('s', this.sweepIndex);
     }
 
@@ -116,7 +107,7 @@ export default class ShipWarehouse {
     }
 
     setRivetIndex(i) {
-        this.rivetIndex = this.normalizeIndex(i, this.rivets.length);
+        this.rivetIndex = normalizeIndex(i, this.rivets.length);
         setItem('r', this.rivetIndex);
     }
 
@@ -133,7 +124,7 @@ export default class ShipWarehouse {
     }
 
     setRed(r) {
-        this.red = this.normalizeIndex(r, 256);
+        this.red = normalizeIndex(r, 256);
         setItem('sr', this.red);
     }
 
@@ -142,7 +133,7 @@ export default class ShipWarehouse {
     }
 
     setGreen(g) {
-        this.green = this.normalizeIndex(g, 256);
+        this.green = normalizeIndex(g, 256);
         setItem('sg', this.green);
     }
 
@@ -151,7 +142,7 @@ export default class ShipWarehouse {
     }
 
     setBlue(b) {
-        this.blue = this.normalizeIndex(b, 256);
+        this.blue = normalizeIndex(b, 256);
         setItem('sb', this.blue);
     }
 

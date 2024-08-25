@@ -58,8 +58,15 @@
 
         resizeCanvas()
         window.addEventListener('resize', resizeCanvas, false);
-        
-        let gs = new StartScreen(new Point(canvas.width, canvas.height), keyHandler, {}, pointerHandler)
+
+        const upperBounds = new Point(canvas.width, canvas.height); 
+        const options = {
+            upperBounds, 
+            keyHandler,
+            state: {},
+            pointerHandler
+        };
+        let gs = new StartScreen(options);
         let lastNow = performance.now();
 
         function animate(now) {

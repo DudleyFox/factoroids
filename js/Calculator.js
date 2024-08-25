@@ -83,6 +83,17 @@ export default class Calculator {
         ];
     }
 
+    topLeft(x,y) {
+        return new Point(x + this.frame.xOffset, y + this.frame.yOffset);
+    }
+
+    
+    bottomRight(x,y) {
+        return new Point(
+            x + this.frame.xOffset + this.frame.width,
+            y + this.frame.xOffset + this.frame.height);
+    }
+
     drawFrame(context, x, y, frame, lineColor, fillColor) {
         context.beginPath();
         context.rect(x + frame.xOffset, y + frame.yOffset, frame.width, frame.heigth);
@@ -94,6 +105,7 @@ export default class Calculator {
             context.fill();
         }
     }
+
     drawText(context, x, y, text) {
         text.forEach(t => {
             context.font = t.font;

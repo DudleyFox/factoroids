@@ -9,11 +9,19 @@ import primes from './Primes.js';
 import Point from './Point.js';
 
 export default class LevelTransition extends GameScreenBase {
-    constructor(upperBounds, keyHandler, state, level, pointerHandler) {
-        super(upperBounds, keyHandler, state);
+    constructor(options) {
+        super(options);
+        const {upperBounds, keyHandler, state, level, pointerHandler} = options
         this.pointerHandler = pointerHandler;
         this.level = level;
-        this.fact = new Factoroid(this.level, new Point(this.upperBounds.x / 2, this.upperBounds.y / 2), this.state, new Point(this.upperBounds.x, this.upperBounds.y),0,0,()=>'gold');
+        const factOptions = {
+            product: this.level,
+            origin: new Point(this.upperBounds.x / 2, this.upperBounds.y / 2),
+            state: this.state,
+            upperBounds: this.upperBounds,
+            cg: ()=>'gold'
+        };
+        this.fact = new Factoroid(factOptions);
         this.fact.xVelocity = 0;
         this.fact.yVelocity = 0;
         const x = this.upperBounds.x / 2 - 225 / 2;
@@ -23,8 +31,8 @@ export default class LevelTransition extends GameScreenBase {
         let primesIndex = primes.findIndex(p => p === this.level) + 1;
         this.buttonState = 'wait';
         this.nextLevel = primes[primesIndex];
-        
-       
+
+
         this.continueButton.Subscribe(this);
         this.menuButton.Subscribe(this);
     }
@@ -53,6 +61,11 @@ export default class LevelTransition extends GameScreenBase {
 
     }
 
+    buildOptions(level) {
+        const {upperBounds, keyHandler, state, pointerHandler} = this;
+        return {upperBounds, keyHandler, state, level, pointerHandler};
+    }
+
     update(delta) {
         if (this.upperBoundsChanged) {
             this.resize();
@@ -61,10 +74,10 @@ export default class LevelTransition extends GameScreenBase {
         this.menuButton.update(delta);
         if (this.buttonState === 'continue' || this.keyHandler.continue()) {
             this.cleanUp();
-            return new GameScreenLevel(this.upperBounds, this.keyHandler, this.state, this.nextLevel, this.pointerHandler);
+            return new GameScreenLevel(this.buildOptions(this.nextLevel));
         } else if (this.buttonState === 'menu') {
             this.cleanUp();
-            return new StartScreen(this.upperBounds, this.keyHandler, this.state, this.pointerHandler);
+            return new StartScreen(this.buildOptions(2));
         }
         this.fact.update(delta);
         return this;

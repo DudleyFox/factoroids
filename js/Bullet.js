@@ -3,8 +3,9 @@ import Point from './Point.js';
 import { degreesToRadians } from './AAAHelpers.js';
 
 export default class Bullet extends MobileSprite {
-    constructor(number, origin, upperBounds, state, vector, magnitude) {
-        super(origin, upperBounds, state, vector, magnitude);
+    constructor(options) {
+        super(options);
+        const {number, origin, upperBounds, state, vector, magnitude } = options;
         this.path = [new Point(this.xPos, this.yPos)];
         this.ttl = 90;
         this.number = number;

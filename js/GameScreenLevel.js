@@ -10,11 +10,12 @@ import PowerUpFactory from './PowerUpFactory.js';
 import LevelTransition from './LevelTransition.js';
 
 export default class GameScreenLevel extends GameScreenBase {
-    constructor(upperBounds, keyHandler, state, level, pointerHandler) {
-        super(upperBounds, keyHandler, state);
+    constructor(options) {
+        super(options);
+        const {upperBounds, keyHandler, state, level, pointerHandler} = options;
         this.pointerHandler = pointerHandler;
         this.level = level || 2;
-        this.gameOverCountdownValue = 10;
+        this.gameOverCountdownValue = 5;
         this.gameOverCountdown = this.gameOverCountdownValue;
 
         this.powerUpFactory = new PowerUpFactory(upperBounds, state);
@@ -55,14 +56,27 @@ export default class GameScreenLevel extends GameScreenBase {
         if (level === 'debug') {
             const x = randFloat(this.upperBounds.x);
             const y = randFloat(this.upperBounds.y);
-            this.state.facts.push(new Factoroid(1172490, new Point(x, y), this.state, new Point(this.upperBounds.x, this.upperBounds.y)));
+            const options = {
+                product: 1172490,
+                origin: new Point(x, y),
+                state: this.state,
+                upperBounds: this.upperBounds
+            };
+            this.state.facts.push(new Factoroid(options));
         } else {
             const factoroids = this.levelCount;
             for (var i = 0; i < factoroids; ++i) {
                 const qNumber = this.getRandomProduct(this.levelMax);
                 const x = randFloat(this.upperBounds.x);
                 const y = randFloat(this.upperBounds.y);
-                this.state.facts.push(new Factoroid(qNumber, new Point(x, y), this.state, new Point(this.upperBounds.x, this.upperBounds.y)));
+                const options = {
+                    product: qNumber,
+                    origin: new Point(x, y),
+                    state: this.state,
+                    upperBounds: this.upperBounds,
+                    mScale: 1 + level/73
+                };
+                this.state.facts.push(new Factoroid(options));
             }
         }
     }
@@ -82,9 +96,14 @@ export default class GameScreenLevel extends GameScreenBase {
         this.upperBoundsChanged = false;
     }
 
+    buildOptions() {
+        const {upperBounds, keyHandler, state, level, pointerHandler} = this;
+        return {upperBounds, keyHandler, state, level, pointerHandler};
+    }
+
     update(delta) {
         if (this.state.facts.length === 0) {
-            return new LevelTransition(this.upperBounds, this.keyHandler, this.state, this.level, this.pointerHandler)
+            return new LevelTransition(this.buildOptions());
         }
 
         if (this.upperBoundsChanged) {
@@ -98,14 +117,12 @@ export default class GameScreenLevel extends GameScreenBase {
         }
 
 
-        this.state.powerUps.forEach(p => {p.update(delta); p.detectShipCollision(this.state.ship)});
-        this.state.powerUps = this.state.powerUps.filter(x => x.active);
 
         // TODO: Clean up this mess
         if (this.state.lifeCount === 0 && this.gameOverCountdown > 0) {
             this.gameOverCountdown -= delta;
             if (this.gameOverCountdown <= 0) {
-                return new GameOver(this.upperBounds, this.keyHandler, this.state, this.level, this.pointerHandler);
+                return new GameOver(this.buildOptions());
             }
         }
 
@@ -126,8 +143,10 @@ export default class GameScreenLevel extends GameScreenBase {
             this.state.facts = this.state.facts.concat(newFactoroids);
         }
 
-        for (var i = 0; i < this.state.facts.length; ++i) {
-            if (this.state.lifeCount > 0) {
+        if (this.state.lifeCount > 0) {
+            this.state.powerUps.forEach(p => {p.update(delta); p.detectShipCollision(this.state.ship)});
+            this.state.powerUps = this.state.powerUps.filter(x => x.active);
+            for (var i = 0; i < this.state.facts.length; ++i) {
                 this.state.facts[i].update(delta);
             }
         }

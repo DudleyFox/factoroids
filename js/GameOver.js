@@ -12,8 +12,9 @@ import {
 } from './AAAHelpers.js';
 
 export default class GameScreenOver extends GameScreenBase {
-    constructor(upperBounds, keyHandler, state, level, pointerHandler) {
-        super(upperBounds, keyHandler, state);
+    constructor(options) {
+        super(options);
+        const {upperBounds, keyHandler, state, level, pointerHandler} = options;
         this.pointerHandler = pointerHandler;
         this.level = level;
         this.facts = [];
@@ -26,16 +27,36 @@ export default class GameScreenOver extends GameScreenBase {
         while (primes[primesIndex] < level) {
             const x = randFloat(this.upperBounds.x);
             const y = randFloat(this.upperBounds.y);
-            this.facts.push(new Factoroid(primes[primesIndex], new Point(x, y), this.state, new Point(this.upperBounds.x, this.upperBounds.y),0,0,()=>'gold'));
+            const goldOptions = {
+                product: primes[primesIndex],
+                origin: new Point(x, y),
+                state: this.state,
+                upperBounds: this.upperBounds,
+                cg: ()=>'gold'
+            };
+            this.facts.push(new Factoroid(goldOptions));
             primesIndex += 1;
         }
-        this.facts.push(new Factoroid(level, new Point(x, y), this.state, new Point(this.upperBounds.x, this.upperBounds.y)));
+        const blueOptions = {
+            product: level,
+            origin: new Point(x, y),
+            state: this.state,
+            upperBounds: this.upperBounds
+        };
+        this.facts.push(new Factoroid(blueOptions));
         this.playAgainButton.Subscribe(this);
         this.menuButton.Subscribe(this);
         this.state.lifeCount = 3;
         const delta = 48;
         for (let i = 0; i < this.state.lifeCount - 1; ++i) {
-            this.state.lives.push(new GhostShip(new Point(this.upperBounds.x - delta, delta + delta * i), new Point(this.upperBounds.x, this.upperBounds.y), this.state.ship.number, this.state.ship.stepSize, 50));
+            const gsOptions = {
+                origin: new Point(this.upperBounds.x - delta, delta + delta * i),
+                upperBounds,
+                number: this.state.ship.number,
+                stepSize: this.state.ship.stepSize,
+                maxSize: 50
+            };
+            this.state.lives.push(new GhostShip(gsOptions));
         }
         this.state.ship.reset();
         this.state.ship.setSpecial(new SpecialFlip());
@@ -63,6 +84,11 @@ export default class GameScreenOver extends GameScreenBase {
         this.upperBoundsChanged = false;
     }
 
+    buildOptions() {
+        const {upperBounds, keyHandler, state, pointerHandler} = this;
+        return {upperBounds, keyHandler, state, level:2, pointerHandler};
+    }
+
     update(delta) {
         if (this.upperBoundsChanged) {
             this.resize();
@@ -72,10 +98,10 @@ export default class GameScreenOver extends GameScreenBase {
         this.facts.forEach(f => f.update(delta));
         if (this.buttonState === 'again') {
             this.cleanUp();
-            return new GameScreenLevel(this.upperBounds, this.keyHandler, this.state, 2, this.pointerHandler);
+            return new GameScreenLevel(this.buildOptions());
         } else if (this.buttonState === 'menu') {
             this.cleanUp();
-            return new StartScreen(this.upperBounds, this.keyHandler, this.state, this.pointerHandler);
+            return new StartScreen(this.buildOptions());
         }
         return this;
     }
