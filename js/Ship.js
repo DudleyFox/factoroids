@@ -16,6 +16,7 @@ import SpecialFlip from './SpecialFlip.js';
 import SpecialFreeze from './SpecialFreeze.js';
 import SpecialHyper from './SpecialHyper.js';
 import SpecialMagnetar from './SpecialMagnetar.js';
+import SpecialX from './SpecialX.js';
 
 const specials = [
     SpecialDeadStop,
@@ -23,6 +24,7 @@ const specials = [
     SpecialFreeze,
     SpecialHyper,
     SpecialMagnetar,
+    SpecialX
 ];
 
 let specialsIndex = 0;
