@@ -5,11 +5,8 @@ export default class SpecialDeadStop extends SpecialBase {
         super(1, '#DD1111', '0');
     }
 
-    invoke(ship) {
-        if (this.cooldown === 0) {
-            ship.xVelocity = 0;
-            ship.yVelocity = 0;
-            this.cooldown = this.cooldownTime;
-        }
+    invocation(ship) {
+        ship.xVelocity = 0;
+        ship.yVelocity = 0;
     }
 }

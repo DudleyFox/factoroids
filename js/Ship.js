@@ -6,8 +6,27 @@ import {
     sumTheFactors,
     degreesToRadians,
     coinToss,
-    randFloat
+    randFloat,
+    normalizeIndex
 } from './AAAHelpers.js';
+
+// This is temporary for debugging
+import SpecialDeadStop from './SpecialDeadStop.js';
+import SpecialFlip from './SpecialFlip.js';
+import SpecialFreeze from './SpecialFreeze.js';
+import SpecialHyper from './SpecialHyper.js';
+import SpecialMagnetar from './SpecialMagnetar.js';
+
+const specials = [
+    SpecialDeadStop,
+    SpecialFlip,
+    SpecialFreeze,
+    SpecialHyper,
+    SpecialMagnetar,
+];
+
+let specialsIndex = 0;
+let specialsCooldown = 1;
 
 // TODO: 2022-09-02 D. Fox - Find a better home for the firing solutions.
 function fireBullet(ship, b) {
@@ -66,6 +85,8 @@ function generateFiringSolutions(ship) {
 
     return [fs1, fs2, fs3];
 }
+
+
 
 
 export default class Ship extends MobileSprite {
@@ -224,7 +245,7 @@ export default class Ship extends MobileSprite {
         }
 
         if (this.special) {
-            this.special.tick(delta);
+            this.special.tick(delta, this);
             if (this.keyHandler.special()) {
                 this.special.invoke(this);
             }
@@ -234,6 +255,13 @@ export default class Ship extends MobileSprite {
 
         if (this.keyHandler.reset()) {
             this.reset();
+        }
+
+        specialsCooldown = Math.max(0, specialsCooldown - delta);
+        if (this.keyHandler.xtra() && specialsCooldown === 0) {
+            specialsIndex = normalizeIndex(specialsIndex + 1, specials.length);
+            this.setSpecial(new specials[specialsIndex]());
+            specialsCooldown = 1;
         }
         this.updateBreach(delta);
     }

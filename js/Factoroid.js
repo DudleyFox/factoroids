@@ -31,6 +31,7 @@ export default class Factoroid extends MobileSprite {
         this.spawn = [];
         this.hasSpawn = false;
         this.magnetar = false;
+        this.frozen = false;
 
         if (options.cg) {
             this.color = options.cg();
@@ -163,6 +164,18 @@ export default class Factoroid extends MobileSprite {
         }
     }
 
+    freezeOn() {
+        this.frozen = true;
+        this.xVelocity = 0
+        this.yVelocity = 0
+    }
+
+    freezeOff() {
+        this.frozen = false;
+        this.xVelocity = Math.cos(degreesToRadians(this.vector)) * this.magnitude;
+        this.yVelocity = Math.sin(degreesToRadians(this.vector)) * this.magnitude;
+    }
+
     magnetarOn() {
         this.magnetar = true;
     }
@@ -238,6 +251,8 @@ export default class Factoroid extends MobileSprite {
                     magnitude: randFloat(50)
                 };
                 const f = new Factoroid(options);
+                if (this.magnetar) f.magnetarOn();
+                if (this.frozen) f.freezeOn()
                 stableFactoroids.push(f);
             }
         }
