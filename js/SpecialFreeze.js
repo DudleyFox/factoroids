@@ -1,8 +1,8 @@
 import SpecialBase from './SpecialBase.js';
 
-export default class SpecialMagentar extends SpecialBase {
+export default class SpecialFreeze extends SpecialBase {
     constructor() {
-        super(5, '#DD11DD', 'Err');
+        super(9, '#FFFFFF', 'x00', 3);
         this.state = {
             facts: []
         };
@@ -11,7 +11,7 @@ export default class SpecialMagentar extends SpecialBase {
 
     terminate() {
         if (this.active) {
-            this.state.facts.forEach(f => { f.magnetarOff(); });
+            this.state.facts.forEach(f => { f.freezeOff(); });
             this.active = false;
             this.cooldown = 0;
         }
@@ -20,7 +20,7 @@ export default class SpecialMagentar extends SpecialBase {
     tick(delta, ship) {
         super.tick(delta, ship);
         if (this.cooldown <= 0 && this.active) {
-            this.state.facts.forEach(f => { f.magnetarOff(); });
+            this.state.facts.forEach(f => { f.freezeOff(); });
             this.active = false;
         }
 
@@ -29,6 +29,6 @@ export default class SpecialMagentar extends SpecialBase {
     invocation(ship) {
         this.active = true;
         this.state = ship.state;
-        this.state.facts.forEach(f => { f.magnetarOn(); });
+        this.state.facts.forEach(f => { f.freezeOn(); });
     }
 }

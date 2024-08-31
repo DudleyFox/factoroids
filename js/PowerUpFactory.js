@@ -1,6 +1,7 @@
 import Point from './Point.js';
 import PowerUp from './PowerUp.js';
 import SpecialFlip from './SpecialFlip.js';
+import SpecialFreeze from './SpecialFreeze.js';
 import SpecialHyper from './SpecialHyper.js';
 import SpecialDeadStop from './SpecialDeadStop.js';
 import SpecialMagnetar from './SpecialMagnetar.js';
@@ -18,7 +19,8 @@ export default class PowerUpFactory {
             SpecialFlip,
             SpecialHyper,
             SpecialDeadStop,
-            SpecialMagnetar
+            SpecialMagnetar,
+            SpecialFreeze
         ]
     }
 
