@@ -28,7 +28,10 @@ export default class KeyHandler {
         if (this.storedNumber < 700000) {
             this.storedNumber = this.storedNumber * 10 + n;
         }
+    }
 
+    setNumberDirect(n) {
+        this.storedNumber = n;
     }
 
     handleNumber(key) {
