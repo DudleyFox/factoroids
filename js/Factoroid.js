@@ -127,9 +127,9 @@ export default class Factoroid extends MobileSprite {
         const dy = Math.abs(this.yPos - y);
         const hypo = Math.sqrt(dx * dx + dy * dy);
         const ratioX = dx / hypo;
-        const rationY = dy / hypo;
+        const ratioY = dy / hypo;
         this.xVelocity = magnetarVelocity * ratioX;
-        this.yVelocity = magnetarVelocity * rationY;
+        this.yVelocity = magnetarVelocity * ratioY;
         this.xPos = this.calculatePosition(this.xPos, x, this.xVelocity, delta);
         this.yPos = this.calculatePosition(this.yPos, y, this.yVelocity, delta);
         if (this.xPos < 0) {
