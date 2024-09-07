@@ -39,15 +39,18 @@ export default class SpecialOmega extends SpecialBase {
             if (this.cooldown <= 0) {
                 ship.lightning = null;
                 this.active = false;
-                this.factoroid.factorize();
+                this.factoroid?.factorize();
             }
-            this.factoroid.color = this.generateColor();
+            if (this.factoroid) {
+                this.factoroid.color = this.generateColor();
+            }
         }
 
     }
 
     invocation(ship) {
         this.active = true;
+        this.factoroid = null;
         this.state = ship.state;
         let maxFactors = 0;
         let maxProduct = 0;
