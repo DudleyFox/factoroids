@@ -5,6 +5,9 @@ export default class SpecialOmega extends SpecialBase {
     constructor() {
         super(5, 'gold', 'Ω');
         this.active = false;
+        this.redBase = 75;
+        this.greenBase = 75;
+        this.blueBase = 150;
     }
 
     terminate(ship) {
@@ -15,11 +18,30 @@ export default class SpecialOmega extends SpecialBase {
         }
     }
 
+    generateColor() {
+    // return `#7777${(0x77 + blue).toString(16)}`;
+        const delta = this.cooldownTime - this.cooldown;
+        const percentComplete = delta / this.cooldownTime;
+        const maxColor = 255;
+        const redDelta = (maxColor - this.redBase) * percentComplete;
+        const greenDelta = (maxColor - this.greenBase) * percentComplete;
+        const blueDelta = (maxColor - this.blueBase) * percentComplete;
+        const redString = (Math.floor(this.redBase + redDelta)).toString(16);
+        const greenString = (Math.floor(this.greenBase + greenDelta)).toString(16);
+        const blueString = (Math.floor(this.blueBase + blueDelta)).toString(16);
+        const result = '#' + redString + greenString + blueString;
+        return result;
+    }
+
     tick(delta, ship) {
         super.tick(delta, ship);
-        if (this.cooldown <= 0 && this.active) {
-            ship.lightning = null;
-            this.active = false;
+        if (this.active) {
+            if (this.cooldown <= 0) {
+                ship.lightning = null;
+                this.active = false;
+                this.factoroid.factorize();
+            }
+            this.factoroid.color = this.generateColor();
         }
 
     }
@@ -27,16 +49,23 @@ export default class SpecialOmega extends SpecialBase {
     invocation(ship) {
         this.active = true;
         this.state = ship.state;
-        let max = 0;
+        let maxFactors = 0;
+        let maxProduct = 0;
         let factoroid = null;
         this.state.facts.forEach(f => { 
-            if (f.product > max) {
-                max = f.product;
-                factoroid = f;
+            if (f.factors.length >= maxFactors) {
+                if (f.product > maxProduct) {
+                    maxFactors = f.factors.length;
+                    maxProduct = f.product;
+                    factoroid = f;
+                }
             }
         });
-        factoroid.color = 'red';
-        ship.lightning = new Lightning(ship, factoroid);
+        if (maxFactors > 1) {
+            factoroid.color = 'black';
+            this.factoroid = factoroid;
+            ship.lightning = new Lightning(ship, factoroid);
+        }
     }
 }
 
