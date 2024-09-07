@@ -31,6 +31,7 @@ export default class Factoroid extends MobileSprite {
         this.spawn = [];
         this.hasSpawn = false;
         this.magnetar = false;
+        this.frozen = false;
 
         if (options.cg) {
             this.color = options.cg();
@@ -126,9 +127,9 @@ export default class Factoroid extends MobileSprite {
         const dy = Math.abs(this.yPos - y);
         const hypo = Math.sqrt(dx * dx + dy * dy);
         const ratioX = dx / hypo;
-        const rationY = dy / hypo;
+        const ratioY = dy / hypo;
         this.xVelocity = magnetarVelocity * ratioX;
-        this.yVelocity = magnetarVelocity * rationY;
+        this.yVelocity = magnetarVelocity * ratioY;
         this.xPos = this.calculatePosition(this.xPos, x, this.xVelocity, delta);
         this.yPos = this.calculatePosition(this.yPos, y, this.yVelocity, delta);
         if (this.xPos < 0) {
@@ -161,6 +162,18 @@ export default class Factoroid extends MobileSprite {
         } else {
             this.updatePosition(delta);
         }
+    }
+
+    freezeOn() {
+        this.frozen = true;
+        this.xVelocity = 0
+        this.yVelocity = 0
+    }
+
+    freezeOff() {
+        this.frozen = false;
+        this.xVelocity = Math.cos(degreesToRadians(this.vector)) * this.magnitude;
+        this.yVelocity = Math.sin(degreesToRadians(this.vector)) * this.magnitude;
     }
 
     magnetarOn() {
@@ -216,6 +229,24 @@ export default class Factoroid extends MobileSprite {
         });
     }
 
+    factorize() {
+        this.hasSpawn = true;
+        const newFactoroids = [];
+        this.factors.forEach(f => {
+            const vector = randFloat(360);
+            const options = {
+                    product: f,
+                    origin: new Point(this.xPos, this.yPos),
+                    state: this.state,
+                    upperBounds: this.upperBounds,
+                    vector,
+                    magnitude: randFloat(25)
+                }
+                newFactoroids.push(new Factoroid(options));
+        });
+        this.spawn = newFactoroids;
+    }
+
     stabilize() {
         let num = this.product;
         const vector = randFloat(360);
@@ -238,6 +269,8 @@ export default class Factoroid extends MobileSprite {
                     magnitude: randFloat(50)
                 };
                 const f = new Factoroid(options);
+                if (this.magnetar) f.magnetarOn();
+                if (this.frozen) f.freezeOn()
                 stableFactoroids.push(f);
             }
         }

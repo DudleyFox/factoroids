@@ -5,10 +5,7 @@ export default class SpecialFlip extends SpecialBase {
         super(0.25, '#1111DD', '180');
     }
 
-    invoke(ship) {
-        if (this.cooldown === 0) {
-            ship.rotation += 180;
-            this.cooldown = this.cooldownTime;
-        }
+    invocation(ship) {
+        ship.rotation += 180;
     }
 }

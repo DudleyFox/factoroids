@@ -5,8 +5,7 @@ Just a place to put my idea until I implement them or give up on them.
 ## Power up Ideas
 
 - Omega - Breaks the factoroid into its constituent primes
-- X - Finds the largest prime in the level, highlights the asteroid in gold, loads the bullet.
-- Freeze - Stops the motion of all asteroids
+-- Uses a lightning one time use
 
 ## Settings
 
