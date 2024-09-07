@@ -17,18 +17,20 @@ import SpecialFreeze from './SpecialFreeze.js';
 import SpecialHyper from './SpecialHyper.js';
 import SpecialMagnetar from './SpecialMagnetar.js';
 import SpecialX from './SpecialX.js';
+import SpecialOmega from './SpecialOmega.js';
 
 const specials = [
-    SpecialDeadStop,
     SpecialFlip,
+    SpecialDeadStop,
     SpecialFreeze,
     SpecialHyper,
     SpecialMagnetar,
-    SpecialX
+    SpecialX,
+    SpecialOmega
 ];
 
 let specialsIndex = 0;
-let specialsCooldown = 1;
+let specialsCooldown = 0.25;
 
 // TODO: 2022-09-02 D. Fox - Find a better home for the firing solutions.
 function fireBullet(ship, b) {
@@ -179,7 +181,8 @@ export default class Ship extends MobileSprite {
 
     death() {
         this.dead = true;
-        this.special?.terminate();
+        this.special?.terminate(this);
+        this.lightning = null;
     }
 
     gameOver() {
@@ -204,7 +207,7 @@ export default class Ship extends MobileSprite {
     }
 
     setSpecial(special) {
-        this.special?.terminate();
+        this.special?.terminate(this);
         this.special = special;
     }
 
@@ -263,8 +266,9 @@ export default class Ship extends MobileSprite {
         if (this.keyHandler.xtra() && specialsCooldown === 0) {
             specialsIndex = normalizeIndex(specialsIndex + 1, specials.length);
             this.setSpecial(new specials[specialsIndex]());
-            specialsCooldown = 1;
+            specialsCooldown = 0.25;
         }
+        this.lightning?.update(delta)
         this.updateBreach(delta);
     }
 
@@ -354,6 +358,7 @@ export default class Ship extends MobileSprite {
             if (this.drawR) {
                 this.drawRadii(context, x, y)
             }
+            this.lightning?.draw(context);
         } else {
             for (let i = 0; i < 20; ++i) {
                 const range = this.radius + this.particleCloudExtent;

@@ -36,7 +36,7 @@ export default class SpecialBase {
         throw new Error("Did you forget to implement this?")
     }
 
-    terminate() {
+    terminate(ship) {
         // called when we switch out specials.
     }
 
