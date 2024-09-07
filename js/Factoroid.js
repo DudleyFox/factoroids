@@ -229,6 +229,24 @@ export default class Factoroid extends MobileSprite {
         });
     }
 
+    factorize() {
+        this.hasSpawn = true;
+        const newFactoroids = [];
+        this.factors.forEach(f => {
+            const vector = randFloat(360);
+            const options = {
+                    product: f,
+                    origin: new Point(this.xPos, this.yPos),
+                    state: this.state,
+                    upperBounds: this.upperBounds,
+                    vector,
+                    magnitude: randFloat(25)
+                }
+                newFactoroids.push(new Factoroid(options));
+        });
+        this.spawn = newFactoroids;
+    }
+
     stabilize() {
         let num = this.product;
         const vector = randFloat(360);
