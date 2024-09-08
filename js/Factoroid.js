@@ -363,7 +363,10 @@ export default class Factoroid extends MobileSprite {
     }
 
     detectShipCollision(ship) {
-        if (ship.collisionShieldCountdown <= 0 && !ship.dead && this.detectCollision(ship)) {
+        if (ship.collisionShieldCountdown <= 0
+            && !ship.immortal
+            && !ship.dead
+            && this.detectCollision(ship)) {
             ship.death();
             this.state.lifeCount -= 1;
         }
