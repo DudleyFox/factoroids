@@ -52,9 +52,10 @@ export default class ShipWarehouse {
         return `#${toHex(this.red, 2)}${toHex(this.green, 2)}${toHex(this.blue, 2)}`;
     }
 
+
     random() {
         this.setFustrumCapacitance(randInt(this.steps.length));
-        this.setModelIndex(randInt(1500));
+        this.setModelIndex(randInt(2000));
         this.setSweepIndex(randInt(this.sweep.length));
         this.setRivetIndex(randInt(this.rivets.length));
     }
@@ -144,6 +145,24 @@ export default class ShipWarehouse {
     setBlue(b) {
         this.blue = normalizeIndex(b, 256);
         setItem('sb', this.blue);
+    }
+
+    buildRandomShipState(colorFn) {
+        const stepsIndex = randInt(this.steps.length);
+        const modelIndex = randInt(2000);
+        const sweepIndex = randInt(this.sweep.length);
+        const rivetIndex = randInt(this.rivets.length);
+        const qNumber = primes[modelIndex] * Math.pow(this.sweep[sweepIndex].root, this.rivets[rivetIndex]);
+        const stepSize = this.steps[stepsIndex];
+        const color = colorFn();
+        const state = {
+            shipNumber: qNumber,
+            shipStepSize: stepSize,
+            shipColor: color,
+            shipHull: color,
+        };
+
+        return state;
     }
 
     buildShipState() {

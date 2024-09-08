@@ -3,6 +3,7 @@ import GameScreenBase from './GameScreenBase.js';
 import StartScreen from './StartScreen.js';
 import Point from './Point.js';
 import CreditShip from './CreditShip.js';
+import ShipWarehouse from './ShipWarehouse.js';
 import stateFactory from './StateFactory.js';
 import {
     randFloat,
@@ -53,9 +54,11 @@ export default class CreditsScreen extends GameScreenBase {
         this.pointerHandler = pointerHandler;
         this.keyHandler = keyHandler;
         this.startScreen = false;
+        this.down = false;
         this.spawnCounter = 0;
         this.creditIndex = 0;
         this.shipSpawnCoolDown = 0;
+        this.wh = new ShipWarehouse();
 
         this.facts = []; // only on this screen.
         this.ships = []; // only on this screen
@@ -63,25 +66,36 @@ export default class CreditsScreen extends GameScreenBase {
         this.pointerHandler.Subscribe(this);
     }
 
+    generateShipColor() {
+        const r = randInt(155) + 100;
+        const g = 0x11;
+        const b = 0x11;
+        const result = '#' + r.toString(16) + g.toString(16) + b.toString(16);
+        return result;
+    }
+
+    spawnShip(x, y) {
+        const color = this.generateShipColor();
+        const options = {
+            origin: new Point(x,y),
+            upperBounds: this.upperBounds,
+            keyHandler: this.keyHandler,
+            state: this.wh.buildRandomShipState(this.generateShipColor),
+            maxSize: randInt(50) + 20
+        };
+        this.ships.push(new CreditShip(options));
+        this.shipSpawnCoolDown = 0.05;
+    }
+
     OnDown(evt, x, y) {
         if (this.shipSpawnCoolDown === 0) {
-            const options = {
-                origin: new Point(x,y),
-                upperBounds: this.upperBounds,
-                keyHandler: this.keyHandler,
-                state: {
-                    shipNumber: 1973*500,
-                    shipColor: 'red',
-                    shipStepSize: 5,
-                },
-                maxSize: randInt(50) + 50
-            };
-            this.ships.push(new CreditShip(options));
-            this.shipSpawnCoolDown = 0.25;
+            this.spawnShip(x, y);
         }
+        this.down = true;
     }
 
     OnUp(evt, x, y) {
+        this.down = false;
     }
 
     OnCancel(evt) {
@@ -91,6 +105,9 @@ export default class CreditsScreen extends GameScreenBase {
     }
 
     OnMove(evt, x, y) {
+        if (this.shipSpawnCoolDown === 0) {
+            this.spawnShip(x,y);
+        }
     }
 
     handleShipUpdate(ship, delta) {
@@ -188,7 +205,6 @@ export default class CreditsScreen extends GameScreenBase {
             context.fillStyle = 'green';
             context.beginPath();
             context.arc(s.xPos, s.yPos, 5, 0, Math.PI * 2);
-            console.log(s.xPos, s.yPos);
             context.fill();
             context.restore();
             s.draw(context);

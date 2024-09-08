@@ -268,7 +268,12 @@ export default class Ship extends MobileSprite {
             this.setSpecial(new specials[specialsIndex]());
             specialsCooldown = 0.25;
         }
-        this.lightning?.update(delta)
+        this.lightning?.update(delta);
+        if (this.lightning) {
+            this.keyHandler.clearNumber();
+        }
+
+
         this.updateBreach(delta);
     }
 
