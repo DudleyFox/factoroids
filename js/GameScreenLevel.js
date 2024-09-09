@@ -98,7 +98,7 @@ export default class GameScreenLevel extends GameScreenBase {
 
     buildOptions() {
         const {upperBounds, keyHandler, state, level, pointerHandler} = this;
-        return {upperBounds, keyHandler, state, level, pointerHandler};
+        return {upperBounds, keyHandler, state, level, pointerHandler, playAgain: GameScreenLevel};
     }
 
     update(delta) {

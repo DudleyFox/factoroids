@@ -5,7 +5,7 @@ import {
 
 export default class SpecialHyper extends SpecialBase {
     constructor() {
-        super(1, '#11DD11', 'i');
+        super({cooldownTime: 1, color: '#11DD11', text: 'i'});
     }
 
     invocation(ship) {

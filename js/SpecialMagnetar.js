@@ -2,7 +2,7 @@ import SpecialBase from './SpecialBase.js';
 
 export default class SpecialMagentar extends SpecialBase {
     constructor() {
-        super(5, '#DD11DD', 'Err');
+        super({cooldownTime: 5, color: '#DD11DD', text: 'Err'});
         this.state = {
             facts: []
         };
