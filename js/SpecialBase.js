@@ -1,12 +1,14 @@
 import Calculator from "./Calculator.js";
 
 export default class SpecialBase {
-    constructor(cooldownTime, color, text, uses=-1) {
+    constructor(options) {
+        const {cooldownTime, color, text} = options;
+        this.yOffset = options.yOffset || 0;
         this.cooldown = 0;
         this.cooldownTime = cooldownTime;
         this.colorValue = color;
         this.textValue = text;
-        this.uses = uses;
+        this.uses = options.uses || -1;
         this.invocations = 0;
         this.calculator = new Calculator(this.colorValue, this.textValue, this.uses);
     }
@@ -46,7 +48,7 @@ export default class SpecialBase {
 
     draw(context) {
         const x = 30;
-        const y = 95;
+        const y = 95 + this.yOffset;
         const radius = 40;
         const three60 = Math.PI * 2;
         this.calculator.draw(context, x, y);

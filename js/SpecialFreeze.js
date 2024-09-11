@@ -2,7 +2,7 @@ import SpecialBase from './SpecialBase.js';
 
 export default class SpecialFreeze extends SpecialBase {
     constructor() {
-        super(9, '#FFFFFF', 'x00', 3);
+        super({cooldownTime: 9, color: '#FFFFFF', text: 'x00', uses: 3});
         this.state = {
             facts: []
         };

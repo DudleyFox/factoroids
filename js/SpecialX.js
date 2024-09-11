@@ -2,7 +2,7 @@ import SpecialBase from './SpecialBase.js';
 
 export default class SpecialX extends SpecialBase {
     constructor() {
-        super(9, 'purple', 'X', 3);
+        super({ cooldownTime:9, color: 'purple', text:'X', uses:3});
         this.state = {
             facts: []
         };

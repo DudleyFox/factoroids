@@ -3,7 +3,7 @@ import Lightning from './Lightning.js';
 
 export default class SpecialOmega extends SpecialBase {
     constructor() {
-        super(5, 'gold', 'Ω');
+        super({ cooldownTime: 5, color:'gold', text:'Ω'});
         this.active = false;
         this.redBase = 75;
         this.greenBase = 75;

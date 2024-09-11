@@ -1,6 +1,7 @@
 import Factoroid from "./Factoroid.js";
 import GameScreenBase from "./GameScreenBase.js";
 import GameScreenLevel from "./GameScreenLevel.js";
+import GameScreenSolitaire from "./GameScreenSolitaire.js";
 import CreditsScreen from "./CreditsScreen.js";
 import HowToPlay from "./HowToPlay.js";
 import ShipWarehouse from "./ShipWarehouse.js";
@@ -57,7 +58,8 @@ export default class StartScreen extends GameScreenBase {
         this.buttons.push(new Button('select', 'Select Ship', new Point(this.leftEdge, this.topEdge), 120, 25, this.pointerHandler));
         this.buttons.push(new Button('play', 'Play', new Point(this.leftEdge, this.topEdge + this.yDelta), 120, 25, this.pointerHandler));
         // this.buttons.push(new Button('howToPlay', 'How To Play', new Point(this.leftEdge, this.topEdge + this.yDelta * 2), 120, 25, this.pointerHandler));
-        this.buttons.push(new Button('credits', 'Credits', new Point(this.leftEdge, this.topEdge + this.yDelta * 2), 120, 25, this.pointerHandler));
+        this.buttons.push(new Button('solo', 'Solitaire', new Point(this.leftEdge, this.topEdge + this.yDelta * 2), 120, 25, this.pointerHandler));
+        this.buttons.push(new Button('credits', 'Credits', new Point(this.leftEdge, this.topEdge + this.yDelta * 3), 120, 25, this.pointerHandler));
         this.buttons.forEach(b => b.Subscribe(this));
     }
 
@@ -65,7 +67,8 @@ export default class StartScreen extends GameScreenBase {
         this.play = x === 'play';
         this.selectShip = x === 'select';
         this.howToPlay = x === 'howToPlay';
-        this.credits = x === 'credits'
+        this.credits = x === 'credits';
+        this.solo = x === 'solo';
     }
 
     buildOptions() {
@@ -90,6 +93,9 @@ export default class StartScreen extends GameScreenBase {
         }
         if (this.howToPlay) {
             return new HowToPlay(this.buildOptions()); 
+        }
+        if (this.solo) {
+            return new GameScreenSolitaire(this.buildOptions());
         }
         if (this.credits) {
             return new CreditsScreen(this.buildOptions());

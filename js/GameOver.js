@@ -1,5 +1,4 @@
 import GameScreenBase from './GameScreenBase.js';
-import GameScreenLevel from './GameScreenLevel.js';
 import SpecialFlip from './SpecialFlip.js';
 import GhostShip from './GhostShip.js';
 import StartScreen from './StartScreen.js';
@@ -14,8 +13,9 @@ import {
 export default class GameScreenOver extends GameScreenBase {
     constructor(options) {
         super(options);
-        const {upperBounds, keyHandler, state, level, pointerHandler} = options;
+        const {upperBounds, keyHandler, state, level, pointerHandler, playAgain} = options;
         this.pointerHandler = pointerHandler;
+        this.playAgain = playAgain;
         this.level = level;
         this.facts = [];
         const x = this.upperBounds.x / 2 - 225 / 2;
@@ -32,18 +32,22 @@ export default class GameScreenOver extends GameScreenBase {
                 origin: new Point(x, y),
                 state: this.state,
                 upperBounds: this.upperBounds,
-                cg: ()=>'gold'
+                cg: ()=> 'gold'
             };
             this.facts.push(new Factoroid(goldOptions));
             primesIndex += 1;
         }
-        const blueOptions = {
-            product: level,
-            origin: new Point(x, y),
-            state: this.state,
-            upperBounds: this.upperBounds
-        };
-        this.facts.push(new Factoroid(blueOptions));
+
+        if (level !==0) {
+            const blueOptions = {
+                product: level,
+                origin: new Point(x, y),
+                state: this.state,
+                upperBounds: this.upperBounds
+            };
+            this.facts.push(new Factoroid(blueOptions));
+        }
+
         this.playAgainButton.Subscribe(this);
         this.menuButton.Subscribe(this);
         this.state.lifeCount = 3;
@@ -98,7 +102,7 @@ export default class GameScreenOver extends GameScreenBase {
         this.facts.forEach(f => f.update(delta));
         if (this.buttonState === 'again') {
             this.cleanUp();
-            return new GameScreenLevel(this.buildOptions());
+            return new this.playAgain(this.buildOptions());
         } else if (this.buttonState === 'menu') {
             this.cleanUp();
             return new StartScreen(this.buildOptions());
