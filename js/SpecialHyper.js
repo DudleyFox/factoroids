@@ -4,8 +4,8 @@ import {
 } from './AAAHelpers.js';
 
 export default class SpecialHyper extends SpecialBase {
-    constructor() {
-        super({cooldownTime: 1, color: '#11DD11', text: 'i'});
+    constructor(options) {
+        super({cooldownTime: 1, color: '#11DD11', text: 'i', state: options.state});
     }
 
     invocation(ship) {

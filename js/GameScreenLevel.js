@@ -4,6 +4,7 @@ import GameOver from './GameOver.js';
 import Factoroid from './Factoroid.js';
 import primes from './Primes.js';
 import Point from './Point.js';
+import Modes from './Modes.js';
 
 import { degreesToRadians, randFloat, randInt } from './AAAHelpers.js';
 import PowerUpFactory from './PowerUpFactory.js';
@@ -22,6 +23,7 @@ export default class GameScreenLevel extends GameScreenBase {
         this.levelCount = this.calculateFactoroidCount(this.level);
         this.levelMax = this.calculateLevelMax(this.level);
 
+        this.state.mode = Modes.GAME;
         this.state.ship.reset();
         this.populateLevel(this.level);
     }

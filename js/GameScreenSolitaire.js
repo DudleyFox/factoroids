@@ -12,10 +12,11 @@ import SpecialOmega from './SpecialOmega.js';
 import Factoroid from './Factoroid.js';
 import primes from './Primes.js';
 import Point from './Point.js';
+import Modes from './Modes.js';
 
 import { degreesToRadians, randFloat, randInt } from './AAAHelpers.js';
 
-const pickSpecial = () => {
+const pickSpecial = (options) => {
     const specials = [
         SpecialFlip,
         SpecialHyper,
@@ -26,8 +27,7 @@ const pickSpecial = () => {
         SpecialFreeze
     ];
 
-    const special = new (specials[randInt(specials.length)])();
-    special.yOffset = -50;
+    const special = new (specials[randInt(specials.length)])(options);
     return special;
 };
 
@@ -40,10 +40,11 @@ export default class GameScreenSolitaire extends GameScreenBase {
         this.gameOverCountdown = this.gameOverCountdownValue;
         this.product = 1;
 
+        this.state.mode = Modes.SOLO;
         this.state.lives = [];
         this.state.lifeCount = 1;
         this.state.ship.reset();
-        this.state.ship.setSpecial(pickSpecial());
+        this.state.ship.setSpecial(pickSpecial(options));
         this.populateLevel(this.level);
     }
 
