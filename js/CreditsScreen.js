@@ -41,6 +41,10 @@ const credits = [
         title: 'Closet Extravert',
     },
     {
+        label: 'Jimbo',
+        title: 'Play Tester',
+    },
+    {
         label: 'ojo',
         title: 'Prime Target',
     },
