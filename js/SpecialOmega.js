@@ -2,8 +2,8 @@ import SpecialBase from './SpecialBase.js';
 import Lightning from './Lightning.js';
 
 export default class SpecialOmega extends SpecialBase {
-    constructor() {
-        super({ cooldownTime: 5, color:'gold', text:'Ω'});
+    constructor(options) {
+        super({ cooldownTime: 5, color:'gold', text:'Ω', state: options.state});
         this.active = false;
         this.redBase = 75;
         this.greenBase = 75;
