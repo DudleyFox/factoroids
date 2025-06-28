@@ -53,13 +53,13 @@ export default class StartScreen extends GameScreenBase {
         this.buttons = [];
         this.yDelta = 40;
         this.leftEdge = this.upperBounds.x / 2 - 60;
-        this.topEdge = this.upperBounds.y / 2 - this.yDelta;
-       
+        this.topEdge = this.upperBounds.y / 2 - ((this.yDelta * 4 + 25 * 5) /2 );
+
         this.buttons.push(new Button('select', 'Select Ship', new Point(this.leftEdge, this.topEdge), 120, 25, this.pointerHandler));
         this.buttons.push(new Button('play', 'Play', new Point(this.leftEdge, this.topEdge + this.yDelta), 120, 25, this.pointerHandler));
-        // this.buttons.push(new Button('howToPlay', 'How To Play', new Point(this.leftEdge, this.topEdge + this.yDelta * 2), 120, 25, this.pointerHandler));
-        this.buttons.push(new Button('solo', 'Solitaire', new Point(this.leftEdge, this.topEdge + this.yDelta * 2), 120, 25, this.pointerHandler));
-        this.buttons.push(new Button('credits', 'Credits', new Point(this.leftEdge, this.topEdge + this.yDelta * 3), 120, 25, this.pointerHandler));
+        this.buttons.push(new Button('howToPlay', 'How To Play', new Point(this.leftEdge, this.topEdge + this.yDelta * 2), 120, 25, this.pointerHandler));
+        this.buttons.push(new Button('solo', 'Solitaire', new Point(this.leftEdge, this.topEdge + this.yDelta * 3 ), 120, 25, this.pointerHandler));
+        this.buttons.push(new Button('credits', 'Credits', new Point(this.leftEdge, this.topEdge + this.yDelta * 4), 120, 25, this.pointerHandler));
         this.buttons.forEach(b => b.Subscribe(this));
     }
 
