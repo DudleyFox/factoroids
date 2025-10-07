@@ -7,17 +7,28 @@ export default class KeyHandler {
         var obj = this;
         this.storedNumber = 0;
         this.postFiring = false;
+        this.subscribers = [];
         window.addEventListener('keydown', function (evt) { obj.OnKeyDown(evt) }, true);
         window.addEventListener('keyup', function (evt) { obj.OnKeyUp(evt) }, true);
+    }
+
+    Subscribe(s) {
+        this.subscribers.push(s);
+    }
+
+    Unsubscribe(s) {
+        this.subscribers = this.subscribers.filter(x => x !== s);
     }
 
     keydown(key) {
         this.map[key] = true;
         this.handleNumber(key)
+        this.subscribers.forEach(s => s.OnKeyDown(key));
     }
 
     keyup(key) {
         this.map[key] = false;
+        this.subscribers.forEach(s => s.OnKeyUp(key));
         
     }
 
@@ -139,5 +150,10 @@ export default class KeyHandler {
     xtra() {
         // 'X'
         return this.map[88];
+    }
+
+    shift() {
+        // 'shift'
+        return this.map[16];
     }
 }
