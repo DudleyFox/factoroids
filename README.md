@@ -18,7 +18,10 @@ Use \<backspace\>, `-`, or `/` to unload a bullet
 
 The `-`, `/`, and `+` controls work well with a number pad if your keyboard has that.
 
+## Running Locally
 
-# Alpha
+```bash
+python -m http.server
+```
 
-To play the alpha you can go to [factoroids.com](https://factoroids.com/)
+Then open `http://localhost:8000` in your browser.
