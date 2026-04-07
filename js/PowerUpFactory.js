@@ -41,7 +41,7 @@ export default class PowerUpFactory {
 
     boom() {
         const index = randInt(this.specials.length);
-        const special = new this.specials[index]();
+        const special = new this.specials[index]({state: this.state});
         const x = randFloat(this.upperBounds.x);
         const y = randFloat(this.upperBounds.y);
         const options = {

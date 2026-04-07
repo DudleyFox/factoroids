@@ -1,8 +1,8 @@
 import SpecialBase from './SpecialBase.js';
 
 export default class SpecialMagentar extends SpecialBase {
-    constructor() {
-        super({cooldownTime: 5, color: '#DD11DD', text: 'Err'});
+    constructor(options) {
+        super({cooldownTime: 7, color: '#DD11DD', text: 'Err', state: options.state});
         this.state = {
             facts: []
         };

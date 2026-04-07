@@ -1,8 +1,8 @@
 import SpecialBase from './SpecialBase.js';
 
 export default class SpecialX extends SpecialBase {
-    constructor() {
-        super({ cooldownTime:9, color: 'purple', text:'X', uses:3});
+    constructor(options) {
+        super({ cooldownTime:9, color: 'purple', text:'X', uses:3, state: options.state});
         this.state = {
             facts: []
         };

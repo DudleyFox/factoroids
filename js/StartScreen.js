@@ -8,6 +8,7 @@ import ShipWarehouse from "./ShipWarehouse.js";
 import ShipSelector from "./ShipSelector.js";
 import Button from "./Button.js";
 import Point from "./Point.js";
+import Modes from "./Modes.js";
 import stateFactory from './StateFactory.js';
 import {
     randFloat,
@@ -37,6 +38,7 @@ export default class StartScreen extends GameScreenBase {
             };
             this.facts.push(new Factoroid(options));
         }
+        this.state.mode = Modes.START;
         this.buildButtons();
     }
 

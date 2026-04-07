@@ -1,8 +1,8 @@
 import SpecialBase from './SpecialBase.js';
 
 export default class SpecialFreeze extends SpecialBase {
-    constructor() {
-        super({cooldownTime: 9, color: '#FFFFFF', text: 'x00', uses: 3});
+    constructor(options) {
+        super({cooldownTime: 9, color: '#FFFFFF', text: 'x00', uses: 3, state: options.state});
         this.state = {
             facts: []
         };

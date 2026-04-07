@@ -63,7 +63,7 @@ export default class GameScreenOver extends GameScreenBase {
             this.state.lives.push(new GhostShip(gsOptions));
         }
         this.state.ship.reset();
-        this.state.ship.setSpecial(new SpecialFlip());
+        this.state.ship.setSpecial(new SpecialFlip(this.buildOptions()));
         this.level = 2;
         this.state.facts = [];
     }

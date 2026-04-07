@@ -2,11 +2,6 @@
 
 Just a place to put my idea until I implement them or give up on them.
 
-## Power up Ideas
-
-- Omega - Breaks the factoroid into its constituent primes
--- Uses a lightning one time use
-
 ## Settings
 
 Make a settings screen, stored to local storage that allows you to adjust the following:
@@ -20,9 +15,4 @@ Make a settings screen, stored to local storage that allows you to adjust the fo
 -- Splinter
 - Prime Highlight
 -- If true prime factoroids are golden instead of blue.
-
-## Mode of Play
-
-- Solitaire - Infinite lives, start with the number 2, and increase by 1 each time.
-
 

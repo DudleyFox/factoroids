@@ -1,9 +1,11 @@
 import Calculator from "./Calculator.js";
+import Modes from "./Modes.js";
 
 export default class SpecialBase {
     constructor(options) {
-        const {cooldownTime, color, text} = options;
-        this.yOffset = options.yOffset || 0;
+        const {cooldownTime, color, text, state} = options;
+        this.state = state;
+        this.yOffset = this.state.mode === Modes.SOLO ? -50 : 0;
         this.cooldown = 0;
         this.cooldownTime = cooldownTime;
         this.colorValue = color;
@@ -66,7 +68,7 @@ export default class SpecialBase {
         context.restore();
         if (this.uses > 0) {
             const x = 52;
-            const y = 68;
+            const y = 68 + this.yOffset;
             const yD = 7
             for (let i = 0; i < this.used(); ++i) {
                 context.save();

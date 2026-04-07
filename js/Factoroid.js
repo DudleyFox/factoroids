@@ -121,7 +121,7 @@ export default class Factoroid extends MobileSprite {
     }
 
     calculateMagnetarPosition(delta) {
-        const magnetarVelocity = 80;
+        const magnetarVelocity = 211;
         const [x,y] = this.findShortestDistanceToShip();
         const dx = Math.abs(this.xPos - x);
         const dy = Math.abs(this.yPos - y);

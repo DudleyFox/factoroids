@@ -265,7 +265,7 @@ export default class Ship extends MobileSprite {
         specialsCooldown = Math.max(0, specialsCooldown - delta);
         if (this.keyHandler.xtra() && specialsCooldown === 0) {
             specialsIndex = normalizeIndex(specialsIndex + 1, specials.length);
-            this.setSpecial(new specials[specialsIndex]());
+            this.setSpecial(new specials[specialsIndex]({state: this.state}));
             specialsCooldown = 0.25;
         }
 

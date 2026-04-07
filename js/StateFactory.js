@@ -3,6 +3,7 @@ import Ship from './Ship.js';
 import GhostShip from './GhostShip.js';
 import SpecialFlip from './SpecialFlip.js';
 import Point from './Point.js';
+import Modes from './Modes.js';
 
 export default function (options) {
         const {upperBounds, keyHandler} = options
@@ -26,6 +27,7 @@ export default function (options) {
             shipNumber: 2,
             shipStepSize: 5
         };
+        state.mode = Modes.START;
         const shipState = shipWarehouse.buildShipState();
         state.shipNumber = shipState.shipNumber;
         state.shipStepSize = shipState.shipStepSize;
@@ -50,6 +52,6 @@ export default function (options) {
             };
             state.lives.push(new GhostShip(gsOptions));
         }
-        state.ship.setSpecial(new SpecialFlip());
+        state.ship.setSpecial(new SpecialFlip({state}));
         return state;
     }
